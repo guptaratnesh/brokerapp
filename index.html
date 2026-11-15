@@ -183,47 +183,31 @@
                 <input type="date" id="order-date" required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
               </div>
 
-              <!-- Wholesaler (Seller) -->
-              <div>
-                <div class="flex justify-between items-center mb-1.5">
-                  <label for="order-seller" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider">Seller (Wholesaler) *</label>
-                  <button type="button" id="btn-toggle-new-seller" class="text-[11px] font-bold text-blue-600 hover:text-blue-800 flex items-center space-x-1">
-                    <span id="btn-toggle-new-seller-text">+ New Wholesaler</span>
-                  </button>
+              <!-- Wholesaler (Seller) - Google-style Editable Autocomplete -->
+              <div class="relative">
+                <label for="order-seller" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Seller (Wholesaler) *</label>
+                <div class="relative">
+                  <input type="text" id="order-seller" autocomplete="off" placeholder="Type or search wholesaler..." required class="w-full rounded-xl border border-slate-300 pl-3.5 pr-8 py-2.5 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm bg-white">
+                  <svg class="w-4 h-4 text-slate-400 absolute right-3 top-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </div>
-                <select id="order-seller" required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm bg-white font-medium">
-                  <option value="">-- Select Saved Wholesaler --</option>
-                </select>
-                <!-- New Wholesaler Input (toggled if needed) -->
-                <div id="new-seller-input-wrapper" class="mt-2 hidden">
-                  <input type="text" id="order-seller-new" placeholder="Type new wholesaler / supplier name..." class="w-full rounded-xl border border-blue-400 bg-blue-50/40 px-3.5 py-2 text-sm focus:ring-2 focus:ring-blue-500 font-medium">
-                  <p class="text-[10px] text-blue-600 mt-1">Will be added to your saved wholesalers list automatically</p>
-                </div>
+                <div id="seller-suggestions" class="absolute z-30 left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl max-h-52 overflow-y-auto hidden"></div>
                 <div class="flex items-center space-x-1.5 mt-1 text-[11px] text-emerald-600 font-medium">
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                  <span id="seller-count-badge">Populated from saved data</span>
+                  <span id="seller-count-badge">Type new or pick from saved list</span>
                 </div>
               </div>
 
-              <!-- Retailer (Buyer) -->
-              <div>
-                <div class="flex justify-between items-center mb-1.5">
-                  <label for="order-buyer" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider">Buyer (Retailer) *</label>
-                  <button type="button" id="btn-toggle-new-buyer" class="text-[11px] font-bold text-blue-600 hover:text-blue-800 flex items-center space-x-1">
-                    <span id="btn-toggle-new-buyer-text">+ New Retailer</span>
-                  </button>
+              <!-- Retailer (Buyer) - Google-style Editable Autocomplete -->
+              <div class="relative">
+                <label for="order-buyer" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Buyer (Retailer) *</label>
+                <div class="relative">
+                  <input type="text" id="order-buyer" autocomplete="off" placeholder="Type or search retailer..." required class="w-full rounded-xl border border-slate-300 pl-3.5 pr-8 py-2.5 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm bg-white">
+                  <svg class="w-4 h-4 text-slate-400 absolute right-3 top-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </div>
-                <select id="order-buyer" required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm bg-white font-medium">
-                  <option value="">-- Select Saved Retailer --</option>
-                </select>
-                <!-- New Retailer Input (toggled if needed) -->
-                <div id="new-buyer-input-wrapper" class="mt-2 hidden">
-                  <input type="text" id="order-buyer-new" placeholder="Type new retailer / buyer name..." class="w-full rounded-xl border border-blue-400 bg-blue-50/40 px-3.5 py-2 text-sm focus:ring-2 focus:ring-blue-500 font-medium">
-                  <p class="text-[10px] text-blue-600 mt-1">Will be added to your saved retailers list automatically</p>
-                </div>
+                <div id="buyer-suggestions" class="absolute z-30 left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl max-h-52 overflow-y-auto hidden"></div>
                 <div class="flex items-center space-x-1.5 mt-1 text-[11px] text-emerald-600 font-medium">
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                  <span id="buyer-count-badge">Populated from saved data</span>
+                  <span id="buyer-count-badge">Type new or pick from saved list</span>
                 </div>
               </div>
 
@@ -1349,8 +1333,6 @@
     }
 
     function populateDatalistsAndDropdowns() {
-      const sellerSelect = document.getElementById('order-seller');
-      const buyerSelect = document.getElementById('order-buyer');
       const buyerSelectDropdown = document.getElementById('buyer-select-dropdown');
       const sellerCountBadge = document.getElementById('seller-count-badge');
       const buyerCountBadge = document.getElementById('buyer-count-badge');
@@ -1358,32 +1340,11 @@
       const sellers = state.parties.filter(p => p.type === 'Wholesaler');
       const buyers = state.parties.filter(p => p.type === 'Retailer');
 
-      // Populate Order Form Seller Dropdown from saved data
-      if (sellerSelect) {
-        const currentSellerVal = sellerSelect.value;
-        sellerSelect.innerHTML = `<option value="">-- Choose Saved Wholesaler (${sellers.length} saved) --</option>` +
-          sellers.map(s => `<option value="${s.name}">${s.name} ${s.city ? `— ${s.city}` : ''}</option>`).join('') +
-          `<option value="__NEW__">+ Enter New Wholesaler...</option>`;
-        if (currentSellerVal && currentSellerVal !== '__NEW__' && sellers.some(s => s.name === currentSellerVal)) {
-          sellerSelect.value = currentSellerVal;
-        }
-      }
       if (sellerCountBadge) {
-        sellerCountBadge.textContent = `${sellers.length} saved wholesalers available`;
-      }
-
-      // Populate Order Form Buyer Dropdown from saved data
-      if (buyerSelect) {
-        const currentBuyerVal = buyerSelect.value;
-        buyerSelect.innerHTML = `<option value="">-- Choose Saved Retailer (${buyers.length} saved) --</option>` +
-          buyers.map(b => `<option value="${b.name}">${b.name} ${b.city ? `— ${b.city}` : ''}</option>`).join('') +
-          `<option value="__NEW__">+ Enter New Retailer...</option>`;
-        if (currentBuyerVal && currentBuyerVal !== '__NEW__' && buyers.some(b => b.name === currentBuyerVal)) {
-          buyerSelect.value = currentBuyerVal;
-        }
+        sellerCountBadge.textContent = `${sellers.length} saved • Type to search or add new`;
       }
       if (buyerCountBadge) {
-        buyerCountBadge.textContent = `${buyers.length} saved retailers available`;
+        buyerCountBadge.textContent = `${buyers.length} saved • Type to search or add new`;
       }
 
       // Dropdown in Buyers Tab
@@ -1948,90 +1909,78 @@
       qtyInput.addEventListener('input', recalculateOrderTotal);
       rateInput.addEventListener('input', recalculateOrderTotal);
 
-      // Toggles for New Seller / Buyer in Order Form
-      const btnToggleNewSeller = document.getElementById('btn-toggle-new-seller');
-      const btnToggleNewBuyer = document.getElementById('btn-toggle-new-buyer');
-      const sellerSelect = document.getElementById('order-seller');
-      const buyerSelect = document.getElementById('order-buyer');
-      const newSellerWrapper = document.getElementById('new-seller-input-wrapper');
-      const newBuyerWrapper = document.getElementById('new-buyer-input-wrapper');
-      const newSellerInput = document.getElementById('order-seller-new');
-      const newBuyerInput = document.getElementById('order-buyer-new');
+      // Google-style Editable Autocomplete for Seller & Buyer
+      const sellerInput = document.getElementById('order-seller');
+      const buyerInput = document.getElementById('order-buyer');
+      const sellerSuggestions = document.getElementById('seller-suggestions');
+      const buyerSuggestions = document.getElementById('buyer-suggestions');
 
-      if (sellerSelect) {
-        sellerSelect.addEventListener('change', () => {
-          if (sellerSelect.value === '__NEW__') {
-            newSellerWrapper.classList.remove('hidden');
-            newSellerInput.focus();
-            document.getElementById('btn-toggle-new-seller-text').textContent = 'Use Saved List';
-          } else {
-            newSellerWrapper.classList.add('hidden');
-            document.getElementById('btn-toggle-new-seller-text').textContent = '+ New Wholesaler';
+      function setupAutocomplete(inputEl, dropdownEl, partyType) {
+        if (!inputEl || !dropdownEl) return;
+
+        function renderSuggestions(query) {
+          const q = (query || '').trim().toLowerCase();
+          const allParties = state.parties.filter(p => p.type === partyType);
+          const matches = q
+            ? allParties.filter(p => p.name.toLowerCase().includes(q) || (p.city && p.city.toLowerCase().includes(q)))
+            : allParties;
+
+          let htmlOut = '';
+          matches.forEach(p => {
+            htmlOut += `
+              <button type="button" class="autocomplete-item w-full text-left px-3.5 py-2.5 hover:bg-blue-50 border-b border-slate-100 last:border-b-0 flex items-center justify-between transition-colors" data-value="${p.name}">
+                <div>
+                  <span class="text-sm font-semibold text-slate-900 block">${p.name}</span>
+                  ${p.city ? `<span class="text-[11px] text-slate-400">${p.city}</span>` : ''}
+                </div>
+                <span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">Saved</span>
+              </button>
+            `;
+          });
+
+          const exactExists = allParties.some(p => p.name.toLowerCase() === q);
+          if (q && !exactExists) {
+            htmlOut += `
+              <div class="px-3.5 py-2 bg-emerald-50/70 text-[11px] font-semibold text-emerald-800 flex items-center space-x-1.5">
+                <span>+ Will save "<strong>${query.trim()}</strong>" as new ${partyType}</span>
+              </div>
+            `;
           }
+
+          if (!htmlOut) {
+            dropdownEl.classList.add('hidden');
+            return;
+          }
+
+          dropdownEl.innerHTML = htmlOut;
+          dropdownEl.classList.remove('hidden');
+
+          dropdownEl.querySelectorAll('.autocomplete-item').forEach(btn => {
+            btn.addEventListener('mousedown', (e) => {
+              e.preventDefault(); // Prevent blur before click registers on desktop/mobile
+              inputEl.value = btn.getAttribute('data-value');
+              inputEl.classList.remove('border-rose-500', 'ring-2', 'ring-rose-300');
+              dropdownEl.classList.add('hidden');
+            });
+          });
+        }
+
+        inputEl.addEventListener('focus', () => renderSuggestions(inputEl.value));
+        inputEl.addEventListener('input', () => renderSuggestions(inputEl.value));
+        inputEl.addEventListener('blur', () => {
+          setTimeout(() => dropdownEl.classList.add('hidden'), 150);
         });
       }
 
-      if (btnToggleNewSeller) {
-        btnToggleNewSeller.addEventListener('click', () => {
-          const isHidden = newSellerWrapper.classList.contains('hidden');
-          if (isHidden) {
-            newSellerWrapper.classList.remove('hidden');
-            sellerSelect.value = '__NEW__';
-            newSellerInput.focus();
-            document.getElementById('btn-toggle-new-seller-text').textContent = 'Use Saved List';
-          } else {
-            newSellerWrapper.classList.add('hidden');
-            sellerSelect.value = '';
-            document.getElementById('btn-toggle-new-seller-text').textContent = '+ New Wholesaler';
-          }
-        });
-      }
-
-      if (buyerSelect) {
-        buyerSelect.addEventListener('change', () => {
-          if (buyerSelect.value === '__NEW__') {
-            newBuyerWrapper.classList.remove('hidden');
-            newBuyerInput.focus();
-            document.getElementById('btn-toggle-new-buyer-text').textContent = 'Use Saved List';
-          } else {
-            newBuyerWrapper.classList.add('hidden');
-            document.getElementById('btn-toggle-new-buyer-text').textContent = '+ New Retailer';
-          }
-        });
-      }
-
-      if (btnToggleNewBuyer) {
-        btnToggleNewBuyer.addEventListener('click', () => {
-          const isHidden = newBuyerWrapper.classList.contains('hidden');
-          if (isHidden) {
-            newBuyerWrapper.classList.remove('hidden');
-            buyerSelect.value = '__NEW__';
-            newBuyerInput.focus();
-            document.getElementById('btn-toggle-new-buyer-text').textContent = 'Use Saved List';
-          } else {
-            newBuyerWrapper.classList.add('hidden');
-            buyerSelect.value = '';
-            document.getElementById('btn-toggle-new-buyer-text').textContent = '+ New Retailer';
-          }
-        });
-      }
+      setupAutocomplete(sellerInput, sellerSuggestions, 'Wholesaler');
+      setupAutocomplete(buyerInput, buyerSuggestions, 'Retailer');
 
       // Submit Order Form
       formOrder.addEventListener('submit', (e) => {
         e.preventDefault();
         const date = document.getElementById('order-date').value;
-        
-        // Resolve Seller Name (from saved select or newly typed)
-        let sellerName = sellerSelect.value;
-        if (sellerName === '__NEW__' || !sellerName) {
-          sellerName = newSellerInput.value.trim();
-        }
-
-        // Resolve Buyer Name (from saved select or newly typed)
-        let buyerName = buyerSelect.value;
-        if (buyerName === '__NEW__' || !buyerName) {
-          buyerName = newBuyerInput.value.trim();
-        }
+        const sellerName = sellerInput.value.trim();
+        const buyerName = buyerInput.value.trim();
         const item = document.getElementById('order-item').value.trim();
         const qty = parseFloat(qtyInput.value);
         const unit = document.getElementById('order-unit')?.value || 'Kg';
@@ -2042,7 +1991,7 @@
         const amount = qty * rate;
 
         // Clear previous error highlights
-        ['order-date', 'order-seller', 'order-seller-new', 'order-buyer', 'order-buyer-new', 'order-item', 'order-qty', 'order-rate'].forEach(id => {
+        ['order-date', 'order-seller', 'order-buyer', 'order-item', 'order-qty', 'order-rate'].forEach(id => {
           const el = document.getElementById(id);
           if (el) el.classList.remove('border-rose-500', 'ring-2', 'ring-rose-300');
         });
@@ -2062,13 +2011,11 @@
           return;
         }
         if (!sellerName) {
-          const targetId = sellerSelect.value === '__NEW__' ? 'order-seller-new' : 'order-seller';
-          flagFieldError(targetId, 'Please select a Seller (Wholesaler) from the list');
+          flagFieldError('order-seller', 'Please enter or select a Seller (Wholesaler)');
           return;
         }
         if (!buyerName) {
-          const targetId = buyerSelect.value === '__NEW__' ? 'order-buyer-new' : 'order-buyer';
-          flagFieldError(targetId, 'Please select a Buyer (Retailer) from the list');
+          flagFieldError('order-buyer', 'Please enter or select a Buyer (Retailer)');
           return;
         }
         if (!item) {
@@ -2762,29 +2709,13 @@
           btnToggleOrder.click();
 
           // Apply Seller
-          if (res.seller) {
-            const sellerOpt = Array.from(sellerSelect.options).find(o => o.value.toLowerCase() === res.seller.toLowerCase());
-            if (sellerOpt) {
-              sellerSelect.value = sellerOpt.value;
-              newSellerWrapper.classList.add('hidden');
-            } else {
-              sellerSelect.value = '__NEW__';
-              newSellerWrapper.classList.remove('hidden');
-              newSellerInput.value = res.seller;
-            }
+          if (res.seller && sellerInput) {
+            sellerInput.value = res.seller;
           }
 
           // Apply Buyer
-          if (res.buyer) {
-            const buyerOpt = Array.from(buyerSelect.options).find(o => o.value.toLowerCase() === res.buyer.toLowerCase());
-            if (buyerOpt) {
-              buyerSelect.value = buyerOpt.value;
-              newBuyerWrapper.classList.add('hidden');
-            } else {
-              buyerSelect.value = '__NEW__';
-              newBuyerWrapper.classList.remove('hidden');
-              newBuyerInput.value = res.buyer;
-            }
+          if (res.buyer && buyerInput) {
+            buyerInput.value = res.buyer;
           }
 
           // Apply Item, Qty, Unit, Rate
@@ -2933,13 +2864,8 @@
         state.editingOrderIndex = idx;
 
         document.getElementById('order-date').value = ord.date || todayISO;
-        newSellerWrapper.classList.add('hidden');
-        newBuyerWrapper.classList.add('hidden');
-        document.getElementById('btn-toggle-new-seller-text').textContent = '+ New Wholesaler';
-        document.getElementById('btn-toggle-new-buyer-text').textContent = '+ New Retailer';
-
-        sellerSelect.value = ord.seller;
-        buyerSelect.value = ord.buyer;
+        sellerInput.value = ord.seller || '';
+        buyerInput.value = ord.buyer || '';
         document.getElementById('order-item').value = ord.item || '';
         qtyInput.value = ord.qty || '';
         if (orderUnitSelect && ord.unit) {
@@ -2964,10 +2890,8 @@
         formOrder.reset();
         document.getElementById('order-date').value = todayISO;
         amountDisplay.textContent = '₹0';
-        newSellerWrapper.classList.add('hidden');
-        newBuyerWrapper.classList.add('hidden');
-        document.getElementById('btn-toggle-new-seller-text').textContent = '+ New Wholesaler';
-        document.getElementById('btn-toggle-new-buyer-text').textContent = '+ New Retailer';
+        if (sellerSuggestions) sellerSuggestions.classList.add('hidden');
+        if (buyerSuggestions) buyerSuggestions.classList.add('hidden');
         if (optionalOrderFields) optionalOrderFields.classList.add('hidden');
         populateDatalistsAndDropdowns();
         updateOrderNavControls();
@@ -3082,7 +3006,7 @@
       updatePaymentNavControls();
 
       // Auto-clear red error highlights when user edits a field
-      ['order-date', 'order-seller', 'order-seller-new', 'order-buyer', 'order-buyer-new', 'order-item', 'order-qty', 'order-rate', 'pay-date', 'pay-party', 'pay-amount'].forEach(id => {
+      ['order-date', 'order-seller', 'order-buyer', 'order-item', 'order-qty', 'order-rate', 'pay-date', 'pay-party', 'pay-amount'].forEach(id => {
         const el = document.getElementById(id);
         if (el) {
           const clearErr = () => el.classList.remove('border-rose-500', 'ring-2', 'ring-rose-300');
