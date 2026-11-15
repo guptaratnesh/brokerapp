@@ -174,7 +174,7 @@
           <!-- ========================= -->
           <!-- FORM A: RECORD NEW ORDER -->
           <!-- ========================= -->
-          <form id="form-order" class="space-y-6">
+          <form id="form-order" novalidate class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
               
               <!-- Date -->
@@ -232,23 +232,34 @@
                 <label for="order-item" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Commodity / Item *</label>
                 <input type="text" id="order-item" placeholder="e.g. Basmati Rice (50kg Bags)" required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
                 <div class="flex flex-wrap gap-1.5 mt-2">
-                  <button type="button" class="btn-quick-item px-2 py-0.5 text-[11px] font-semibold bg-slate-100 hover:bg-blue-100 hover:text-blue-800 text-slate-600 rounded-md transition-colors" data-item="Basmati Rice (50kg Bag)">Rice</button>
-                  <button type="button" class="btn-quick-item px-2 py-0.5 text-[11px] font-semibold bg-slate-100 hover:bg-blue-100 hover:text-blue-800 text-slate-600 rounded-md transition-colors" data-item="Wheat Flour / Atta (50kg)">Atta</button>
-                  <button type="button" class="btn-quick-item px-2 py-0.5 text-[11px] font-semibold bg-slate-100 hover:bg-blue-100 hover:text-blue-800 text-slate-600 rounded-md transition-colors" data-item="Refined Oil (15L Tin)">Oil Tin</button>
-                  <button type="button" class="btn-quick-item px-2 py-0.5 text-[11px] font-semibold bg-slate-100 hover:bg-blue-100 hover:text-blue-800 text-slate-600 rounded-md transition-colors" data-item="Sugar M-30 (50kg Bag)">Sugar</button>
-                  <button type="button" class="btn-quick-item px-2 py-0.5 text-[11px] font-semibold bg-slate-100 hover:bg-blue-100 hover:text-blue-800 text-slate-600 rounded-md transition-colors" data-item="Toor Dal Premium (50kg)">Toor Dal</button>
+                  <button type="button" class="btn-quick-item px-2 py-0.5 text-[11px] font-semibold bg-slate-100 hover:bg-blue-100 hover:text-blue-800 text-slate-600 rounded-md transition-colors" data-item="Basmati Rice" data-unit="Bag">Rice</button>
+                  <button type="button" class="btn-quick-item px-2 py-0.5 text-[11px] font-semibold bg-slate-100 hover:bg-blue-100 hover:text-blue-800 text-slate-600 rounded-md transition-colors" data-item="Wheat Flour / Atta" data-unit="Bag">Atta</button>
+                  <button type="button" class="btn-quick-item px-2 py-0.5 text-[11px] font-semibold bg-slate-100 hover:bg-blue-100 hover:text-blue-800 text-slate-600 rounded-md transition-colors" data-item="Refined Oil (15L)" data-unit="Tin">Oil Tin</button>
+                  <button type="button" class="btn-quick-item px-2 py-0.5 text-[11px] font-semibold bg-slate-100 hover:bg-blue-100 hover:text-blue-800 text-slate-600 rounded-md transition-colors" data-item="Sugar M-30" data-unit="Bag">Sugar</button>
+                  <button type="button" class="btn-quick-item px-2 py-0.5 text-[11px] font-semibold bg-slate-100 hover:bg-blue-100 hover:text-blue-800 text-slate-600 rounded-md transition-colors" data-item="Toor Dal (Pulses)" data-unit="Kg">Toor Dal</button>
                 </div>
               </div>
 
-              <!-- Quantity -->
+              <!-- Quantity & Unit -->
               <div>
-                <label for="order-qty" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Quantity (Units/Bags) *</label>
-                <input type="number" id="order-qty" min="1" step="any" placeholder="e.g. 50" required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
+                <label for="order-qty" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Quantity &amp; Unit *</label>
+                <div class="flex space-x-2">
+                  <input type="number" id="order-qty" min="0.01" step="any" placeholder="e.g. 50" required class="w-3/5 rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
+                  <select id="order-unit" class="w-2/5 rounded-xl border border-slate-300 px-2.5 py-2.5 text-sm font-semibold bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
+                    <option value="Kg">Kg</option>
+                    <option value="Piece">Piece</option>
+                    <option value="Tin">Tin</option>
+                    <option value="Bag">Bag</option>
+                    <option value="Box">Box</option>
+                    <option value="Quintal">Quintal</option>
+                    <option value="Litre">Litre</option>
+                  </select>
+                </div>
               </div>
 
               <!-- Rate -->
               <div>
-                <label for="order-rate" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Rate per Unit (₹) *</label>
+                <label id="order-rate-label" for="order-rate" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Rate per Kg (₹) *</label>
                 <input type="number" id="order-rate" min="0.01" step="any" placeholder="e.g. 1800" required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
               </div>
 
@@ -294,15 +305,34 @@
               </div>
             </div>
 
-            <!-- Form Actions -->
-            <div class="flex items-center justify-end space-x-3 pt-3">
-              <button type="reset" class="px-5 py-2.5 text-sm font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
-                Clear Fields
-              </button>
-              <button type="submit" class="px-7 py-2.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-xl shadow-md shadow-blue-500/20 transition-all flex items-center space-x-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                <span>Save Order to Register</span>
-              </button>
+            <!-- Prev / Next Record Navigator & Save / Edit Actions -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-4 border-t border-slate-100">
+              <!-- Left/Right Arrows for Prev & Next Entry -->
+              <div class="flex items-center justify-between sm:justify-start space-x-2 bg-slate-100/80 p-1.5 rounded-xl border border-slate-200">
+                <button type="button" id="btn-order-prev" class="px-3 py-1.5 text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 rounded-lg shadow-sm border border-slate-200 flex items-center space-x-1 transition-all disabled:opacity-40">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                  <span>Prev</span>
+                </button>
+                <span id="order-nav-badge" class="text-xs font-bold text-slate-700 px-2 whitespace-nowrap">New Entry</span>
+                <button type="button" id="btn-order-next" class="px-3 py-1.5 text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 rounded-lg shadow-sm border border-slate-200 flex items-center space-x-1 transition-all disabled:opacity-40">
+                  <span>Next</span>
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+                <button type="button" id="btn-order-new" class="px-2.5 py-1.5 text-xs font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors hidden">
+                  + New
+                </button>
+              </div>
+
+              <!-- Save / Edit Button -->
+              <div class="flex items-center justify-end space-x-2.5">
+                <button type="reset" id="btn-order-clear" class="px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
+                  Clear
+                </button>
+                <button type="submit" id="btn-order-submit" class="flex-1 sm:flex-none px-6 py-2.5 text-xs sm:text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-xl shadow-md shadow-blue-500/20 transition-all flex items-center justify-center space-x-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                  <span id="btn-order-submit-text">Save Order</span>
+                </button>
+              </div>
             </div>
 
           <datalist id="sellers-datalist"></datalist><datalist id="buyers-datalist"></datalist>
@@ -311,7 +341,7 @@
           <!-- =========================== -->
           <!-- FORM B: RECORD PAYMENT ONLY -->
           <!-- =========================== -->
-          <form id="form-payment" class="space-y-6 hidden">
+          <form id="form-payment" novalidate class="space-y-6 hidden">
             
             <!-- Type Selector: From Buyer vs To Seller -->
             <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl">
@@ -385,15 +415,34 @@
 
             </div>
 
-            <!-- Form Actions -->
-            <div class="flex items-center justify-end space-x-3 pt-3 border-t border-slate-100">
-              <button type="reset" class="px-5 py-2.5 text-sm font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
-                Clear Fields
-              </button>
-              <button type="submit" class="px-7 py-2.5 text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 rounded-xl shadow-md shadow-emerald-500/20 transition-all flex items-center space-x-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <span>Record & Update Ledger</span>
-              </button>
+            <!-- Prev / Next Record Navigator & Save / Edit Actions -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-4 border-t border-slate-100">
+              <!-- Left/Right Arrows for Prev & Next Payment -->
+              <div class="flex items-center justify-between sm:justify-start space-x-2 bg-slate-100/80 p-1.5 rounded-xl border border-slate-200">
+                <button type="button" id="btn-pay-prev" class="px-3 py-1.5 text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 rounded-lg shadow-sm border border-slate-200 flex items-center space-x-1 transition-all disabled:opacity-40">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                  <span>Prev</span>
+                </button>
+                <span id="pay-nav-badge" class="text-xs font-bold text-slate-700 px-2 whitespace-nowrap">New Payment</span>
+                <button type="button" id="btn-pay-next" class="px-3 py-1.5 text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 rounded-lg shadow-sm border border-slate-200 flex items-center space-x-1 transition-all disabled:opacity-40">
+                  <span>Next</span>
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+                <button type="button" id="btn-pay-new" class="px-2.5 py-1.5 text-xs font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-lg transition-colors hidden">
+                  + New
+                </button>
+              </div>
+
+              <!-- Save / Edit Button -->
+              <div class="flex items-center justify-end space-x-2.5">
+                <button type="reset" id="btn-pay-clear" class="px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
+                  Clear
+                </button>
+                <button type="submit" id="btn-pay-submit" class="flex-1 sm:flex-none px-6 py-2.5 text-xs sm:text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 rounded-xl shadow-md shadow-emerald-500/20 transition-all flex items-center justify-center space-x-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                  <span id="btn-pay-submit-text">Save Payment</span>
+                </button>
+              </div>
             </div>
 
           </form>
@@ -401,29 +450,7 @@
         </div>
       </div>
 
-      <!-- Quick Recent Transactions Feed -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
-        <div class="flex justify-between items-center mb-4">
-          <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Latest Activity in Register</h3>
-          <span class="text-xs text-slate-500">Last 5 recorded transactions</span>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
-            <thead>
-              <tr class="text-slate-400 border-b border-slate-100 uppercase font-semibold">
-                <th class="pb-2.5">Type</th>
-                <th class="pb-2.5">Date</th>
-                <th class="pb-2.5">Party / Details</th>
-                <th class="pb-2.5 text-right">Amount</th>
-                <th class="pb-2.5 text-center">Status</th>
-              </tr>
-            </thead>
-            <tbody id="quick-activity-tbody" class="divide-y divide-slate-100 font-medium">
-              <!-- Rendered via JS -->
-            </tbody>
-          </table>
-        </div>
-      </div>
+
 
     </section>
 
@@ -1042,13 +1069,13 @@
     ];
 
     const DEFAULT_ORDERS = [
-      { id: 'ORD-1001', date: '2026-11-08', seller: 'Mahaveer Wholesale Mart', buyer: 'Sharma Kirana Store', item: 'Basmati Rice (50kg Bag)', qty: 40, rate: 1950, amount: 78000, paid: 78000, paidToSeller: 78000, remarks: 'Delivered in full' },
-      { id: 'ORD-1002', date: '2026-11-08', seller: 'Sri Ganesh Trading Co.', buyer: 'Balaji Provision', item: 'Refined Oil (15L Tin)', qty: 30, rate: 1620, amount: 48600, paid: 25000, paidToSeller: 25000, remarks: 'Partial payment received' },
-      { id: 'ORD-1003', date: '2026-11-09', seller: 'Apex Grain Distributors', buyer: 'Krishna Retail', item: 'Wheat Flour / Atta (50kg)', qty: 60, rate: 1450, amount: 87000, paid: 0, paidToSeller: 0, remarks: '7 days credit term' },
-      { id: 'ORD-1004', date: '2026-11-09', seller: 'Mahaveer Wholesale Mart', buyer: 'Agarwal Daily Needs', item: 'Sugar M-30 (50kg Bag)', qty: 25, rate: 2100, amount: 52500, paid: 52500, paidToSeller: 50000, remarks: 'Broker float ₹2,500' },
-      { id: 'ORD-1005', date: '2026-11-10', seller: 'Sri Ganesh Trading Co.', buyer: 'Sharma Kirana Store', item: 'Spices Assorted Box', qty: 15, rate: 3200, amount: 48000, paid: 20000, paidToSeller: 20000, remarks: 'Balance promised Friday' },
-      { id: 'ORD-1006', date: '2026-11-10', seller: 'Apex Grain Distributors', buyer: 'Balaji Provision', item: 'Toor Dal Premium (50kg)', qty: 20, rate: 4600, amount: 92000, paid: 40000, paidToSeller: 40000, remarks: 'Half paid' },
-      { id: 'ORD-1007', date: '2026-11-11', seller: 'Mahaveer Wholesale Mart', buyer: 'Krishna Retail', item: 'Basmati Rice (50kg Bag)', qty: 30, rate: 1950, amount: 58500, paid: 0, paidToSeller: 0, remarks: 'Today morning dispatch' }
+      { id: 'ORD-1001', date: '2026-11-08', seller: 'Mahaveer Wholesale Mart', buyer: 'Sharma Kirana Store', item: 'Basmati Rice (50kg Bag)', qty: 40, unit: 'Bag', rate: 1950, amount: 78000, paid: 78000, paidToSeller: 78000, remarks: 'Delivered in full' },
+      { id: 'ORD-1002', date: '2026-11-08', seller: 'Sri Ganesh Trading Co.', buyer: 'Balaji Provision', item: 'Refined Oil (15L Tin)', qty: 30, unit: 'Tin', rate: 1620, amount: 48600, paid: 25000, paidToSeller: 25000, remarks: 'Partial payment received' },
+      { id: 'ORD-1003', date: '2026-11-09', seller: 'Apex Grain Distributors', buyer: 'Krishna Retail', item: 'Wheat Flour / Atta (50kg)', qty: 60, unit: 'Bag', rate: 1450, amount: 87000, paid: 0, paidToSeller: 0, remarks: '7 days credit term' },
+      { id: 'ORD-1004', date: '2026-11-09', seller: 'Mahaveer Wholesale Mart', buyer: 'Agarwal Daily Needs', item: 'Sugar M-30 (50kg Bag)', qty: 25, unit: 'Bag', rate: 2100, amount: 52500, paid: 52500, paidToSeller: 50000, remarks: 'Broker float ₹2,500' },
+      { id: 'ORD-1005', date: '2026-11-10', seller: 'Sri Ganesh Trading Co.', buyer: 'Sharma Kirana Store', item: 'Spices Assorted Box', qty: 15, unit: 'Box', rate: 3200, amount: 48000, paid: 20000, paidToSeller: 20000, remarks: 'Balance promised Friday' },
+      { id: 'ORD-1006', date: '2026-11-10', seller: 'Apex Grain Distributors', buyer: 'Balaji Provision', item: 'Toor Dal Premium (50kg)', qty: 20, unit: 'Bag', rate: 4600, amount: 92000, paid: 40000, paidToSeller: 40000, remarks: 'Half paid' },
+      { id: 'ORD-1007', date: '2026-11-11', seller: 'Mahaveer Wholesale Mart', buyer: 'Krishna Retail', item: 'Basmati Rice (50kg Bag)', qty: 30, unit: 'Bag', rate: 1950, amount: 58500, paid: 0, paidToSeller: 0, remarks: 'Today morning dispatch' }
     ];
 
     const DEFAULT_PAYMENTS = [
@@ -1072,6 +1099,8 @@
       syncQueue: [],
       sheetWebAppUrl: '',
       isSyncing: false,
+      editingOrderIndex: -1,
+      editingPaymentIndex: -1,
       activeView: 'entry',
       selectedBuyerId: null,
       buyerSubTab: 'orders'
@@ -1432,40 +1461,6 @@
       orderSelect.innerHTML = options;
     }
 
-    // Render Quick Activity Table on Entry Tab
-    function renderQuickActivity() {
-      const tbody = document.getElementById('quick-activity-tbody');
-      if (!tbody) return;
-
-      const recentOrders = [...state.orders].reverse().slice(0, 5);
-      if (recentOrders.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-slate-400">No transactions recorded yet.</td></tr>';
-        return;
-      }
-
-      tbody.innerHTML = recentOrders.map(o => {
-        const due = o.amount - (o.paid || 0);
-        const statusBadge = due <= 0 
-          ? '<span class="bg-emerald-100 text-emerald-800 font-semibold px-2 py-0.5 rounded-full text-[10px]">Paid</span>'
-          : o.paid > 0
-            ? '<span class="bg-amber-100 text-amber-800 font-semibold px-2 py-0.5 rounded-full text-[10px]">Partial</span>'
-            : '<span class="bg-rose-100 text-rose-800 font-semibold px-2 py-0.5 rounded-full text-[10px]">Pending</span>';
-
-        return `
-          <tr class="hover:bg-slate-50 transition-colors">
-            <td class="py-2.5 font-bold text-blue-700">Order</td>
-            <td class="py-2.5 text-slate-500">${o.date}</td>
-            <td class="py-2.5">
-              <span class="font-bold text-slate-800">${o.buyer}</span>
-              <span class="text-slate-400 block text-[11px]">from ${o.seller} • ${o.item}</span>
-            </td>
-            <td class="py-2.5 text-right font-bold text-slate-900">${formatINR(o.amount)}</td>
-            <td class="py-2.5 text-center">${statusBadge}</td>
-          </tr>
-        `;
-      }).join('');
-    }
-
     // Render Buyers All Table & KPI Stats
     function renderBuyersAll() {
       const buyers = state.parties.filter(p => p.type === 'Retailer');
@@ -1581,7 +1576,7 @@
                 <td class="py-3 px-4 font-semibold text-slate-800">${o.seller}</td>
                 <td class="py-3 px-4">
                   <span class="font-medium text-slate-900 block">${o.item}</span>
-                  <span class="text-xs text-slate-400">${o.qty} units</span>
+                  <span class="text-xs text-slate-400">${o.qty} ${o.unit || 'Units'}</span>
                 </td>
                 <td class="py-3 px-4 text-right text-slate-700">${formatINR(o.rate)}</td>
                 <td class="py-3 px-4 text-right font-bold text-slate-900">${formatINR(o.amount)}</td>
@@ -1688,7 +1683,7 @@
             <td class="py-3 px-4 font-semibold text-slate-800">${o.seller}</td>
             <td class="py-3 px-4 font-semibold text-slate-900">${o.buyer}</td>
             <td class="py-3 px-4 text-slate-700">${o.item}</td>
-            <td class="py-3 px-4 text-right font-medium">${o.qty}</td>
+            <td class="py-3 px-4 text-right font-medium">${o.qty} <span class="text-xs text-slate-400">${o.unit || ''}</span></td>
             <td class="py-3 px-4 text-right text-slate-700">${formatINR(o.rate)}</td>
             <td class="py-3 px-4 text-right font-bold text-slate-900">${formatINR(o.amount)}</td>
             <td class="py-3 px-4 text-right font-semibold text-emerald-600">${formatINR(o.paid || 0)}</td>
@@ -1793,7 +1788,6 @@
       updateSyncStatusUI();
       updateHeaderStats();
       populateDatalistsAndDropdowns();
-      renderQuickActivity();
       renderBuyersAll();
       renderSpecificBuyer();
       renderSellers();
@@ -1879,13 +1873,30 @@
         });
       });
 
+      // Dynamic Rate label based on selected Unit
+      const orderUnitSelect = document.getElementById('order-unit');
+      const orderRateLabel = document.getElementById('order-rate-label');
+      function updateRateLabel() {
+        if (orderUnitSelect && orderRateLabel) {
+          orderRateLabel.textContent = `Rate per ${orderUnitSelect.value} (₹) *`;
+        }
+      }
+      if (orderUnitSelect) {
+        orderUnitSelect.addEventListener('change', updateRateLabel);
+      }
+
       // Quick-pick Commodity Chips
       document.querySelectorAll('.btn-quick-item').forEach(chip => {
         chip.addEventListener('click', (e) => {
           const itemInput = document.getElementById('order-item');
+          const chipUnit = e.currentTarget.getAttribute('data-unit');
           if (itemInput) {
             itemInput.value = e.currentTarget.getAttribute('data-item');
             itemInput.focus();
+          }
+          if (chipUnit && orderUnitSelect) {
+            orderUnitSelect.value = chipUnit;
+            updateRateLabel();
           }
         });
       });
@@ -2023,14 +2034,53 @@
         }
         const item = document.getElementById('order-item').value.trim();
         const qty = parseFloat(qtyInput.value);
+        const unit = document.getElementById('order-unit')?.value || 'Kg';
         const rate = parseFloat(rateInput.value);
         const initialPayment = parseFloat(document.getElementById('order-initial-payment').value) || 0;
         const initialPayout = parseFloat(document.getElementById('order-initial-payout').value) || 0;
         const remarks = document.getElementById('order-remarks').value.trim();
         const amount = qty * rate;
 
-        if (!sellerName || !buyerName || !item || isNaN(qty) || isNaN(rate)) {
-          showToast('Please fill all required order fields', 'error');
+        // Clear previous error highlights
+        ['order-date', 'order-seller', 'order-seller-new', 'order-buyer', 'order-buyer-new', 'order-item', 'order-qty', 'order-rate'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.classList.remove('border-rose-500', 'ring-2', 'ring-rose-300');
+        });
+
+        function flagFieldError(elId, msg) {
+          const el = document.getElementById(elId);
+          if (el) {
+            el.classList.add('border-rose-500', 'ring-2', 'ring-rose-300');
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            el.focus();
+          }
+          showToast(msg, 'error');
+        }
+
+        if (!date) {
+          flagFieldError('order-date', 'Please choose an Order Date');
+          return;
+        }
+        if (!sellerName) {
+          const targetId = sellerSelect.value === '__NEW__' ? 'order-seller-new' : 'order-seller';
+          flagFieldError(targetId, 'Please select a Seller (Wholesaler) from the list');
+          return;
+        }
+        if (!buyerName) {
+          const targetId = buyerSelect.value === '__NEW__' ? 'order-buyer-new' : 'order-buyer';
+          flagFieldError(targetId, 'Please select a Buyer (Retailer) from the list');
+          return;
+        }
+        if (!item) {
+          flagFieldError('order-item', 'Please enter or tap a Commodity / Item');
+          return;
+        }
+        if (isNaN(qty) || qty <= 0) {
+          flagFieldError('order-qty', 'Please enter a valid Quantity');
+          return;
+        }
+        if (isNaN(rate) || rate <= 0) {
+          flagFieldError('order-rate', 'Please enter a valid Rate per unit');
           return;
         }
 
@@ -2046,64 +2096,78 @@
           queueForSheetSync('party', newBuyerObj);
         }
 
-        const newOrderId = 'ORD-' + (1001 + state.orders.length);
-        const newOrder = {
-          id: newOrderId,
-          date,
-          seller: sellerName,
-          buyer: buyerName,
-          item,
-          qty,
-          rate,
-          amount,
-          paid: initialPayment,
-          paidToSeller: initialPayout,
-          remarks
-        };
+        if (state.editingOrderIndex >= 0 && state.orders[state.editingOrderIndex]) {
+          // EDIT EXISTING ORDER
+          const existing = state.orders[state.editingOrderIndex];
+          existing.date = date;
+          existing.seller = sellerName;
+          existing.buyer = buyerName;
+          existing.item = item;
+          existing.qty = qty;
+          existing.unit = unit;
+          existing.rate = rate;
+          existing.amount = amount;
+          existing.paid = initialPayment;
+          existing.paidToSeller = initialPayout;
+          existing.remarks = remarks;
 
-        state.orders.push(newOrder);
-        queueForSheetSync('order', newOrder);
-
-        // If payment was made on spot, log receipt
-        if (initialPayment > 0) {
-          const spotPay = {
-            id: 'PAY-' + (101 + state.payments.length),
+          saveState();
+          resetOrderToNewMode();
+          showToast(`Order ${existing.id} updated! Amount: ${formatINR(amount)}`);
+        } else {
+          // SAVE NEW ORDER
+          const newOrderId = 'ORD-' + (1001 + state.orders.length);
+          const newOrder = {
+            id: newOrderId,
             date,
-            party: buyerName,
-            direction: 'from_buyer',
-            amount: initialPayment,
-            mode: 'Spot Cash / Advance',
-            linkedOrder: newOrderId,
-            ref: 'Advance on order creation'
+            seller: sellerName,
+            buyer: buyerName,
+            item,
+            qty,
+            unit,
+            rate,
+            amount,
+            paid: initialPayment,
+            paidToSeller: initialPayout,
+            remarks
           };
-          state.payments.push(spotPay);
-          queueForSheetSync('payment', spotPay);
-        }
-        if (initialPayout > 0) {
-          const spotPayout = {
-            id: 'PAY-' + (101 + state.payments.length),
-            date,
-            party: sellerName,
-            direction: 'to_seller',
-            amount: initialPayout,
-            mode: 'Immediate Payout',
-            linkedOrder: newOrderId,
-            ref: 'Disbursed against new order'
-          };
-          state.payments.push(spotPayout);
-          queueForSheetSync('payment', spotPayout);
-        }
 
-        saveState();
-        formOrder.reset();
-        document.getElementById('order-date').value = todayISO;
-        amountDisplay.textContent = '₹0';
-        newSellerWrapper.classList.add('hidden');
-        newBuyerWrapper.classList.add('hidden');
-        document.getElementById('btn-toggle-new-seller-text').textContent = '+ New Wholesaler';
-        document.getElementById('btn-toggle-new-buyer-text').textContent = '+ New Retailer';
-        populateDatalistsAndDropdowns();
-        showToast(`Order ${newOrderId} saved successfully! Amount: ${formatINR(amount)}`);
+          state.orders.push(newOrder);
+          queueForSheetSync('order', newOrder);
+
+          if (initialPayment > 0) {
+            const spotPay = {
+              id: 'PAY-' + (101 + state.payments.length),
+              date,
+              party: buyerName,
+              direction: 'from_buyer',
+              amount: initialPayment,
+              mode: 'Spot Cash / Advance',
+              linkedOrder: newOrderId,
+              ref: 'Advance on order creation'
+            };
+            state.payments.push(spotPay);
+            queueForSheetSync('payment', spotPay);
+          }
+          if (initialPayout > 0) {
+            const spotPayout = {
+              id: 'PAY-' + (101 + state.payments.length),
+              date,
+              party: sellerName,
+              direction: 'to_seller',
+              amount: initialPayout,
+              mode: 'Immediate Payout',
+              linkedOrder: newOrderId,
+              ref: 'Disbursed against new order'
+            };
+            state.payments.push(spotPayout);
+            queueForSheetSync('payment', spotPayout);
+          }
+
+          saveState();
+          resetOrderToNewMode();
+          showToast(`Order ${newOrderId} saved successfully! Amount: ${formatINR(amount)}`);
+        }
       });
 
       // Payment Form Direction Radios change
@@ -2136,66 +2200,110 @@
         const linkedOrderId = document.getElementById('pay-linked-order').value;
         const ref = document.getElementById('pay-ref').value.trim();
 
-        if (!partyName || isNaN(amount) || amount <= 0) {
-          showToast('Please select party and enter valid payment amount', 'error');
+        ['pay-date', 'pay-party', 'pay-amount'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.classList.remove('border-rose-500', 'ring-2', 'ring-rose-300');
+        });
+
+        if (!date) {
+          const el = document.getElementById('pay-date');
+          if (el) { el.classList.add('border-rose-500', 'ring-2', 'ring-rose-300'); el.focus(); }
+          showToast('Please choose a Payment Date', 'error');
+          return;
+        }
+        if (!partyName) {
+          const el = document.getElementById('pay-party');
+          if (el) { el.classList.add('border-rose-500', 'ring-2', 'ring-rose-300'); el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.focus(); }
+          showToast('Please select a Buyer or Wholesaler from the list', 'error');
+          return;
+        }
+        if (isNaN(amount) || amount <= 0) {
+          const el = document.getElementById('pay-amount');
+          if (el) { el.classList.add('border-rose-500', 'ring-2', 'ring-rose-300'); el.focus(); }
+          showToast('Please enter a valid Payment Amount', 'error');
           return;
         }
 
-        const newPayId = 'PAY-' + (101 + state.payments.length);
-        const newPayObj = {
-          id: newPayId,
-          date,
-          party: partyName,
-          direction,
-          amount,
-          mode,
-          linkedOrder: linkedOrderId || 'General Balance',
-          ref
-        };
-        state.payments.push(newPayObj);
-        queueForSheetSync('payment', newPayObj);
+        if (state.editingPaymentIndex >= 0 && state.payments[state.editingPaymentIndex]) {
+          // EDIT EXISTING PAYMENT
+          const existingPay = state.payments[state.editingPaymentIndex];
+          const oldAmount = Number(existingPay.amount) || 0;
+          const delta = amount - oldAmount;
 
-        // Apply payment to orders
-        if (direction === 'from_buyer') {
-          if (linkedOrderId) {
-            const ord = state.orders.find(o => o.id === linkedOrderId);
-            if (ord) ord.paid = (ord.paid || 0) + amount;
-          } else {
-            // Apply across unpaid orders of this buyer (FIFO)
-            let remaining = amount;
-            for (let ord of state.orders.filter(o => o.buyer === partyName)) {
-              const due = ord.amount - (ord.paid || 0);
-              if (due > 0 && remaining > 0) {
-                const take = Math.min(due, remaining);
-                ord.paid = (ord.paid || 0) + take;
-                remaining -= take;
+          if (existingPay.linkedOrder && existingPay.linkedOrder !== 'General Balance') {
+            const ord = state.orders.find(o => o.id === existingPay.linkedOrder);
+            if (ord) {
+              if (existingPay.direction === 'from_buyer') {
+                ord.paid = Math.max(0, (ord.paid || 0) + delta);
+              } else {
+                ord.paidToSeller = Math.max(0, (ord.paidToSeller || 0) + delta);
               }
             }
           }
+
+          existingPay.date = date;
+          existingPay.direction = direction;
+          existingPay.party = partyName;
+          existingPay.amount = amount;
+          existingPay.mode = mode;
+          existingPay.linkedOrder = linkedOrderId || 'General Balance';
+          existingPay.ref = ref;
+
+          saveState();
+          resetPaymentToNewMode();
+          showToast(`Payment ${existingPay.id} updated to ${formatINR(amount)}`);
         } else {
-          // Paid to seller
-          if (linkedOrderId) {
-            const ord = state.orders.find(o => o.id === linkedOrderId);
-            if (ord) ord.paidToSeller = (ord.paidToSeller || 0) + amount;
+          // SAVE NEW PAYMENT
+          const newPayId = 'PAY-' + (101 + state.payments.length);
+          const newPayObj = {
+            id: newPayId,
+            date,
+            party: partyName,
+            direction,
+            amount,
+            mode,
+            linkedOrder: linkedOrderId || 'General Balance',
+            ref
+          };
+          state.payments.push(newPayObj);
+          queueForSheetSync('payment', newPayObj);
+
+          if (direction === 'from_buyer') {
+            if (linkedOrderId) {
+              const ord = state.orders.find(o => o.id === linkedOrderId);
+              if (ord) ord.paid = (ord.paid || 0) + amount;
+            } else {
+              let remaining = amount;
+              for (let ord of state.orders.filter(o => o.buyer === partyName)) {
+                const due = ord.amount - (ord.paid || 0);
+                if (due > 0 && remaining > 0) {
+                  const take = Math.min(due, remaining);
+                  ord.paid = (ord.paid || 0) + take;
+                  remaining -= take;
+                }
+              }
+            }
           } else {
-            // FIFO apply to seller supplies
-            let remaining = amount;
-            for (let ord of state.orders.filter(o => o.seller === partyName)) {
-              const due = ord.amount - (ord.paidToSeller || 0);
-              if (due > 0 && remaining > 0) {
-                const take = Math.min(due, remaining);
-                ord.paidToSeller = (ord.paidToSeller || 0) + take;
-                remaining -= take;
+            if (linkedOrderId) {
+              const ord = state.orders.find(o => o.id === linkedOrderId);
+              if (ord) ord.paidToSeller = (ord.paidToSeller || 0) + amount;
+            } else {
+              let remaining = amount;
+              for (let ord of state.orders.filter(o => o.seller === partyName)) {
+                const due = ord.amount - (ord.paidToSeller || 0);
+                if (due > 0 && remaining > 0) {
+                  const take = Math.min(due, remaining);
+                  ord.paidToSeller = (ord.paidToSeller || 0) + take;
+                  remaining -= take;
+                }
               }
             }
           }
-        }
 
-        saveState();
-        formPayment.reset();
-        document.getElementById('pay-date').value = todayISO;
-        updatePaymentPartyDropdown();
-        showToast(`Payment of ${formatINR(amount)} recorded for ${partyName}`);
+          saveState();
+          resetPaymentToNewMode();
+          showToast(`Payment of ${formatINR(amount)} recorded for ${partyName}`);
+        }
       });
 
       // Buyers Mode Buttons (All vs Specific)
@@ -2448,8 +2556,16 @@
           res.rate = parseFloat(mRate[1]) || 0;
         }
 
-        // 4. Match Quantity
-        const mQty = clean.match(/(\d+)\s*(?:बोरी|बैग|टिन|पेटी|किलो|क्विंटल|कार्टन|packet|bags|units|boxes|box|kg)/);
+        // 4. Match Quantity & Unit
+        if (clean.includes('किलो') || clean.includes('kg')) res.unit = 'Kg';
+        else if (clean.includes('टिन') || clean.includes('tin')) res.unit = 'Tin';
+        else if (clean.includes('पीस') || clean.includes('piece') || clean.includes('नग')) res.unit = 'Piece';
+        else if (clean.includes('बोरी') || clean.includes('बैग') || clean.includes('bag')) res.unit = 'Bag';
+        else if (clean.includes('पेटी') || clean.includes('बॉक्स') || clean.includes('box') || clean.includes('कार्टन')) res.unit = 'Box';
+        else if (clean.includes('क्विंटल') || clean.includes('quintal')) res.unit = 'Quintal';
+        else if (clean.includes('लीटर') || clean.includes('litre') || clean.includes('liter')) res.unit = 'Litre';
+
+        const mQty = clean.match(/(\d+)\s*(?:बोरी|बैग|टिन|पेटी|किलो|क्विंटल|कार्टन|पीस|नग|लीटर|packet|bags|units|boxes|box|kg|piece|tin|litre)/);
         if (mQty) {
           res.qty = parseFloat(mQty[1]) || 0;
         } else {
@@ -2671,9 +2787,13 @@
             }
           }
 
-          // Apply Item, Qty, Rate
+          // Apply Item, Qty, Unit, Rate
           if (res.item) document.getElementById('order-item').value = res.item;
           if (res.qty) qtyInput.value = res.qty;
+          if (res.unit && orderUnitSelect) {
+            orderUnitSelect.value = res.unit;
+            updateRateLabel();
+          }
           if (res.rate) rateInput.value = res.rate;
           recalculateOrderTotal();
 
@@ -2777,13 +2897,207 @@
         syncPendingQueue();
       }
 
+      // ==========================================
+      // PREV / NEXT RECORD NAVIGATOR & EDIT MODE
+      // ==========================================
+      const btnOrderPrev = document.getElementById('btn-order-prev');
+      const btnOrderNext = document.getElementById('btn-order-next');
+      const btnOrderNew = document.getElementById('btn-order-new');
+      const orderNavBadge = document.getElementById('order-nav-badge');
+      const btnOrderSubmit = document.getElementById('btn-order-submit');
+      const btnOrderSubmitText = document.getElementById('btn-order-submit-text');
+
+      function updateOrderNavControls() {
+        const total = state.orders.length;
+        if (state.editingOrderIndex === -1) {
+          orderNavBadge.textContent = 'New Entry';
+          btnOrderPrev.disabled = total === 0;
+          btnOrderNext.disabled = true;
+          btnOrderNew.classList.add('hidden');
+          btnOrderSubmit.className = 'flex-1 sm:flex-none px-6 py-2.5 text-xs sm:text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-xl shadow-md shadow-blue-500/20 transition-all flex items-center justify-center space-x-2';
+          btnOrderSubmitText.textContent = 'Save Order';
+        } else {
+          const ord = state.orders[state.editingOrderIndex];
+          orderNavBadge.textContent = `${ord.id} (${state.editingOrderIndex + 1}/${total})`;
+          btnOrderPrev.disabled = state.editingOrderIndex <= 0;
+          btnOrderNext.disabled = false;
+          btnOrderNew.classList.remove('hidden');
+          btnOrderSubmit.className = 'flex-1 sm:flex-none px-6 py-2.5 text-xs sm:text-sm font-bold text-white bg-amber-600 hover:bg-amber-700 active:bg-amber-800 rounded-xl shadow-md shadow-amber-500/20 transition-all flex items-center justify-center space-x-2';
+          btnOrderSubmitText.textContent = 'Edit / Update Order';
+        }
+      }
+
+      function loadOrderIntoForm(idx) {
+        const ord = state.orders[idx];
+        if (!ord) return;
+        state.editingOrderIndex = idx;
+
+        document.getElementById('order-date').value = ord.date || todayISO;
+        newSellerWrapper.classList.add('hidden');
+        newBuyerWrapper.classList.add('hidden');
+        document.getElementById('btn-toggle-new-seller-text').textContent = '+ New Wholesaler';
+        document.getElementById('btn-toggle-new-buyer-text').textContent = '+ New Retailer';
+
+        sellerSelect.value = ord.seller;
+        buyerSelect.value = ord.buyer;
+        document.getElementById('order-item').value = ord.item || '';
+        qtyInput.value = ord.qty || '';
+        if (orderUnitSelect && ord.unit) {
+          orderUnitSelect.value = ord.unit;
+          updateRateLabel();
+        }
+        rateInput.value = ord.rate || '';
+        recalculateOrderTotal();
+
+        document.getElementById('order-initial-payment').value = ord.paid || 0;
+        document.getElementById('order-initial-payout').value = ord.paidToSeller || 0;
+        document.getElementById('order-remarks').value = ord.remarks || '';
+        if ((ord.paid > 0 || ord.paidToSeller > 0 || ord.remarks) && optionalOrderFields) {
+          optionalOrderFields.classList.remove('hidden');
+        }
+
+        updateOrderNavControls();
+      }
+
+      function resetOrderToNewMode() {
+        state.editingOrderIndex = -1;
+        formOrder.reset();
+        document.getElementById('order-date').value = todayISO;
+        amountDisplay.textContent = '₹0';
+        newSellerWrapper.classList.add('hidden');
+        newBuyerWrapper.classList.add('hidden');
+        document.getElementById('btn-toggle-new-seller-text').textContent = '+ New Wholesaler';
+        document.getElementById('btn-toggle-new-buyer-text').textContent = '+ New Retailer';
+        if (optionalOrderFields) optionalOrderFields.classList.add('hidden');
+        populateDatalistsAndDropdowns();
+        updateOrderNavControls();
+      }
+
+      btnOrderPrev.addEventListener('click', () => {
+        if (state.orders.length === 0) return;
+        if (state.editingOrderIndex === -1) {
+          loadOrderIntoForm(state.orders.length - 1);
+        } else if (state.editingOrderIndex > 0) {
+          loadOrderIntoForm(state.editingOrderIndex - 1);
+        }
+      });
+
+      btnOrderNext.addEventListener('click', () => {
+        if (state.editingOrderIndex === -1) return;
+        if (state.editingOrderIndex < state.orders.length - 1) {
+          loadOrderIntoForm(state.editingOrderIndex + 1);
+        } else {
+          resetOrderToNewMode();
+        }
+      });
+
+      btnOrderNew.addEventListener('click', resetOrderToNewMode);
+      document.getElementById('btn-order-clear').addEventListener('click', (e) => {
+        e.preventDefault();
+        resetOrderToNewMode();
+      });
+
+      // Payment Prev / Next Navigator
+      const btnPayPrev = document.getElementById('btn-pay-prev');
+      const btnPayNext = document.getElementById('btn-pay-next');
+      const btnPayNew = document.getElementById('btn-pay-new');
+      const payNavBadge = document.getElementById('pay-nav-badge');
+      const btnPaySubmit = document.getElementById('btn-pay-submit');
+      const btnPaySubmitText = document.getElementById('btn-pay-submit-text');
+
+      function updatePaymentNavControls() {
+        const total = state.payments.length;
+        if (state.editingPaymentIndex === -1) {
+          payNavBadge.textContent = 'New Payment';
+          btnPayPrev.disabled = total === 0;
+          btnPayNext.disabled = true;
+          btnPayNew.classList.add('hidden');
+          btnPaySubmit.className = 'flex-1 sm:flex-none px-6 py-2.5 text-xs sm:text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 rounded-xl shadow-md shadow-emerald-500/20 transition-all flex items-center justify-center space-x-2';
+          btnPaySubmitText.textContent = 'Save Payment';
+        } else {
+          const pay = state.payments[state.editingPaymentIndex];
+          payNavBadge.textContent = `${pay.id} (${state.editingPaymentIndex + 1}/${total})`;
+          btnPayPrev.disabled = state.editingPaymentIndex <= 0;
+          btnPayNext.disabled = false;
+          btnPayNew.classList.remove('hidden');
+          btnPaySubmit.className = 'flex-1 sm:flex-none px-6 py-2.5 text-xs sm:text-sm font-bold text-white bg-amber-600 hover:bg-amber-700 active:bg-amber-800 rounded-xl shadow-md shadow-amber-500/20 transition-all flex items-center justify-center space-x-2';
+          btnPaySubmitText.textContent = 'Edit / Update Payment';
+        }
+      }
+
+      function loadPaymentIntoForm(idx) {
+        const pay = state.payments[idx];
+        if (!pay) return;
+        state.editingPaymentIndex = idx;
+
+        document.getElementById('pay-date').value = pay.date || todayISO;
+        const radio = document.querySelector(`input[name="payment-direction"][value="${pay.direction || 'from_buyer'}"]`);
+        if (radio) {
+          radio.checked = true;
+          radio.dispatchEvent(new Event('change'));
+        }
+        document.getElementById('pay-party').value = pay.party || '';
+        updateLinkedOrdersDropdown();
+        document.getElementById('pay-amount').value = pay.amount || '';
+        document.getElementById('pay-mode').value = pay.mode || 'UPI / PhonePe / GPay';
+        document.getElementById('pay-linked-order').value = pay.linkedOrder && pay.linkedOrder !== 'General Balance' ? pay.linkedOrder : '';
+        document.getElementById('pay-ref').value = pay.ref || '';
+
+        updatePaymentNavControls();
+      }
+
+      function resetPaymentToNewMode() {
+        state.editingPaymentIndex = -1;
+        formPayment.reset();
+        document.getElementById('pay-date').value = todayISO;
+        updatePaymentPartyDropdown();
+        updatePaymentNavControls();
+      }
+
+      btnPayPrev.addEventListener('click', () => {
+        if (state.payments.length === 0) return;
+        if (state.editingPaymentIndex === -1) {
+          loadPaymentIntoForm(state.payments.length - 1);
+        } else if (state.editingPaymentIndex > 0) {
+          loadPaymentIntoForm(state.editingPaymentIndex - 1);
+        }
+      });
+
+      btnPayNext.addEventListener('click', () => {
+        if (state.editingPaymentIndex === -1) return;
+        if (state.editingPaymentIndex < state.payments.length - 1) {
+          loadPaymentIntoForm(state.editingPaymentIndex + 1);
+        } else {
+          resetPaymentToNewMode();
+        }
+      });
+
+      btnPayNew.addEventListener('click', resetPaymentToNewMode);
+      document.getElementById('btn-pay-clear').addEventListener('click', (e) => {
+        e.preventDefault();
+        resetPaymentToNewMode();
+      });
+
+      updateOrderNavControls();
+      updatePaymentNavControls();
+
+      // Auto-clear red error highlights when user edits a field
+      ['order-date', 'order-seller', 'order-seller-new', 'order-buyer', 'order-buyer-new', 'order-item', 'order-qty', 'order-rate', 'pay-date', 'pay-party', 'pay-amount'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          const clearErr = () => el.classList.remove('border-rose-500', 'ring-2', 'ring-rose-300');
+          el.addEventListener('input', clearErr);
+          el.addEventListener('change', clearErr);
+        }
+      });
+
       // Export to CSV
       document.getElementById('btn-export-csv').addEventListener('click', () => {
         let csv = 'Order ID,Date,Seller (Wholesaler),Buyer (Retailer),Item,Quantity,Rate,Amount,Payment Received,Retailer Due,Status,Remarks\n';
         state.orders.forEach(o => {
           const due = o.amount - (o.paid || 0);
           const status = due <= 0 ? 'Paid' : (o.paid > 0 ? 'Partial' : 'Pending');
-          csv += `"${o.id}","${o.date}","${o.seller}","${o.buyer}","${o.item}",${o.qty},${o.rate},${o.amount},${o.paid || 0},${due},"${status}","${o.remarks || ''}"\n`;
+          csv += `"${o.id}","${o.date}","${o.seller}","${o.buyer}","${o.item}",${o.qty} ${o.unit || ''},${o.rate},${o.amount},${o.paid || 0},${due},"${status}","${o.remarks || ''}"\n`;
         });
         const blob = new Blob([csv], { type: 'text/csv' });
         const url = URL.createObjectURL(blob);
