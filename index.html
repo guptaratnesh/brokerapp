@@ -2355,11 +2355,80 @@ function doGet(e) {
         });
       });
 
-      // Setup autocomplete for Payment Buyer & Seller fields
+      // Setup mapped-records-only autocomplete for Payment Buyer & Seller fields
       const payBuyerInput = document.getElementById('pay-buyer');
       const paySellerInput = document.getElementById('pay-seller');
-      setupAutocomplete(payBuyerInput, document.getElementById('pay-buyer-suggestions'), 'Retailer');
-      setupAutocomplete(paySellerInput, document.getElementById('pay-seller-suggestions'), 'Wholesaler');
+
+      function setupPaymentMappedAutocomplete(inputEl, dropdownEl, role) {
+        if (!inputEl || !dropdownEl) return;
+
+        function renderMappedSuggestions(query) {
+          const q = (query || '').trim().toLowerCase();
+          const isFromBuyer = document.querySelector('input[name="payment-direction"]:checked')?.value === 'from_buyer';
+          const otherVal = (role === 'Retailer' ? (paySellerInput?.value || '') : (payBuyerInput?.value || '')).trim().toLowerCase();
+
+          // Filter only orders with pending due matching the counterparty (if entered)
+          const mappedOrders = state.orders.filter(o => {
+            const due = isFromBuyer ? (o.amount - (o.paid || 0)) : (o.amount - (o.paidToSeller || 0));
+            if (due <= 0) return false;
+            if (otherVal) {
+              const otherParty = (role === 'Retailer' ? o.seller : o.buyer) || '';
+              if (otherParty.trim().toLowerCase() !== otherVal) return false;
+            }
+            return true;
+          });
+
+          // Aggregate unique mapped party names with pending order count & due total
+          const partyMap = {};
+          mappedOrders.forEach(o => {
+            const name = ((role === 'Retailer' ? o.buyer : o.seller) || '').trim();
+            if (!name) return;
+            const key = name.toLowerCase();
+            const due = isFromBuyer ? (o.amount - (o.paid || 0)) : (o.amount - (o.paidToSeller || 0));
+            if (!partyMap[key]) partyMap[key] = { name, count: 0, due: 0 };
+            partyMap[key].count += 1;
+            partyMap[key].due += due;
+          });
+
+          const matches = Object.values(partyMap).filter(p => !q || p.name.toLowerCase().includes(q));
+
+          if (matches.length === 0) {
+            dropdownEl.innerHTML = `<div class="px-3.5 py-2.5 text-xs text-slate-500">कोई बकाया मैप किया गया रिकॉर्ड नहीं मिला</div>`;
+            dropdownEl.classList.remove('hidden');
+            return;
+          }
+
+          dropdownEl.innerHTML = matches.map(p => `
+            <button type="button" class="pay-mapped-opt w-full text-left px-3.5 py-2.5 hover:bg-blue-50 border-b border-slate-100 last:border-b-0 flex items-center justify-between transition-colors" data-value="${p.name}">
+              <div>
+                <span class="text-sm font-semibold text-slate-900 block">${p.name}</span>
+                <span class="text-[11px] text-slate-500">${p.count} बकाया ऑर्डर</span>
+              </div>
+              <span class="text-xs font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full">Due: ${formatINR(p.due)}</span>
+            </button>
+          `).join('');
+          dropdownEl.classList.remove('hidden');
+
+          dropdownEl.querySelectorAll('.pay-mapped-opt').forEach(btn => {
+            btn.addEventListener('mousedown', (e) => {
+              e.preventDefault();
+              inputEl.value = btn.getAttribute('data-value');
+              inputEl.classList.remove('border-rose-500', 'ring-2', 'ring-rose-300');
+              dropdownEl.classList.add('hidden');
+              updateLinkedOrdersDropdown();
+            });
+          });
+        }
+
+        inputEl.addEventListener('focus', () => renderMappedSuggestions(inputEl.value));
+        inputEl.addEventListener('input', () => renderMappedSuggestions(inputEl.value));
+        inputEl.addEventListener('blur', () => {
+          setTimeout(() => dropdownEl.classList.add('hidden'), 150);
+        });
+      }
+
+      setupPaymentMappedAutocomplete(payBuyerInput, document.getElementById('pay-buyer-suggestions'), 'Retailer');
+      setupPaymentMappedAutocomplete(paySellerInput, document.getElementById('pay-seller-suggestions'), 'Wholesaler');
 
       if (payBuyerInput) {
         payBuyerInput.addEventListener('input', updateLinkedOrdersDropdown);
