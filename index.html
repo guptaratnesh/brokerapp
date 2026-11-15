@@ -154,7 +154,7 @@
               </div>
 
               <!-- Wholesaler (Seller) - Google-style Editable Autocomplete -->
-              <div class="relative">
+              <div class="relative col-span-2 md:col-span-1">
                 <label for="order-seller" class="block text-[11px] font-bold text-slate-700 mb-1">विक्रेता (थोक) *</label>
                 <div class="relative">
                   <input type="text" id="order-seller" autocomplete="off" placeholder="विक्रेता खोजें/लिखें" required class="w-full rounded-xl border border-slate-300 pl-2.5 pr-7 py-2 text-xs sm:text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm bg-white">
@@ -165,7 +165,7 @@
               </div>
 
               <!-- Retailer (Buyer) - Google-style Editable Autocomplete -->
-              <div class="relative">
+              <div class="relative col-span-2 md:col-span-1">
                 <label for="order-buyer" class="block text-[11px] font-bold text-slate-700 mb-1">खरीदार (फुटकर) *</label>
                 <div class="relative">
                   <input type="text" id="order-buyer" autocomplete="off" placeholder="खरीदार खोजें/लिखें" required class="w-full rounded-xl border border-slate-300 pl-2.5 pr-7 py-2 text-xs sm:text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm bg-white">
@@ -262,9 +262,12 @@
                 </button>
               </div>
 
-              <!-- Save / Edit Button -->
-              <div class="flex items-center justify-end space-x-2.5">
-                <button type="reset" id="btn-order-clear" class="px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
+              <!-- Save / Edit / Delete Buttons -->
+              <div class="flex items-center justify-end space-x-2">
+                <button type="button" id="btn-order-delete" class="hidden px-3 py-2.5 text-xs sm:text-sm font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-xl transition-colors flex items-center space-x-1">
+                  <span>🗑️ Delete</span>
+                </button>
+                <button type="reset" id="btn-order-clear" class="px-3.5 py-2.5 text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
                   Clear
                 </button>
                 <button type="submit" id="btn-order-submit" class="flex-1 sm:flex-none px-6 py-2.5 text-xs sm:text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-xl shadow-md shadow-blue-500/20 transition-all flex items-center justify-center space-x-2">
@@ -390,9 +393,12 @@
                 </button>
               </div>
 
-              <!-- Save / Edit Button -->
-              <div class="flex items-center justify-end space-x-2.5">
-                <button type="reset" id="btn-pay-clear" class="px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
+              <!-- Save / Edit / Delete Buttons -->
+              <div class="flex items-center justify-end space-x-2">
+                <button type="button" id="btn-pay-delete" class="hidden px-3 py-2.5 text-xs sm:text-sm font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-xl transition-colors flex items-center space-x-1">
+                  <span>🗑️ Delete</span>
+                </button>
+                <button type="reset" id="btn-pay-clear" class="px-3.5 py-2.5 text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
                   Clear
                 </button>
                 <button type="submit" id="btn-pay-submit" class="flex-1 sm:flex-none px-6 py-2.5 text-xs sm:text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 rounded-xl shadow-md shadow-emerald-500/20 transition-all flex items-center justify-center space-x-2">
@@ -1367,6 +1373,25 @@ function doGet(e) {
     }
 
     // Currency Formatter
+    function normalizeToISODate(val) {
+      if (!val) return new Date().toISOString().split('T')[0];
+      const s = String(val).trim();
+      if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+      if (/^\d{4}-\d{2}-\d{2}T/.test(s)) return s.slice(0, 10);
+      const dmy = s.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/);
+      if (dmy) {
+        return `${dmy[3]}-${dmy[2].padStart(2, '0')}-${dmy[1].padStart(2, '0')}`;
+      }
+      const parsed = new Date(s);
+      if (!isNaN(parsed.getTime())) {
+        const y = parsed.getFullYear();
+        const m = String(parsed.getMonth() + 1).padStart(2, '0');
+        const d = String(parsed.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+      }
+      return new Date().toISOString().split('T')[0];
+    }
+
     function formatINR(num) {
       const val = Number(num) || 0;
       return '₹' + Math.round(val).toLocaleString('en-IN');
@@ -3182,6 +3207,7 @@ function doGet(e) {
       const btnOrderNext = document.getElementById('btn-order-next');
       const btnOrderNew = document.getElementById('btn-order-new');
       const orderNavBadge = document.getElementById('order-nav-badge');
+      const btnOrderDelete = document.getElementById('btn-order-delete');
       const btnOrderSubmit = document.getElementById('btn-order-submit');
       const btnOrderSubmitText = document.getElementById('btn-order-submit-text');
 
@@ -3192,6 +3218,7 @@ function doGet(e) {
           btnOrderPrev.disabled = total === 0;
           btnOrderNext.disabled = true;
           btnOrderNew.classList.add('hidden');
+          if (btnOrderDelete) btnOrderDelete.classList.add('hidden');
           btnOrderSubmit.className = 'flex-1 sm:flex-none px-6 py-2.5 text-xs sm:text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-xl shadow-md shadow-blue-500/20 transition-all flex items-center justify-center space-x-2';
           btnOrderSubmitText.textContent = 'Save Order';
         } else {
@@ -3200,6 +3227,7 @@ function doGet(e) {
           btnOrderPrev.disabled = state.editingOrderIndex <= 0;
           btnOrderNext.disabled = false;
           btnOrderNew.classList.remove('hidden');
+          if (btnOrderDelete) btnOrderDelete.classList.remove('hidden');
           btnOrderSubmit.className = 'flex-1 sm:flex-none px-6 py-2.5 text-xs sm:text-sm font-bold text-white bg-amber-600 hover:bg-amber-700 active:bg-amber-800 rounded-xl shadow-md shadow-amber-500/20 transition-all flex items-center justify-center space-x-2';
           btnOrderSubmitText.textContent = 'Edit / Update Order';
         }
@@ -3210,7 +3238,7 @@ function doGet(e) {
         if (!ord) return;
         state.editingOrderIndex = idx;
 
-        document.getElementById('order-date').value = ord.date || todayISO;
+        document.getElementById('order-date').value = normalizeToISODate(ord.date);
         sellerInput.value = ord.seller || '';
         buyerInput.value = ord.buyer || '';
         document.getElementById('order-item').value = ord.item || '';
@@ -3263,6 +3291,33 @@ function doGet(e) {
         }
       });
 
+      if (btnOrderDelete) {
+        let ordDelArmed = false;
+        let ordDelTimer = null;
+        btnOrderDelete.addEventListener('click', () => {
+          if (state.editingOrderIndex < 0 || !state.orders[state.editingOrderIndex]) return;
+          const ord = state.orders[state.editingOrderIndex];
+          if (!ordDelArmed) {
+            ordDelArmed = true;
+            btnOrderDelete.innerHTML = '<span>Confirm Delete?</span>';
+            clearTimeout(ordDelTimer);
+            ordDelTimer = setTimeout(() => {
+              ordDelArmed = false;
+              btnOrderDelete.innerHTML = '<span>🗑️ Delete</span>';
+            }, 3000);
+            return;
+          }
+          clearTimeout(ordDelTimer);
+          ordDelArmed = false;
+          btnOrderDelete.innerHTML = '<span>🗑️ Delete</span>';
+          state.orders.splice(state.editingOrderIndex, 1);
+          queueForSheetSync('delete_order', { id: ord.id });
+          saveState();
+          resetOrderToNewMode();
+          showToast(`ऑर्डर ${ord.id} हटाया गया`, 'info');
+        });
+      }
+
       btnOrderNew.addEventListener('click', resetOrderToNewMode);
       document.getElementById('btn-order-clear').addEventListener('click', (e) => {
         e.preventDefault();
@@ -3274,6 +3329,7 @@ function doGet(e) {
       const btnPayNext = document.getElementById('btn-pay-next');
       const btnPayNew = document.getElementById('btn-pay-new');
       const payNavBadge = document.getElementById('pay-nav-badge');
+      const btnPayDelete = document.getElementById('btn-pay-delete');
       const btnPaySubmit = document.getElementById('btn-pay-submit');
       const btnPaySubmitText = document.getElementById('btn-pay-submit-text');
 
@@ -3284,6 +3340,7 @@ function doGet(e) {
           btnPayPrev.disabled = total === 0;
           btnPayNext.disabled = true;
           btnPayNew.classList.add('hidden');
+          if (btnPayDelete) btnPayDelete.classList.add('hidden');
           btnPaySubmit.className = 'flex-1 sm:flex-none px-6 py-2.5 text-xs sm:text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 rounded-xl shadow-md shadow-emerald-500/20 transition-all flex items-center justify-center space-x-2';
           btnPaySubmitText.textContent = 'Save Payment';
         } else {
@@ -3292,6 +3349,7 @@ function doGet(e) {
           btnPayPrev.disabled = state.editingPaymentIndex <= 0;
           btnPayNext.disabled = false;
           btnPayNew.classList.remove('hidden');
+          if (btnPayDelete) btnPayDelete.classList.remove('hidden');
           btnPaySubmit.className = 'flex-1 sm:flex-none px-6 py-2.5 text-xs sm:text-sm font-bold text-white bg-amber-600 hover:bg-amber-700 active:bg-amber-800 rounded-xl shadow-md shadow-amber-500/20 transition-all flex items-center justify-center space-x-2';
           btnPaySubmitText.textContent = 'Edit / Update Payment';
         }
@@ -3302,7 +3360,7 @@ function doGet(e) {
         if (!pay) return;
         state.editingPaymentIndex = idx;
 
-        document.getElementById('pay-date').value = pay.date || todayISO;
+        document.getElementById('pay-date').value = normalizeToISODate(pay.date);
         const radio = document.querySelector(`input[name="payment-direction"][value="${pay.direction || 'from_buyer'}"]`);
         if (radio) {
           radio.checked = true;
@@ -3375,6 +3433,41 @@ function doGet(e) {
           resetPaymentToNewMode();
         }
       });
+
+      if (btnPayDelete) {
+        let payDelArmed = false;
+        let payDelTimer = null;
+        btnPayDelete.addEventListener('click', () => {
+          if (state.editingPaymentIndex < 0 || !state.payments[state.editingPaymentIndex]) return;
+          const pay = state.payments[state.editingPaymentIndex];
+          if (!payDelArmed) {
+            payDelArmed = true;
+            btnPayDelete.innerHTML = '<span>Confirm Delete?</span>';
+            clearTimeout(payDelTimer);
+            payDelTimer = setTimeout(() => {
+              payDelArmed = false;
+              btnPayDelete.innerHTML = '<span>🗑️ Delete</span>';
+            }, 3000);
+            return;
+          }
+          clearTimeout(payDelTimer);
+          payDelArmed = false;
+          btnPayDelete.innerHTML = '<span>🗑️ Delete</span>';
+          const settled = Number(pay.settledAmount ?? pay.amount) || 0;
+          if (pay.linkedOrder && pay.linkedOrder !== 'General Balance') {
+            const ord = state.orders.find(o => o.id === pay.linkedOrder);
+            if (ord) {
+              ord.paid = Math.max(0, (ord.paid || 0) - settled);
+              ord.paidToSeller = Math.max(0, (ord.paidToSeller || 0) - settled);
+            }
+          }
+          state.payments.splice(state.editingPaymentIndex, 1);
+          queueForSheetSync('delete_payment', { id: pay.id });
+          saveState();
+          resetPaymentToNewMode();
+          showToast(`भुगतान ${pay.id} हटाया गया`, 'info');
+        });
+      }
 
       btnPayNew.addEventListener('click', resetPaymentToNewMode);
       document.getElementById('btn-pay-clear').addEventListener('click', (e) => {
