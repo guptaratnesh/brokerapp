@@ -364,13 +364,26 @@
                 <input type="date" id="pay-date" required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
               </div>
 
-              <!-- Party Selection (Dynamic based on direction) -->
-              <div>
-                <label id="pay-party-label" for="pay-party" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">खरीदार चुनें *</label>
-                <select id="pay-party" required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm bg-white">
-                  <option value="">-- Choose Party --</option>
-                </select>
-                <div id="pay-party-due-hint" class="text-xs text-slate-500 mt-1 font-medium">Select a party to view current outstanding</div>
+              <!-- Buyer (Retailer) -->
+              <div class="relative">
+                <label for="pay-buyer" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">खरीदार (फुटकर व्यापारी) <span id="pay-buyer-req">*</span></label>
+                <div class="relative">
+                  <input type="text" id="pay-buyer" autocomplete="off" placeholder="खरीदार खोजें या लिखें..." class="w-full rounded-xl border border-slate-300 pl-3.5 pr-8 py-2.5 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm bg-white">
+                  <svg class="w-4 h-4 text-slate-400 absolute right-3 top-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </div>
+                <div id="pay-buyer-suggestions" class="absolute z-30 left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl max-h-48 overflow-y-auto hidden"></div>
+                <div id="pay-buyer-due-hint" class="text-[11px] text-slate-500 mt-1 font-medium">खरीदार का बकाया देखने के लिए चुनें</div>
+              </div>
+
+              <!-- Seller (Wholesaler) -->
+              <div class="relative">
+                <label for="pay-seller" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">विक्रेता (थोक व्यापारी) <span id="pay-seller-req" class="text-slate-400 font-normal">(वैकल्पिक)</span></label>
+                <div class="relative">
+                  <input type="text" id="pay-seller" autocomplete="off" placeholder="विक्रेता खोजें या लिखें..." class="w-full rounded-xl border border-slate-300 pl-3.5 pr-8 py-2.5 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm bg-white">
+                  <svg class="w-4 h-4 text-slate-400 absolute right-3 top-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </div>
+                <div id="pay-seller-suggestions" class="absolute z-30 left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl max-h-48 overflow-y-auto hidden"></div>
+                <div id="pay-seller-due-hint" class="text-[11px] text-slate-500 mt-1 font-medium">विक्रेता का देय देखने के लिए चुनें</div>
               </div>
 
               <!-- Payment Amount -->
@@ -379,14 +392,15 @@
                 <input type="number" id="pay-amount" min="1" step="any" placeholder="e.g. 25000" required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
               </div>
 
-              <!-- Payment Mode -->
+              <!-- Payment Mode (Optional) -->
               <div>
-                <label for="pay-mode" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">भुगतान का माध्यम *</label>
-                <select id="pay-mode" required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm bg-white">
+                <label for="pay-mode" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">भुगतान का माध्यम (वैकल्पिक)</label>
+                <select id="pay-mode" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm bg-white">
+                  <option value="">-- चुनें (वैकल्पिक) --</option>
                   <option value="UPI / PhonePe / GPay">UPI / GPay / PhonePe</option>
-                  <option value="Cash">Cash in Hand</option>
-                  <option value="Bank Transfer (NEFT/RTGS)">Bank Transfer (NEFT/RTGS/IMPS)</option>
-                  <option value="Cheque">Cheque</option>
+                  <option value="Cash">नकद (Cash)</option>
+                  <option value="Bank Transfer (NEFT/RTGS)">बैंक ट्रांसफर (NEFT/RTGS/IMPS)</option>
+                  <option value="Cheque">चेक (Cheque)</option>
                 </select>
               </div>
 
@@ -1475,66 +1489,67 @@ function doGet(e) {
     }
 
     function updatePaymentPartyDropdown() {
-      const payPartySelect = document.getElementById('pay-party');
       const isFromBuyer = document.querySelector('input[name="payment-direction"]:checked')?.value === 'from_buyer';
-      const label = document.getElementById('pay-party-label');
-      
-      if (!payPartySelect) return;
-
-      if (isFromBuyer) {
-        if (label) label.textContent = 'खरीदार चुनें *';
-        const buyers = state.parties.filter(p => p.type === 'Retailer');
-        payPartySelect.innerHTML = '<option value="">-- Choose Retailer --</option>' +
-          buyers.map(b => {
-            const m = getPartyMetrics(b.name, 'Retailer');
-            return `<option value="${b.name}">${b.name} (Due: ${formatINR(m.balanceDue)})</option>`;
-          }).join('');
-      } else {
-        if (label) label.textContent = 'विक्रेता चुनें *';
-        const sellers = state.parties.filter(p => p.type === 'Wholesaler');
-        payPartySelect.innerHTML = '<option value="">-- Choose Wholesaler --</option>' +
-          sellers.map(s => {
-            const m = getPartyMetrics(s.name, 'Wholesaler');
-            return `<option value="${s.name}">${s.name} (Payable: ${formatINR(m.balanceDue)})</option>`;
-          }).join('');
+      const buyerReq = document.getElementById('pay-buyer-req');
+      const sellerReq = document.getElementById('pay-seller-req');
+      if (buyerReq && sellerReq) {
+        if (isFromBuyer) {
+          buyerReq.textContent = '*';
+          buyerReq.className = 'text-slate-700';
+          sellerReq.textContent = '(वैकल्पिक)';
+          sellerReq.className = 'text-slate-400 font-normal';
+        } else {
+          buyerReq.textContent = '(वैकल्पिक)';
+          buyerReq.className = 'text-slate-400 font-normal';
+          sellerReq.textContent = '*';
+          sellerReq.className = 'text-slate-700';
+        }
       }
-
       updateLinkedOrdersDropdown();
     }
 
     function updateLinkedOrdersDropdown() {
-      const partyName = document.getElementById('pay-party')?.value;
+      const buyerName = (document.getElementById('pay-buyer')?.value || '').trim();
+      const sellerName = (document.getElementById('pay-seller')?.value || '').trim();
       const orderSelect = document.getElementById('pay-linked-order');
-      const hint = document.getElementById('pay-party-due-hint');
+      const buyerHint = document.getElementById('pay-buyer-due-hint');
+      const sellerHint = document.getElementById('pay-seller-due-hint');
       const isFromBuyer = document.querySelector('input[name="payment-direction"]:checked')?.value === 'from_buyer';
+
+      if (buyerHint) {
+        if (buyerName) {
+          const m = getPartyMetrics(buyerName, 'Retailer');
+          buyerHint.textContent = `खरीदार बकाया: ${formatINR(m.balanceDue)}`;
+        } else {
+          buyerHint.textContent = 'खरीदार का बकाया देखने के लिए चुनें';
+        }
+      }
+
+      if (sellerHint) {
+        if (sellerName) {
+          const m = getPartyMetrics(sellerName, 'Wholesaler');
+          sellerHint.textContent = `विक्रेता को देय: ${formatINR(m.balanceDue)}`;
+        } else {
+          sellerHint.textContent = 'विक्रेता का देय देखने के लिए चुनें';
+        }
+      }
 
       if (!orderSelect) return;
 
-      if (!partyName) {
-        orderSelect.innerHTML = '<option value="">General Balance (Unallocated)</option>';
-        if (hint) hint.textContent = 'Select a party to view current outstanding';
-        return;
-      }
+      const bTarget = buyerName.toLowerCase();
+      const sTarget = sellerName.toLowerCase();
 
-      const partyType = isFromBuyer ? 'Retailer' : 'Wholesaler';
-      const metrics = getPartyMetrics(partyName, partyType);
-      if (hint) {
-        hint.textContent = `Current ${isFromBuyer ? 'Receivable Due' : 'Payable to Supplier'}: ${formatINR(metrics.balanceDue)}`;
-      }
-
-      // Filter pending or partial orders for this party
       const relevantOrders = state.orders.filter(o => {
-        if (isFromBuyer) {
-          return o.buyer === partyName && (o.amount - (o.paid || 0) > 0);
-        } else {
-          return o.seller === partyName && (o.amount - (o.paidToSeller || 0) > 0);
-        }
+        const matchBuyer = !bTarget || (o.buyer || '').trim().toLowerCase() === bTarget;
+        const matchSeller = !sTarget || (o.seller || '').trim().toLowerCase() === sTarget;
+        const hasDue = isFromBuyer ? (o.amount - (o.paid || 0) > 0) : (o.amount - (o.paidToSeller || 0) > 0);
+        return matchBuyer && matchSeller && hasDue && (bTarget || sTarget);
       });
 
       let options = '<option value="">General Balance (Unallocated)</option>';
       relevantOrders.forEach(o => {
         const due = isFromBuyer ? (o.amount - (o.paid || 0)) : (o.amount - (o.paidToSeller || 0));
-        options += `<option value="${o.id}">${o.id} - ${o.item} (Due: ${formatINR(due)})</option>`;
+        options += `<option value="${o.id}">${o.id} (${o.buyer} → ${o.seller}) - ${o.item} (Due: ${formatINR(due)})</option>`;
       });
       orderSelect.innerHTML = options;
     }
@@ -2340,21 +2355,36 @@ function doGet(e) {
         });
       });
 
-      // Payment Party selection change -> update due hint & linked orders
-      document.getElementById('pay-party').addEventListener('change', updateLinkedOrdersDropdown);
+      // Setup autocomplete for Payment Buyer & Seller fields
+      const payBuyerInput = document.getElementById('pay-buyer');
+      const paySellerInput = document.getElementById('pay-seller');
+      setupAutocomplete(payBuyerInput, document.getElementById('pay-buyer-suggestions'), 'Retailer');
+      setupAutocomplete(paySellerInput, document.getElementById('pay-seller-suggestions'), 'Wholesaler');
+
+      if (payBuyerInput) {
+        payBuyerInput.addEventListener('input', updateLinkedOrdersDropdown);
+        payBuyerInput.addEventListener('change', updateLinkedOrdersDropdown);
+        document.getElementById('pay-buyer-suggestions').addEventListener('mousedown', () => setTimeout(updateLinkedOrdersDropdown, 30));
+      }
+      if (paySellerInput) {
+        paySellerInput.addEventListener('input', updateLinkedOrdersDropdown);
+        paySellerInput.addEventListener('change', updateLinkedOrdersDropdown);
+        document.getElementById('pay-seller-suggestions').addEventListener('mousedown', () => setTimeout(updateLinkedOrdersDropdown, 30));
+      }
 
       // Submit Payment Form
       formPayment.addEventListener('submit', (e) => {
         e.preventDefault();
         const date = document.getElementById('pay-date').value;
         const direction = document.querySelector('input[name="payment-direction"]:checked')?.value || 'from_buyer';
-        const partyName = document.getElementById('pay-party').value;
+        let payBuyer = (payBuyerInput?.value || '').trim();
+        let paySeller = (paySellerInput?.value || '').trim();
         const amount = parseFloat(document.getElementById('pay-amount').value);
-        const mode = document.getElementById('pay-mode').value;
+        const mode = document.getElementById('pay-mode').value || 'Unspecified';
         const linkedOrderId = document.getElementById('pay-linked-order').value;
         const ref = document.getElementById('pay-ref').value.trim();
 
-        ['pay-date', 'pay-party', 'pay-amount'].forEach(id => {
+        ['pay-date', 'pay-buyer', 'pay-seller', 'pay-amount'].forEach(id => {
           const el = document.getElementById(id);
           if (el) el.classList.remove('border-rose-500', 'ring-2', 'ring-rose-300');
         });
@@ -2362,21 +2392,47 @@ function doGet(e) {
         if (!date) {
           const el = document.getElementById('pay-date');
           if (el) { el.classList.add('border-rose-500', 'ring-2', 'ring-rose-300'); el.focus(); }
-          showToast('Please choose a Payment Date', 'error');
+          showToast('कृपया भुगतान की तारीख चुनें', 'error');
           return;
         }
-        if (!partyName) {
-          const el = document.getElementById('pay-party');
-          if (el) { el.classList.add('border-rose-500', 'ring-2', 'ring-rose-300'); el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.focus(); }
-          showToast('Please select a Buyer or Wholesaler from the list', 'error');
+        if (direction === 'from_buyer' && !payBuyer) {
+          if (payBuyerInput) { payBuyerInput.classList.add('border-rose-500', 'ring-2', 'ring-rose-300'); payBuyerInput.scrollIntoView({ behavior: 'smooth', block: 'center' }); payBuyerInput.focus(); }
+          showToast('कृपया खरीदार (Buyer) का नाम दर्ज करें', 'error');
+          return;
+        }
+        if (direction === 'to_seller' && !paySeller) {
+          if (paySellerInput) { paySellerInput.classList.add('border-rose-500', 'ring-2', 'ring-rose-300'); paySellerInput.scrollIntoView({ behavior: 'smooth', block: 'center' }); paySellerInput.focus(); }
+          showToast('कृपया विक्रेता (Seller) का नाम दर्ज करें', 'error');
           return;
         }
         if (isNaN(amount) || amount <= 0) {
           const el = document.getElementById('pay-amount');
           if (el) { el.classList.add('border-rose-500', 'ring-2', 'ring-rose-300'); el.focus(); }
-          showToast('Please enter a valid Payment Amount', 'error');
+          showToast('कृपया सही भुगतान राशि दर्ज करें', 'error');
           return;
         }
+
+        // Resolve canonical names or auto-register new Buyer / Seller
+        if (payBuyer) {
+          const exB = state.parties.find(p => p.name.trim().toLowerCase() === payBuyer.toLowerCase());
+          if (exB) payBuyer = exB.name;
+          else {
+            const newB = { id: 'p_' + Date.now(), name: payBuyer, type: 'Retailer', phone: '', city: '' };
+            state.parties.push(newB);
+            queueForSheetSync('party', newB);
+          }
+        }
+        if (paySeller) {
+          const exS = state.parties.find(p => p.name.trim().toLowerCase() === paySeller.toLowerCase());
+          if (exS) paySeller = exS.name;
+          else {
+            const newS = { id: 'p_' + (Date.now() + 1), name: paySeller, type: 'Wholesaler', phone: '', city: '' };
+            state.parties.push(newS);
+            queueForSheetSync('party', newS);
+          }
+        }
+
+        const partyName = direction === 'from_buyer' ? payBuyer : paySeller;
 
         if (state.editingPaymentIndex >= 0 && state.payments[state.editingPaymentIndex]) {
           // EDIT EXISTING PAYMENT
@@ -2398,6 +2454,8 @@ function doGet(e) {
           existingPay.date = date;
           existingPay.direction = direction;
           existingPay.party = partyName;
+          existingPay.buyer = payBuyer;
+          existingPay.seller = paySeller;
           existingPay.amount = amount;
           existingPay.mode = mode;
           existingPay.linkedOrder = linkedOrderId || 'General Balance';
@@ -2413,6 +2471,8 @@ function doGet(e) {
             id: newPayId,
             date,
             party: partyName,
+            buyer: payBuyer,
+            seller: paySeller,
             direction,
             amount,
             mode,
@@ -2428,7 +2488,7 @@ function doGet(e) {
               if (ord) ord.paid = (ord.paid || 0) + amount;
             } else {
               let remaining = amount;
-              for (let ord of state.orders.filter(o => o.buyer === partyName)) {
+              for (let ord of state.orders.filter(o => (o.buyer || '').trim().toLowerCase() === payBuyer.toLowerCase() && (!paySeller || (o.seller || '').trim().toLowerCase() === paySeller.toLowerCase()))) {
                 const due = ord.amount - (ord.paid || 0);
                 if (due > 0 && remaining > 0) {
                   const take = Math.min(due, remaining);
@@ -2443,7 +2503,7 @@ function doGet(e) {
               if (ord) ord.paidToSeller = (ord.paidToSeller || 0) + amount;
             } else {
               let remaining = amount;
-              for (let ord of state.orders.filter(o => o.seller === partyName)) {
+              for (let ord of state.orders.filter(o => (o.seller || '').trim().toLowerCase() === paySeller.toLowerCase() && (!payBuyer || (o.buyer || '').trim().toLowerCase() === payBuyer.toLowerCase()))) {
                 const due = ord.amount - (ord.paidToSeller || 0);
                 if (due > 0 && remaining > 0) {
                   const take = Math.min(due, remaining);
@@ -2526,9 +2586,8 @@ function doGet(e) {
           radio.checked = true;
           radio.dispatchEvent(new Event('change'));
         }
-        const partySelect = document.getElementById('pay-party');
-        if (partySelect) {
-          partySelect.value = buyer.name;
+        if (payBuyerInput) {
+          payBuyerInput.value = buyer.name;
           updateLinkedOrdersDropdown();
         }
         showToast(`Switched to Payment form for ${buyer.name}`);
@@ -2978,11 +3037,13 @@ function doGet(e) {
             radioBuyer.dispatchEvent(new Event('change'));
           }
 
-          if (res.buyer) {
-            const partySelect = document.getElementById('pay-party');
-            partySelect.value = res.buyer;
-            updateLinkedOrdersDropdown();
+          if (res.buyer && payBuyerInput) {
+            payBuyerInput.value = res.buyer;
           }
+          if (res.seller && paySellerInput) {
+            paySellerInput.value = res.seller;
+          }
+          updateLinkedOrdersDropdown();
 
           if (res.payment || res.amount) {
             document.getElementById('pay-amount').value = res.payment || res.amount;
@@ -3206,10 +3267,11 @@ function doGet(e) {
           radio.checked = true;
           radio.dispatchEvent(new Event('change'));
         }
-        document.getElementById('pay-party').value = pay.party || '';
+        if (payBuyerInput) payBuyerInput.value = pay.buyer || (pay.direction === 'from_buyer' ? (pay.party || '') : '');
+        if (paySellerInput) paySellerInput.value = pay.seller || (pay.direction === 'to_seller' ? (pay.party || '') : '');
         updateLinkedOrdersDropdown();
         document.getElementById('pay-amount').value = pay.amount || '';
-        document.getElementById('pay-mode').value = pay.mode || 'UPI / PhonePe / GPay';
+        document.getElementById('pay-mode').value = (pay.mode && pay.mode !== 'Unspecified') ? pay.mode : '';
         document.getElementById('pay-linked-order').value = pay.linkedOrder && pay.linkedOrder !== 'General Balance' ? pay.linkedOrder : '';
         document.getElementById('pay-ref').value = pay.ref || '';
 
@@ -3252,7 +3314,7 @@ function doGet(e) {
       updatePaymentNavControls();
 
       // Auto-clear red error highlights when user edits a field
-      ['order-date', 'order-seller', 'order-buyer', 'order-item', 'order-qty', 'order-rate', 'pay-date', 'pay-party', 'pay-amount'].forEach(id => {
+      ['order-date', 'order-seller', 'order-buyer', 'order-item', 'order-qty', 'order-rate', 'pay-date', 'pay-buyer', 'pay-seller', 'pay-amount'].forEach(id => {
         const el = document.getElementById(id);
         if (el) {
           const clearErr = () => el.classList.remove('border-rose-500', 'ring-2', 'ring-rose-300');
