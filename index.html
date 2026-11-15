@@ -1,0 +1,2801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VyaparSetu — Wholesale Broker Register & Ledger</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .tab-active { border-color: #2563eb; color: #1d4ed8; background-color: #eff6ff; }
+    .toggle-active { background-color: #2563eb; color: #ffffff; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2); }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+  <!-- TOP APP HEADER -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        
+        <!-- Brand -->
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-700 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-blue-700 to-indigo-800 bg-clip-text text-transparent">VyaparSetu</span>
+              <span class="text-xs bg-blue-100 text-blue-800 font-semibold px-2 py-0.5 rounded-full">Wholesale Broker</span>
+            </div>
+            <p class="text-xs text-slate-500 hidden sm:block">Automated Register, Party Ledger & Dues Reconciliation</p>
+          </div>
+        </div>
+
+        <!-- Quick Live Dues Ticker -->
+        <div class="hidden md:flex items-center space-x-4">
+          <div class="bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-1.5 flex items-center space-x-2">
+            <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
+            <div>
+              <span class="text-[10px] uppercase font-bold text-emerald-700 block tracking-wider">Due from Retailers</span>
+              <span id="header-receivable" class="text-sm font-bold text-emerald-900">₹0</span>
+            </div>
+          </div>
+          <div class="bg-rose-50 border border-rose-200 rounded-lg px-3 py-1.5 flex items-center space-x-2">
+            <div class="w-2.5 h-2.5 rounded-full bg-rose-500"></div>
+            <div>
+              <span class="text-[10px] uppercase font-bold text-rose-700 block tracking-wider">Due to Wholesalers</span>
+              <span id="header-payable" class="text-sm font-bold text-rose-900">₹0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Utility / Action Buttons -->
+        <div class="flex items-center space-x-2">
+          <button id="btn-sheet-sync-modal" class="px-3 py-1.5 text-xs font-semibold text-amber-800 bg-amber-50 border border-amber-200 hover:bg-amber-100 rounded-lg transition-colors flex items-center space-x-1.5">
+            <span id="sync-status-dot" class="w-2 h-2 rounded-full bg-amber-500"></span>
+            <span id="sync-status-label">Link Sheet</span>
+          </button>
+          <button id="btn-export-csv" class="px-3 py-1.5 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors flex items-center space-x-1">
+            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            <span class="hidden sm:inline">Export CSV</span>
+          </button>
+          <button id="btn-reset-demo" class="px-3 py-1.5 text-xs font-semibold text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors">
+            Reset Demo
+          </button>
+        </div>
+
+      </div>
+
+      <!-- MAIN NAVIGATION TABS -->
+      <nav class="flex space-x-1 sm:space-x-4 border-t border-slate-100 pt-1 -mb-px overflow-x-auto" id="main-nav-tabs">
+        <button data-view="entry" class="nav-tab tab-active flex items-center space-x-2 px-3 sm:px-4 py-2.5 border-b-2 font-medium text-sm whitespace-nowrap transition-all">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+          <span>Data Entry (Order / Payment)</span>
+        </button>
+        <button data-view="buyers" class="nav-tab text-slate-600 hover:text-blue-600 px-3 sm:px-4 py-2.5 border-b-2 border-transparent font-medium text-sm whitespace-nowrap transition-all flex items-center space-x-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+          <span>Buyers (Retailers)</span>
+        </button>
+        <button data-view="sellers" class="nav-tab text-slate-600 hover:text-blue-600 px-3 sm:px-4 py-2.5 border-b-2 border-transparent font-medium text-sm whitespace-nowrap transition-all flex items-center space-x-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+          <span>Wholesalers (Sellers)</span>
+        </button>
+        <button data-view="orders" class="nav-tab text-slate-600 hover:text-blue-600 px-3 sm:px-4 py-2.5 border-b-2 border-transparent font-medium text-sm whitespace-nowrap transition-all flex items-center space-x-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+          <span>Orders Register</span>
+        </button>
+        <button data-view="eod" class="nav-tab text-slate-600 hover:text-blue-600 px-3 sm:px-4 py-2.5 border-b-2 border-transparent font-medium text-sm whitespace-nowrap transition-all flex items-center space-x-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+          <span>End-of-Day Dues</span>
+        </button>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- MAIN APP CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 pb-24 md:pb-8">
+
+    <!-- Mobile Quick Dues Strip (Visible on Mobile/Tablet) -->
+    <div class="grid grid-cols-2 gap-3 mb-5 md:hidden">
+      <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-3 flex items-center justify-between shadow-sm">
+        <div>
+          <span class="text-[10px] uppercase font-bold text-emerald-700 block tracking-wider">Due from Buyers</span>
+          <span id="mobile-receivable" class="text-base font-extrabold text-emerald-900">₹0</span>
+        </div>
+        <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
+      </div>
+      <div class="bg-rose-50 border border-rose-200 rounded-2xl p-3 flex items-center justify-between shadow-sm">
+        <div>
+          <span class="text-[10px] uppercase font-bold text-rose-700 block tracking-wider">Due to Sellers</span>
+          <span id="mobile-payable" class="text-base font-extrabold text-rose-900">₹0</span>
+        </div>
+        <div class="w-2.5 h-2.5 rounded-full bg-rose-500"></div>
+      </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- VIEW 1: DATA ENTRY (TOGGLE BETWEEN ORDER & PAYMENT FORM) -->
+    <!-- ======================================================== -->
+    <section id="view-entry" class="view-panel space-y-6">
+      
+      <!-- Card with Form Switcher -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        
+        <!-- Toggle Header -->
+        <div class="p-4 sm:p-6 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-lg font-bold text-slate-900">Direct Entry Register</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Choose entry type below to log a new trade or a payment transaction</p>
+          </div>
+
+          <!-- The User Toggle Switch -->
+          <div class="inline-flex p-1 bg-slate-200/80 rounded-xl max-w-sm self-start sm:self-auto shadow-inner">
+            <button id="toggle-form-order" class="toggle-active px-5 py-2 rounded-lg font-semibold text-xs sm:text-sm transition-all flex items-center space-x-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+              <span>Record Order</span>
+            </button>
+            <button id="toggle-form-payment" class="px-5 py-2 rounded-lg font-semibold text-xs sm:text-sm text-slate-700 hover:text-slate-900 transition-all flex items-center space-x-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+              <span>Record Payment</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Hindi Voice Assistant Callout Bar -->
+        <div class="px-4 sm:px-6 py-3.5 bg-gradient-to-r from-orange-50 via-amber-50 to-rose-50 border-b border-orange-200/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-orange-600 to-rose-600 text-white flex items-center justify-center shadow-md shadow-orange-500/20 shrink-0">
+              <svg class="w-5 h-5 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+            </div>
+            <div>
+              <div class="flex items-center space-x-2">
+                <span class="text-xs sm:text-sm font-bold text-orange-950">🎙️ हिन्दी वॉइस एंट्री (Voice Entry in Hindi)</span>
+                <span class="text-[10px] bg-orange-200 text-orange-900 font-bold px-2 py-0.5 rounded-full">New Feature</span>
+              </div>
+              <p class="text-[11px] text-orange-900/80 mt-0.5">बोलकर नया आर्डर या पेमेंट दर्ज करें: <span class="font-semibold text-orange-950">"महावीर से शर्मा किराना को 40 बोरी बासमती चावल 1950 भाव"</span></p>
+            </div>
+          </div>
+          <button type="button" id="btn-start-voice" class="px-4 py-2 bg-gradient-to-r from-orange-600 to-rose-600 hover:from-orange-700 hover:to-rose-700 active:scale-95 text-white font-bold text-xs rounded-xl shadow-md shadow-orange-500/20 flex items-center space-x-2 transition-all shrink-0">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+            <span>बोलकर एंट्री करें (Speak in Hindi)</span>
+          </button>
+        </div>
+
+        <div class="p-6">
+          
+          <!-- ========================= -->
+          <!-- FORM A: RECORD NEW ORDER -->
+          <!-- ========================= -->
+          <form id="form-order" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+              
+              <!-- Date -->
+              <div>
+                <label for="order-date" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Order Date *</label>
+                <input type="date" id="order-date" required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
+              </div>
+
+              <!-- Wholesaler (Seller) -->
+              <div>
+                <div class="flex justify-between items-center mb-1.5">
+                  <label for="order-seller" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider">Seller (Wholesaler) *</label>
+                  <button type="button" id="btn-toggle-new-seller" class="text-[11px] font-bold text-blue-600 hover:text-blue-800 flex items-center space-x-1">
+                    <span id="btn-toggle-new-seller-text">+ New Wholesaler</span>
+                  </button>
+                </div>
+                <select id="order-seller" required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm bg-white font-medium">
+                  <option value="">-- Select Saved Wholesaler --</option>
+                </select>
+                <!-- New Wholesaler Input (toggled if needed) -->
+                <div id="new-seller-input-wrapper" class="mt-2 hidden">
+                  <input type="text" id="order-seller-new" placeholder="Type new wholesaler / supplier name..." class="w-full rounded-xl border border-blue-400 bg-blue-50/40 px-3.5 py-2 text-sm focus:ring-2 focus:ring-blue-500 font-medium">
+                  <p class="text-[10px] text-blue-600 mt-1">Will be added to your saved wholesalers list automatically</p>
+                </div>
+                <div class="flex items-center space-x-1.5 mt-1 text-[11px] text-emerald-600 font-medium">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                  <span id="seller-count-badge">Populated from saved data</span>
+                </div>
+              </div>
+
+              <!-- Retailer (Buyer) -->
+              <div>
+                <div class="flex justify-between items-center mb-1.5">
+                  <label for="order-buyer" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider">Buyer (Retailer) *</label>
+                  <button type="button" id="btn-toggle-new-buyer" class="text-[11px] font-bold text-blue-600 hover:text-blue-800 flex items-center space-x-1">
+                    <span id="btn-toggle-new-buyer-text">+ New Retailer</span>
+                  </button>
+                </div>
+                <select id="order-buyer" required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm bg-white font-medium">
+                  <option value="">-- Select Saved Retailer --</option>
+                </select>
+                <!-- New Retailer Input (toggled if needed) -->
+                <div id="new-buyer-input-wrapper" class="mt-2 hidden">
+                  <input type="text" id="order-buyer-new" placeholder="Type new retailer / buyer name..." class="w-full rounded-xl border border-blue-400 bg-blue-50/40 px-3.5 py-2 text-sm focus:ring-2 focus:ring-blue-500 font-medium">
+                  <p class="text-[10px] text-blue-600 mt-1">Will be added to your saved retailers list automatically</p>
+                </div>
+                <div class="flex items-center space-x-1.5 mt-1 text-[11px] text-emerald-600 font-medium">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                  <span id="buyer-count-badge">Populated from saved data</span>
+                </div>
+              </div>
+
+              <!-- Item -->
+              <div>
+                <label for="order-item" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Commodity / Item *</label>
+                <input type="text" id="order-item" placeholder="e.g. Basmati Rice (50kg Bags)" required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
+                <div class="flex flex-wrap gap-1.5 mt-2">
+                  <button type="button" class="btn-quick-item px-2 py-0.5 text-[11px] font-semibold bg-slate-100 hover:bg-blue-100 hover:text-blue-800 text-slate-600 rounded-md transition-colors" data-item="Basmati Rice (50kg Bag)">Rice</button>
+                  <button type="button" class="btn-quick-item px-2 py-0.5 text-[11px] font-semibold bg-slate-100 hover:bg-blue-100 hover:text-blue-800 text-slate-600 rounded-md transition-colors" data-item="Wheat Flour / Atta (50kg)">Atta</button>
+                  <button type="button" class="btn-quick-item px-2 py-0.5 text-[11px] font-semibold bg-slate-100 hover:bg-blue-100 hover:text-blue-800 text-slate-600 rounded-md transition-colors" data-item="Refined Oil (15L Tin)">Oil Tin</button>
+                  <button type="button" class="btn-quick-item px-2 py-0.5 text-[11px] font-semibold bg-slate-100 hover:bg-blue-100 hover:text-blue-800 text-slate-600 rounded-md transition-colors" data-item="Sugar M-30 (50kg Bag)">Sugar</button>
+                  <button type="button" class="btn-quick-item px-2 py-0.5 text-[11px] font-semibold bg-slate-100 hover:bg-blue-100 hover:text-blue-800 text-slate-600 rounded-md transition-colors" data-item="Toor Dal Premium (50kg)">Toor Dal</button>
+                </div>
+              </div>
+
+              <!-- Quantity -->
+              <div>
+                <label for="order-qty" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Quantity (Units/Bags) *</label>
+                <input type="number" id="order-qty" min="1" step="any" placeholder="e.g. 50" required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
+              </div>
+
+              <!-- Rate -->
+              <div>
+                <label for="order-rate" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Rate per Unit (₹) *</label>
+                <input type="number" id="order-rate" min="0.01" step="any" placeholder="e.g. 1800" required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
+              </div>
+
+            </div>
+
+            <!-- Auto Amount Preview Callout -->
+            <div class="bg-blue-50/70 border border-blue-200 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-base">₹</div>
+                <div>
+                  <span class="text-xs font-semibold text-blue-900 block">Calculated Total Order Amount</span>
+                  <span class="text-xs text-blue-700">Formula: Quantity × Rate</span>
+                </div>
+              </div>
+              <div class="text-right">
+                <span id="order-amount-display" class="text-2xl font-extrabold text-blue-900">₹0</span>
+              </div>
+            </div>
+
+            <!-- Collapsible Optional Spot Payment & Remarks -->
+            <div class="pt-1">
+              <button type="button" id="btn-toggle-optional-order" class="text-xs font-bold text-slate-600 hover:text-blue-700 flex items-center space-x-1.5 py-1 transition-colors">
+                <svg id="icon-optional-order" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                <span>Add Spot Payment or Delivery Remarks (Optional)</span>
+              </button>
+              <div id="optional-order-fields" class="grid grid-cols-1 md:grid-cols-3 gap-5 pt-3 mt-2 border-t border-slate-100 hidden">
+                <div>
+                  <label for="order-initial-payment" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Payment Received on Spot (₹)</label>
+                  <input type="number" id="order-initial-payment" min="0" step="any" value="0" placeholder="0" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
+                  <p class="text-[11px] text-slate-400 mt-1">Leave 0 if full amount is due</p>
+                </div>
+
+                <div>
+                  <label for="order-initial-payout" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Amount Forwarded to Seller (₹)</label>
+                  <input type="number" id="order-initial-payout" min="0" step="any" value="0" placeholder="0" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
+                  <p class="text-[11px] text-slate-400 mt-1">Disbursed to wholesaler right away</p>
+                </div>
+
+                <div>
+                  <label for="order-remarks" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Remarks / Delivery Note</label>
+                  <input type="text" id="order-remarks" placeholder="e.g. Direct dispatch via truck #4402" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
+                </div>
+              </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="flex items-center justify-end space-x-3 pt-3">
+              <button type="reset" class="px-5 py-2.5 text-sm font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
+                Clear Fields
+              </button>
+              <button type="submit" class="px-7 py-2.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-xl shadow-md shadow-blue-500/20 transition-all flex items-center space-x-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                <span>Save Order to Register</span>
+              </button>
+            </div>
+
+          <datalist id="sellers-datalist"></datalist><datalist id="buyers-datalist"></datalist>
+</form>
+
+          <!-- =========================== -->
+          <!-- FORM B: RECORD PAYMENT ONLY -->
+          <!-- =========================== -->
+          <form id="form-payment" class="space-y-6 hidden">
+            
+            <!-- Type Selector: From Buyer vs To Seller -->
+            <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl">
+              <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Payment Direction *</label>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <label class="payment-direction-label cursor-pointer border-2 border-emerald-500 bg-emerald-50/50 rounded-xl p-3 flex items-center space-x-3 transition-all">
+                  <input type="radio" name="payment-direction" value="from_buyer" checked class="text-emerald-600 focus:ring-emerald-500 h-4 w-4">
+                  <div>
+                    <span class="block text-sm font-bold text-emerald-900">Payment Received from Buyer (Retailer)</span>
+                    <span class="block text-xs text-emerald-700">Clears retail customer dues</span>
+                  </div>
+                </label>
+                <label class="payment-direction-label cursor-pointer border-2 border-slate-200 bg-white hover:bg-slate-50 rounded-xl p-3 flex items-center space-x-3 transition-all">
+                  <input type="radio" name="payment-direction" value="to_seller" class="text-rose-600 focus:ring-rose-500 h-4 w-4">
+                  <div>
+                    <span class="block text-sm font-bold text-rose-900">Payment Paid to Seller (Wholesaler)</span>
+                    <span class="block text-xs text-rose-700">Settles supplier outstanding amount</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+              
+              <!-- Date -->
+              <div>
+                <label for="pay-date" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Payment Date *</label>
+                <input type="date" id="pay-date" required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
+              </div>
+
+              <!-- Party Selection (Dynamic based on direction) -->
+              <div>
+                <label id="pay-party-label" for="pay-party" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Select Buyer (Retailer) *</label>
+                <select id="pay-party" required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm bg-white">
+                  <option value="">-- Choose Party --</option>
+                </select>
+                <div id="pay-party-due-hint" class="text-xs text-slate-500 mt-1 font-medium">Select a party to view current outstanding</div>
+              </div>
+
+              <!-- Payment Amount -->
+              <div>
+                <label for="pay-amount" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Payment Amount (₹) *</label>
+                <input type="number" id="pay-amount" min="1" step="any" placeholder="e.g. 25000" required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
+              </div>
+
+              <!-- Payment Mode -->
+              <div>
+                <label for="pay-mode" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Payment Mode *</label>
+                <select id="pay-mode" required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm bg-white">
+                  <option value="UPI / PhonePe / GPay">UPI / GPay / PhonePe</option>
+                  <option value="Cash">Cash in Hand</option>
+                  <option value="Bank Transfer (NEFT/RTGS)">Bank Transfer (NEFT/RTGS/IMPS)</option>
+                  <option value="Cheque">Cheque</option>
+                </select>
+              </div>
+
+              <!-- Linked Order (Optional) -->
+              <div>
+                <label for="pay-linked-order" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Allocate Against Order (Optional)</label>
+                <select id="pay-linked-order" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm bg-white">
+                  <option value="">General Balance (Unallocated)</option>
+                </select>
+                <p class="text-[11px] text-slate-400 mt-1">Leaves on account or clears specific bill</p>
+              </div>
+
+              <!-- Reference / Note -->
+              <div>
+                <label for="pay-ref" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Transaction ID / Reference Note</label>
+                <input type="text" id="pay-ref" placeholder="e.g. UPI Ref #40921098, or Cash slip #12" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
+              </div>
+
+            </div>
+
+            <!-- Form Actions -->
+            <div class="flex items-center justify-end space-x-3 pt-3 border-t border-slate-100">
+              <button type="reset" class="px-5 py-2.5 text-sm font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
+                Clear Fields
+              </button>
+              <button type="submit" class="px-7 py-2.5 text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 rounded-xl shadow-md shadow-emerald-500/20 transition-all flex items-center space-x-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span>Record & Update Ledger</span>
+              </button>
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+
+      <!-- Quick Recent Transactions Feed -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Latest Activity in Register</h3>
+          <span class="text-xs text-slate-500">Last 5 recorded transactions</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="text-slate-400 border-b border-slate-100 uppercase font-semibold">
+                <th class="pb-2.5">Type</th>
+                <th class="pb-2.5">Date</th>
+                <th class="pb-2.5">Party / Details</th>
+                <th class="pb-2.5 text-right">Amount</th>
+                <th class="pb-2.5 text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody id="quick-activity-tbody" class="divide-y divide-slate-100 font-medium">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ======================================================= -->
+    <!-- VIEW 2: BUYERS (RETAILERS) — ALL OR SPECIFIC LEDGER     -->
+    <!-- ======================================================= -->
+    <section id="view-buyers" class="view-panel space-y-6 hidden">
+
+      <!-- Sub Navigation / Filter Bar -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        
+        <!-- View Mode Switcher -->
+        <div class="flex items-center space-x-2">
+          <button id="btn-buyer-mode-all" class="px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-blue-600 text-white shadow-sm transition-all">
+            All Buyers List
+          </button>
+          <button id="btn-buyer-mode-specific" class="px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl text-slate-600 bg-slate-100 hover:bg-slate-200 transition-all">
+            Specific Buyer Details & Ledger
+          </button>
+        </div>
+
+        <!-- Party Dropdown Selector & Search -->
+        <div class="flex items-center space-x-3 w-full md:w-auto">
+          <div class="relative flex-1 md:w-64">
+            <select id="buyer-select-dropdown" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs sm:text-sm font-semibold focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white">
+              <option value="">-- Choose Buyer / Retailer --</option>
+            </select>
+          </div>
+          <button id="btn-add-new-buyer" class="px-3 py-2 text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-xl transition-colors whitespace-nowrap flex items-center space-x-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            <span>Add Buyer</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- SECTION A: ALL BUYERS DIRECTORY (Grid & Table) -->
+      <div id="buyers-all-section" class="space-y-6">
+        
+        <!-- Summary KPI Stats -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider block">Total Buyers</span>
+            <span id="stat-total-buyers" class="text-2xl font-bold text-slate-900 mt-1 block">0</span>
+          </div>
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider block">Total Order Book</span>
+            <span id="stat-buyers-total-orders" class="text-2xl font-bold text-slate-900 mt-1 block">₹0</span>
+          </div>
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <span class="text-xs font-semibold text-emerald-600 uppercase tracking-wider block">Total Collected</span>
+            <span id="stat-buyers-total-paid" class="text-2xl font-bold text-emerald-600 mt-1 block">₹0</span>
+          </div>
+          <div class="bg-white p-4 rounded-xl border border-rose-200 shadow-sm bg-rose-50/30">
+            <span class="text-xs font-semibold text-rose-600 uppercase tracking-wider block">Total Pending Dues</span>
+            <span id="stat-buyers-total-due" class="text-2xl font-bold text-rose-600 mt-1 block">₹0</span>
+          </div>
+        </div>
+
+        <!-- Search Table Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          <div class="p-4 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-3">
+            <h3 class="font-bold text-slate-900 text-sm">Retailer Directory & Master Ledger Balances</h3>
+            <div class="w-full sm:w-64">
+              <input type="text" id="search-buyers-input" placeholder="Search buyer, phone, city..." class="w-full text-xs rounded-xl border border-slate-300 px-3 py-1.5 focus:ring-2 focus:ring-blue-500">
+            </div>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs sm:text-sm">
+              <thead class="bg-slate-50/75 border-b border-slate-200 text-slate-500 font-semibold uppercase text-[11px] tracking-wider">
+                <tr>
+                  <th class="py-3 px-4">Buyer (Retailer)</th>
+                  <th class="py-3 px-4">Location / Phone</th>
+                  <th class="py-3 px-4 text-right">Total Orders</th>
+                  <th class="py-3 px-4 text-right">Total Payments</th>
+                  <th class="py-3 px-4 text-right">Balance Due</th>
+                  <th class="py-3 px-4 text-center">Status</th>
+                  <th class="py-3 px-4 text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody id="buyers-table-tbody" class="divide-y divide-slate-100 font-medium">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SECTION B: SPECIFIC BUYER COMPLETE DETAILS & STATEMENT -->
+      <div id="buyers-specific-section" class="space-y-6 hidden">
+        
+        <!-- Buyer Profile Banner -->
+        <div class="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 rounded-2xl p-6 text-white shadow-lg">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            
+            <div class="flex items-center space-x-4">
+              <div class="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center font-bold text-2xl text-blue-200 border border-white/20">
+                <span id="spec-buyer-avatar">R</span>
+              </div>
+              <div>
+                <div class="flex items-center space-x-2">
+                  <h2 id="spec-buyer-name" class="text-xl sm:text-2xl font-black tracking-tight">Select Buyer</h2>
+                  <span class="text-xs bg-blue-500/30 text-blue-200 border border-blue-400/30 px-2 py-0.5 rounded-md font-semibold">Retailer</span>
+                </div>
+                <p id="spec-buyer-meta" class="text-xs text-blue-200/80 mt-1">Phone: -- | Market: --</p>
+              </div>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="flex items-center space-x-2 self-stretch sm:self-auto">
+              <button id="btn-quick-pay-buyer" class="flex-1 sm:flex-none px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 font-bold text-xs shadow-md transition-colors flex items-center justify-center space-x-1.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                <span>Collect Payment</span>
+              </button>
+              <button id="btn-copy-buyer-statement" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 font-semibold text-xs border border-white/20 transition-colors flex items-center space-x-1.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                <span>Copy Statement</span>
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Specific Buyer 4-card metric row -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6 pt-6 border-t border-white/10">
+            <div class="bg-white/5 rounded-xl p-3 border border-white/10">
+              <span class="text-[11px] uppercase font-bold tracking-wider text-blue-200/70 block">Total Invoiced</span>
+              <span id="spec-buyer-invoiced" class="text-lg sm:text-xl font-bold mt-0.5 block">₹0</span>
+            </div>
+            <div class="bg-white/5 rounded-xl p-3 border border-white/10">
+              <span class="text-[11px] uppercase font-bold tracking-wider text-emerald-300 block">Total Paid</span>
+              <span id="spec-buyer-paid" class="text-lg sm:text-xl font-bold text-emerald-300 mt-0.5 block">₹0</span>
+            </div>
+            <div class="bg-white/5 rounded-xl p-3 border border-white/10">
+              <span class="text-[11px] uppercase font-bold tracking-wider text-rose-300 block">Balance Pending</span>
+              <span id="spec-buyer-due" class="text-lg sm:text-xl font-bold text-rose-300 mt-0.5 block">₹0</span>
+            </div>
+            <div class="bg-white/5 rounded-xl p-3 border border-white/10">
+              <span class="text-[11px] uppercase font-bold tracking-wider text-blue-200/70 block">Orders Count</span>
+              <span id="spec-buyer-orders-count" class="text-lg sm:text-xl font-bold mt-0.5 block">0</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Orders & Payments Tabbed Ledger -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          
+          <div class="border-b border-slate-200 bg-slate-50 p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+            <div class="flex space-x-2">
+              <button id="tab-buyer-orders" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-white text-blue-700 shadow-sm border border-slate-200">
+                All Orders Placed
+              </button>
+              <button id="tab-buyer-payments" class="px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-200/70 transition-colors">
+                Payment History
+              </button>
+            </div>
+            <span class="text-xs text-slate-500" id="spec-table-subtitle">Showing all orders placed by this retailer</span>
+          </div>
+
+          <!-- Specific Buyer Orders Table -->
+          <div id="spec-buyer-orders-container" class="overflow-x-auto">
+            <table class="w-full text-left text-xs sm:text-sm">
+              <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase text-[11px] tracking-wider">
+                <tr>
+                  <th class="py-3 px-4">Order ID & Date</th>
+                  <th class="py-3 px-4">Wholesaler (Seller)</th>
+                  <th class="py-3 px-4">Item & Qty</th>
+                  <th class="py-3 px-4 text-right">Rate</th>
+                  <th class="py-3 px-4 text-right">Total Amount</th>
+                  <th class="py-3 px-4 text-right">Paid</th>
+                  <th class="py-3 px-4 text-right">Due</th>
+                  <th class="py-3 px-4 text-center">Status</th>
+                </tr>
+              </thead>
+              <tbody id="spec-buyer-orders-tbody" class="divide-y divide-slate-100 font-medium">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Specific Buyer Payments Table -->
+          <div id="spec-buyer-payments-container" class="overflow-x-auto hidden">
+            <table class="w-full text-left text-xs sm:text-sm">
+              <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase text-[11px] tracking-wider">
+                <tr>
+                  <th class="py-3 px-4">Receipt #</th>
+                  <th class="py-3 px-4">Date</th>
+                  <th class="py-3 px-4">Payment Mode</th>
+                  <th class="py-3 px-4">Reference / Details</th>
+                  <th class="py-3 px-4">Allocated Order</th>
+                  <th class="py-3 px-4 text-right">Amount Received</th>
+                </tr>
+              </thead>
+              <tbody id="spec-buyer-payments-tbody" class="divide-y divide-slate-100 font-medium">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- VIEW 3: WHOLESALERS (SELLERS) — DIRECTORY & LEDGER      -->
+    <!-- ======================================================== -->
+    <section id="view-sellers" class="view-panel space-y-6 hidden">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+          <div>
+            <h2 class="text-lg font-bold text-slate-900">Wholesale Suppliers Directory</h2>
+            <p class="text-xs text-slate-500">Track supplies fulfilled, payouts forwarded, and outstanding dues owed to wholesalers</p>
+          </div>
+          <button id="btn-add-new-seller" class="px-3.5 py-2 text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-xl transition-colors flex items-center space-x-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            <span>Add Wholesaler</span>
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs sm:text-sm">
+            <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase text-[11px] tracking-wider">
+              <tr>
+                <th class="py-3 px-4">Wholesaler Name</th>
+                <th class="py-3 px-4">Market / Phone</th>
+                <th class="py-3 px-4 text-right">Total Supplied Value</th>
+                <th class="py-3 px-4 text-right">Payments Sent</th>
+                <th class="py-3 px-4 text-right">Payable Due</th>
+                <th class="py-3 px-4 text-center">Settlement Status</th>
+              </tr>
+            </thead>
+            <tbody id="sellers-table-tbody" class="divide-y divide-slate-100 font-medium">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- VIEW 4: ORDERS REGISTER (FULL TRADE LOG)                 -->
+    <!-- ======================================================== -->
+    <section id="view-orders" class="view-panel space-y-6 hidden">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        
+        <div class="p-4 sm:p-5 bg-slate-50 border-b border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div>
+            <h2 class="text-lg font-bold text-slate-900">Master Orders Register</h2>
+            <p class="text-xs text-slate-500">Full history of orders matching the manual register headers</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <select id="filter-order-status" class="text-xs rounded-xl border border-slate-300 px-3 py-1.5 bg-white font-medium">
+              <option value="all">All Statuses</option>
+              <option value="Pending">Pending Only</option>
+              <option value="Partial">Partial Only</option>
+              <option value="Paid">Fully Paid</option>
+            </select>
+            <input type="text" id="search-orders-input" placeholder="Search item, buyer, seller..." class="text-xs rounded-xl border border-slate-300 px-3 py-1.5 w-48">
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs sm:text-sm">
+            <thead class="bg-slate-50 text-slate-500 font-semibold uppercase text-[11px] tracking-wider border-b border-slate-200">
+              <tr>
+                <th class="py-3 px-4">Order ID & Date</th>
+                <th class="py-3 px-4">Seller (Wholesaler)</th>
+                <th class="py-3 px-4">Buyer (Retailer)</th>
+                <th class="py-3 px-4">Item</th>
+                <th class="py-3 px-4 text-right">Qty</th>
+                <th class="py-3 px-4 text-right">Rate (₹)</th>
+                <th class="py-3 px-4 text-right">Amount (₹)</th>
+                <th class="py-3 px-4 text-right">Paid (₹)</th>
+                <th class="py-3 px-4 text-right">Retailer Due (₹)</th>
+                <th class="py-3 px-4 text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody id="master-orders-tbody" class="divide-y divide-slate-100 font-medium">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- VIEW 5: END-OF-DAY DUES & SETTLEMENT RECONCILIATION     -->
+    <!-- ======================================================== -->
+    <section id="view-eod" class="view-panel space-y-6 hidden">
+
+      <!-- EOD Executive Brief -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <div>
+            <span class="text-xs font-bold text-blue-600 uppercase tracking-widest block">Daily Settlement Cockpit</span>
+            <h2 class="text-xl font-bold text-slate-900 mt-0.5">End-of-Day Dues Reconciliation</h2>
+            <p class="text-xs text-slate-500 mt-1">Cross-reconcile which retailer owes which wholesaler for fulfilled stock</p>
+          </div>
+          <div class="text-right">
+            <span class="text-xs text-slate-400 block font-medium">Today's Date</span>
+            <span id="eod-today-date" class="text-sm font-bold text-slate-800">--</span>
+          </div>
+        </div>
+
+        <!-- 3 KPI Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+          <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+            <span class="text-xs font-bold text-emerald-800 uppercase tracking-wider block">Total To Collect From Buyers</span>
+            <span id="eod-total-receivable" class="text-2xl font-extrabold text-emerald-700 mt-1 block">₹0</span>
+            <span class="text-[11px] text-emerald-600 mt-0.5 block">Outstanding retail receivables</span>
+          </div>
+          <div class="bg-rose-50 border border-rose-200 rounded-xl p-4">
+            <span class="text-xs font-bold text-rose-800 uppercase tracking-wider block">Total To Disburse To Sellers</span>
+            <span id="eod-total-payable" class="text-2xl font-extrabold text-rose-700 mt-1 block">₹0</span>
+            <span class="text-[11px] text-rose-600 mt-0.5 block">Pending wholesale liabilities</span>
+          </div>
+          <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+            <span class="text-xs font-bold text-blue-800 uppercase tracking-wider block">Broker Margin / In-Transit Float</span>
+            <span id="eod-broker-float" class="text-2xl font-extrabold text-blue-700 mt-1 block">₹0</span>
+            <span class="text-[11px] text-blue-600 mt-0.5 block">Collected but not yet forwarded</span>
+          </div>
+        </div>
+
+        <!-- Bilateral Settlement Matrix -->
+        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-3">Retailer-to-Wholesaler Due Matrix</h3>
+        <p class="text-xs text-slate-500 mb-4">Shows exact amount due from each Retailer (Row) to each Wholesaler (Column):</p>
+        
+        <div class="overflow-x-auto border border-slate-200 rounded-xl">
+          <table class="w-full text-left text-xs" id="eod-matrix-table">
+            <!-- Rendered dynamically -->
+          </table>
+        </div>
+
+      </div>
+
+      <!-- Bilateral Itemized Breakdown Table -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Unsettled Supply Lines (Pending Fulfillment Debt)</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs sm:text-sm">
+            <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase text-[11px] tracking-wider">
+              <tr>
+                <th class="py-3 px-4">Retailer (Buyer)</th>
+                <th class="py-3 px-4">Wholesaler (Seller)</th>
+                <th class="py-3 px-4">Orders Count</th>
+                <th class="py-3 px-4 text-right">Total Trade</th>
+                <th class="py-3 px-4 text-right">Buyer Unpaid</th>
+                <th class="py-3 px-4 text-right">Seller Pending</th>
+                <th class="py-3 px-4 text-center">Settlement Status</th>
+              </tr>
+            </thead>
+            <tbody id="eod-lines-tbody" class="divide-y divide-slate-100 font-medium">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- MOBILE BOTTOM NAVIGATION BAR (Thumb-Friendly) -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 z-40 px-2 py-1.5 flex justify-around items-center shadow-[0_-4px_12px_rgba(0,0,0,0.05)]">
+    <button data-view="entry" class="mobile-nav-tab flex flex-col items-center justify-center py-1 px-3 rounded-xl text-blue-600 font-bold">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+      <span class="text-[10px] mt-0.5">Entry</span>
+    </button>
+    <button data-view="buyers" class="mobile-nav-tab flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-500 font-medium">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+      <span class="text-[10px] mt-0.5">Buyers</span>
+    </button>
+    <button data-view="sellers" class="mobile-nav-tab flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-500 font-medium">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+      <span class="text-[10px] mt-0.5">Sellers</span>
+    </button>
+    <button data-view="orders" class="mobile-nav-tab flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-500 font-medium">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+      <span class="text-[10px] mt-0.5">Orders</span>
+    </button>
+    <button data-view="eod" class="mobile-nav-tab flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-500 font-medium">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+      <span class="text-[10px] mt-0.5">EOD Dues</span>
+    </button>
+  </nav>
+
+  <!-- HINDI VOICE ASSISTANT MODAL -->
+  <div id="modal-voice-assistant" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 space-y-5 text-center relative overflow-hidden">
+      
+      <!-- Decorative top gradient bar -->
+      <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-orange-500 via-rose-500 to-amber-500"></div>
+
+      <!-- Close Button -->
+      <button type="button" id="btn-close-voice-modal" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+
+      <!-- Pulsing Mic Visual -->
+      <div class="pt-2 flex flex-col items-center">
+        <div id="voice-pulse-ring" class="w-20 h-20 rounded-full bg-orange-100 flex items-center justify-center relative transition-all duration-300">
+          <div id="voice-mic-circle" class="w-14 h-14 rounded-full bg-gradient-to-tr from-orange-600 to-rose-600 text-white flex items-center justify-center shadow-lg shadow-orange-500/30">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+          </div>
+        </div>
+        <span id="voice-status-text" class="text-sm font-bold text-slate-900 mt-3 block">कृपया बोलिए... (Listening in Hindi)</span>
+        <span class="text-xs text-slate-500 mt-0.5 block">Language: हिन्दी (hi-IN)</span>
+      </div>
+
+      <!-- Transcript Box -->
+      <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-left min-h-[70px]">
+        <div class="flex justify-between items-center mb-1">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">आपने क्या बोला (Live Transcript):</span>
+          <span id="voice-interim-badge" class="text-[10px] text-orange-600 font-semibold hidden">पहचान रहे हैं...</span>
+        </div>
+        <p id="voice-transcript-text" class="text-sm font-medium text-slate-800 italic">"बोलना शुरू करें..."</p>
+      </div>
+
+      <!-- Mobile Keyboard Dictation / Paste Fallback -->
+      <div class="text-left bg-white border border-slate-200 rounded-2xl p-3.5 shadow-sm">
+        <label for="voice-manual-input" class="block text-[11px] font-bold text-slate-700 mb-1.5">
+          📱 मोबाइल कीबोर्ड माइक (Gboard / iPhone Dictation) या टाइप करें:
+        </label>
+        <div class="flex items-center space-x-2">
+          <input type="text" id="voice-manual-input" placeholder="यहाँ कीबोर्ड के माइक से बोलें या लिखें..." class="flex-1 rounded-xl border border-slate-300 px-3 py-2 text-xs sm:text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+          <button type="button" id="btn-voice-parse-manual" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-xl transition-colors shrink-0">
+            पहचानें
+          </button>
+        </div>
+        <p class="text-[10px] text-slate-400 mt-1">यदि ब्राउज़र माइक काम न करे, तो ऊपर बॉक्स पर टैप करके फोन के कीबोर्ड माइक से बोलें।</p>
+      </div>
+
+      <!-- Parsed Fields Preview -->
+      <div id="voice-parsed-container" class="bg-blue-50/70 border border-blue-200 rounded-2xl p-4 text-left space-y-2 hidden">
+        <div class="flex justify-between items-center border-b border-blue-200/60 pb-2">
+          <span class="text-[11px] font-bold uppercase tracking-wider text-blue-950">पहचाने गए विवरण (Extracted Details):</span>
+          <span id="voice-detected-type" class="text-xs font-bold bg-blue-600 text-white px-2.5 py-0.5 rounded-full">Order</span>
+        </div>
+        <div class="grid grid-cols-2 gap-2.5 text-xs pt-1">
+          <div><span class="text-slate-500 block text-[11px]">विक्रेता (Wholesaler):</span> <strong id="voice-res-seller" class="text-slate-900 font-bold">--</strong></div>
+          <div><span class="text-slate-500 block text-[11px]">खरीदार (Retailer):</span> <strong id="voice-res-buyer" class="text-slate-900 font-bold">--</strong></div>
+          <div><span class="text-slate-500 block text-[11px]">माल (Item):</span> <strong id="voice-res-item" class="text-slate-900 font-bold">--</strong></div>
+          <div><span class="text-slate-500 block text-[11px]">मात्रा (Quantity):</span> <strong id="voice-res-qty" class="text-slate-900 font-bold">--</strong></div>
+          <div><span class="text-slate-500 block text-[11px]">भाव (Rate):</span> <strong id="voice-res-rate" class="text-slate-900 font-bold">--</strong></div>
+          <div><span class="text-slate-500 block text-[11px]">कुल रकम (Amount):</span> <strong id="voice-res-amount" class="text-blue-700 font-extrabold">--</strong></div>
+        </div>
+      </div>
+
+      <!-- Quick Hindi Sample Prompts (Clickable for Instant Testing) -->
+      <div class="text-left text-xs bg-amber-50/70 border border-amber-200 rounded-xl p-3 text-amber-950">
+        <span class="font-bold block mb-1.5 flex items-center space-x-1">
+          <span>💡</span> <span>बोलने के उदाहरण (या टेस्ट करने के लिए क्लिक करें):</span>
+        </span>
+        <div class="space-y-1.5 text-[11px]">
+          <button type="button" class="btn-voice-sample block w-full text-left bg-white/80 hover:bg-white p-1.5 rounded-lg border border-amber-200/80 transition-colors" data-phrase="महावीर से शर्मा किराना को 40 बोरी बासमती चावल 1950 के भाव से">
+            • "महावीर से शर्मा किराना को 40 बोरी बासमती चावल 1950 के भाव से"
+          </button>
+          <button type="button" class="btn-voice-sample block w-full text-left bg-white/80 hover:bg-white p-1.5 rounded-lg border border-amber-200/80 transition-colors" data-phrase="Apex से कृष्णा रिटेल को 50 बोरी गेहूं आटा 1450 भाव">
+            • "Apex से कृष्णा रिटेल को 50 बोरी गेहूं आटा 1450 भाव"
+          </button>
+          <button type="button" class="btn-voice-sample block w-full text-left bg-white/80 hover:bg-white p-1.5 rounded-lg border border-amber-200/80 transition-colors" data-phrase="शर्मा किराना से 25000 रुपये नकद जमा मिले">
+            • "शर्मा किराना से 25000 रुपये नकद जमा मिले"
+          </button>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center justify-between pt-2">
+        <button type="button" id="btn-voice-retry" class="px-4 py-2.5 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
+          🔄 दोबारा बोलें (Retry)
+        </button>
+        <button type="button" id="btn-voice-apply" class="px-6 py-2.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-md shadow-blue-500/20 transition-all disabled:opacity-40 disabled:cursor-not-allowed" disabled>
+          ✅ फॉर्म में भरें (Fill in Form)
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- GOOGLE SHEET AUTO-SYNC MODAL -->
+  <div id="modal-sheet-sync" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl border border-slate-100 space-y-4 max-h-[90vh] overflow-y-auto relative">
+      <div class="flex justify-between items-start">
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full">Cloud Auto-Sync</span>
+          <h3 class="text-lg font-bold text-slate-900 mt-1">Connect to Your Google Sheet</h3>
+          <p class="text-xs text-slate-500">All new orders, payments, and parties save locally first, then auto-sync to your Google Sheet whenever internet is on.</p>
+        </div>
+        <button type="button" id="btn-close-sync-modal" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+      </div>
+
+      <!-- Live Sync Status Box -->
+      <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+        <div>
+          <span class="text-slate-500 block">Connection &amp; Queue Status:</span>
+          <strong id="sync-modal-status-text" class="text-slate-900">Not linked yet</strong>
+        </div>
+        <button type="button" id="btn-sync-now" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition-colors disabled:opacity-40" disabled>
+          Sync Pending Now (<span id="sync-pending-count">0</span>)
+        </button>
+      </div>
+
+      <!-- Step 1: Apps Script Code -->
+      <div class="space-y-2">
+        <div class="flex justify-between items-center">
+          <span class="text-xs font-bold text-slate-800">Step 1: Add this Script to your Google Sheet</span>
+          <button type="button" id="btn-copy-apps-script" class="px-3 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-[11px] rounded-lg transition-colors">
+            Copy Apps Script
+          </button>
+        </div>
+        <p class="text-[11px] text-slate-500">Open your Google Sheet &rarr; <strong>Extensions &rarr; Apps Script</strong> &rarr; paste this code &rarr; click <strong>Deploy &rarr; New deployment &rarr; Web app</strong> (Execute as: <em>Me</em>, Who has access: <em>Anyone</em>).</p>
+        <pre id="apps-script-code" class="bg-slate-900 text-emerald-300 text-[10px] leading-relaxed p-3 rounded-xl overflow-x-auto max-h-40 font-mono">function doPost(e) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var payload = JSON.parse(e.postData.contents);
+  var type = payload.type;
+  var d = payload.data;
+
+  if (type === 'order') {
+    var sheet = ss.getSheetByName('Orders Register') || ss.insertSheet('Orders Register');
+    var row = sheet.getLastRow() + 1;
+    sheet.appendRow([
+      d.id, d.date, d.seller, d.buyer, d.item, d.qty, d.rate,
+      '=F' + row + '*G' + row,
+      d.paid || 0,
+      d.paid > 0 ? d.date : '',
+      '=H' + row + '-I' + row,
+      d.paidToSeller || 0,
+      '=H' + row + '-L' + row,
+      '=IF(K' + row + '&lt;=0,"Paid",IF(I' + row + '&gt;0,"Partial","Pending"))',
+      d.remarks || ''
+    ]);
+  } else if (type === 'party') {
+    var idx = ss.getSheetByName('Index') || ss.insertSheet('Index');
+    var r = idx.getLastRow() + 1;
+    idx.appendRow([d.id, d.name, d.type, d.phone || '', d.city || '']);
+  } else if (type === 'payment') {
+    var pSheet = ss.getSheetByName('Payments Log') || ss.insertSheet('Payments Log');
+    if (pSheet.getLastRow() === 0) {
+      pSheet.appendRow(['Payment ID', 'Date', 'Party', 'Direction', 'Amount', 'Mode', 'Linked Order', 'Reference']);
+    }
+    pSheet.appendRow([d.id, d.date, d.party, d.direction, d.amount, d.mode, d.linkedOrder || '', d.ref || '']);
+  }
+
+  return ContentService.createTextOutput(JSON.stringify({ status: 'ok' })).setMimeType(ContentService.MimeType.JSON);
+}</pre>
+      </div>
+
+      <!-- Step 2: Paste Web App URL -->
+      <form id="form-sheet-sync-url" class="space-y-3 pt-2 border-t border-slate-100">
+        <div>
+          <label for="input-sheet-webapp-url" class="block text-xs font-bold text-slate-800 mb-1">Step 2: Paste Deployed Web App URL</label>
+          <input type="url" id="input-sheet-webapp-url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-xs sm:text-sm focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div class="flex justify-between items-center">
+          <button type="button" id="btn-unlink-sheet" class="text-xs font-semibold text-rose-600 hover:text-rose-800">Unlink Sheet</button>
+          <div class="flex space-x-2">
+            <button type="button" id="btn-cancel-sync-modal" class="px-4 py-2 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl">Close</button>
+            <button type="submit" class="px-5 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-sm">Save &amp; Enable Auto-Sync</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+  <!-- ADD PARTY MODAL -->
+  <div id="modal-add-party" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4">
+      <div class="flex justify-between items-center">
+        <h3 id="modal-party-title" class="text-base font-bold text-slate-900">Register New Party</h3>
+        <button id="modal-party-close" class="text-slate-400 hover:text-slate-600 text-lg font-bold">&times;</button>
+      </div>
+      <form id="form-new-party" class="space-y-4 text-xs sm:text-sm">
+        <div>
+          <label for="new-party-name" class="block font-semibold text-slate-700 mb-1">Party Name *</label>
+          <input type="text" id="new-party-name" required placeholder="e.g. Mahalakshmi Traders" class="w-full rounded-xl border border-slate-300 px-3 py-2">
+        </div>
+        <div>
+          <label for="new-party-type" class="block font-semibold text-slate-700 mb-1">Party Role *</label>
+          <select id="new-party-type" class="w-full rounded-xl border border-slate-300 px-3 py-2 bg-white">
+            <option value="Retailer">Buyer (Retailer)</option>
+            <option value="Wholesaler">Seller (Wholesaler)</option>
+          </select>
+        </div>
+        <div>
+          <label for="new-party-phone" class="block font-semibold text-slate-700 mb-1">Phone Number</label>
+          <input type="text" id="new-party-phone" placeholder="e.g. +91 98260 12345" class="w-full rounded-xl border border-slate-300 px-3 py-2">
+        </div>
+        <div>
+          <label for="new-party-city" class="block font-semibold text-slate-700 mb-1">Market / City</label>
+          <input type="text" id="new-party-city" placeholder="e.g. Krishi Mandi, Indore" class="w-full rounded-xl border border-slate-300 px-3 py-2">
+        </div>
+        <div class="flex justify-end space-x-2 pt-3">
+          <button type="button" id="modal-party-cancel" class="px-4 py-2 font-semibold text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200">Cancel</button>
+          <button type="submit" class="px-5 py-2 font-bold text-white bg-blue-600 rounded-xl hover:bg-blue-700">Save Party</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- APPLICATION JAVASCRIPT LOGIC -->
+  <script>
+    // --- INITIAL DEMO DATA ---
+    const DEFAULT_PARTIES = [
+      { id: 'p1', name: 'Sharma Kirana Store', type: 'Retailer', phone: '+91 98260 11223', city: 'Vijay Nagar, Indore' },
+      { id: 'p2', name: 'Balaji Provision', type: 'Retailer', phone: '+91 94250 44556', city: 'Sarrafa, Ujjain' },
+      { id: 'p3', name: 'Krishna Retail', type: 'Retailer', phone: '+91 97130 77889', city: 'Mandleshwar' },
+      { id: 'p4', name: 'Agarwal Daily Needs', type: 'Retailer', phone: '+91 98930 22334', city: 'Rau, Indore' },
+      { id: 'p5', name: 'Mahaveer Wholesale Mart', type: 'Wholesaler', phone: '+91 98270 99887', city: 'Grain Mandi, Indore' },
+      { id: 'p6', name: 'Sri Ganesh Trading Co.', type: 'Wholesaler', phone: '+91 94251 66778', city: 'Malwa Mills, Indore' },
+      { id: 'p7', name: 'Apex Grain Distributors', type: 'Wholesaler', phone: '+91 91110 33445', city: 'Dewas Naka' }
+    ];
+
+    const DEFAULT_ORDERS = [
+      { id: 'ORD-1001', date: '2026-11-08', seller: 'Mahaveer Wholesale Mart', buyer: 'Sharma Kirana Store', item: 'Basmati Rice (50kg Bag)', qty: 40, rate: 1950, amount: 78000, paid: 78000, paidToSeller: 78000, remarks: 'Delivered in full' },
+      { id: 'ORD-1002', date: '2026-11-08', seller: 'Sri Ganesh Trading Co.', buyer: 'Balaji Provision', item: 'Refined Oil (15L Tin)', qty: 30, rate: 1620, amount: 48600, paid: 25000, paidToSeller: 25000, remarks: 'Partial payment received' },
+      { id: 'ORD-1003', date: '2026-11-09', seller: 'Apex Grain Distributors', buyer: 'Krishna Retail', item: 'Wheat Flour / Atta (50kg)', qty: 60, rate: 1450, amount: 87000, paid: 0, paidToSeller: 0, remarks: '7 days credit term' },
+      { id: 'ORD-1004', date: '2026-11-09', seller: 'Mahaveer Wholesale Mart', buyer: 'Agarwal Daily Needs', item: 'Sugar M-30 (50kg Bag)', qty: 25, rate: 2100, amount: 52500, paid: 52500, paidToSeller: 50000, remarks: 'Broker float ₹2,500' },
+      { id: 'ORD-1005', date: '2026-11-10', seller: 'Sri Ganesh Trading Co.', buyer: 'Sharma Kirana Store', item: 'Spices Assorted Box', qty: 15, rate: 3200, amount: 48000, paid: 20000, paidToSeller: 20000, remarks: 'Balance promised Friday' },
+      { id: 'ORD-1006', date: '2026-11-10', seller: 'Apex Grain Distributors', buyer: 'Balaji Provision', item: 'Toor Dal Premium (50kg)', qty: 20, rate: 4600, amount: 92000, paid: 40000, paidToSeller: 40000, remarks: 'Half paid' },
+      { id: 'ORD-1007', date: '2026-11-11', seller: 'Mahaveer Wholesale Mart', buyer: 'Krishna Retail', item: 'Basmati Rice (50kg Bag)', qty: 30, rate: 1950, amount: 58500, paid: 0, paidToSeller: 0, remarks: 'Today morning dispatch' }
+    ];
+
+    const DEFAULT_PAYMENTS = [
+      { id: 'PAY-101', date: '2026-11-08', party: 'Sharma Kirana Store', direction: 'from_buyer', amount: 78000, mode: 'Bank Transfer (NEFT/RTGS)', linkedOrder: 'ORD-1001', ref: 'NEFT#IND882101' },
+      { id: 'PAY-102', date: '2026-11-08', party: 'Mahaveer Wholesale Mart', direction: 'to_seller', amount: 78000, mode: 'Bank Transfer (NEFT/RTGS)', linkedOrder: 'ORD-1001', ref: 'Forwarded to Wholesaler' },
+      { id: 'PAY-103', date: '2026-11-09', party: 'Balaji Provision', direction: 'from_buyer', amount: 25000, mode: 'UPI / PhonePe / GPay', linkedOrder: 'ORD-1002', ref: 'UPI/99281921' },
+      { id: 'PAY-104', date: '2026-11-09', party: 'Sri Ganesh Trading Co.', direction: 'to_seller', amount: 25000, mode: 'UPI / PhonePe / GPay', linkedOrder: 'ORD-1002', ref: 'Forwarded UPI' },
+      { id: 'PAY-105', date: '2026-11-10', party: 'Agarwal Daily Needs', direction: 'from_buyer', amount: 52500, mode: 'Cheque', linkedOrder: 'ORD-1004', ref: 'HDFC Chq #110928' },
+      { id: 'PAY-106', date: '2026-11-10', party: 'Mahaveer Wholesale Mart', direction: 'to_seller', amount: 50000, mode: 'Bank Transfer (NEFT/RTGS)', linkedOrder: 'ORD-1004', ref: 'Disbursed ₹50k' },
+      { id: 'PAY-107', date: '2026-11-10', party: 'Sharma Kirana Store', direction: 'from_buyer', amount: 20000, mode: 'Cash', linkedOrder: 'ORD-1005', ref: 'Cash slip #41' },
+      { id: 'PAY-108', date: '2026-11-10', party: 'Sri Ganesh Trading Co.', direction: 'to_seller', amount: 20000, mode: 'Cash', linkedOrder: 'ORD-1005', ref: 'Cash handed to Munimji' },
+      { id: 'PAY-109', date: '2026-11-10', party: 'Balaji Provision', direction: 'from_buyer', amount: 40000, mode: 'UPI / PhonePe / GPay', linkedOrder: 'ORD-1006', ref: 'UPI Ref 4099281' },
+      { id: 'PAY-110', date: '2026-11-10', party: 'Apex Grain Distributors', direction: 'to_seller', amount: 40000, mode: 'Bank Transfer (NEFT/RTGS)', linkedOrder: 'ORD-1006', ref: 'Bank RTGS' }
+    ];
+
+    // --- APPLICATION STATE ---
+    let state = {
+      parties: [],
+      orders: [],
+      payments: [],
+      syncQueue: [],
+      sheetWebAppUrl: '',
+      isSyncing: false,
+      activeView: 'entry',
+      selectedBuyerId: null,
+      buyerSubTab: 'orders'
+    };
+
+    // Sync any parties from orders in saved data into master parties list
+    function syncPartiesFromSavedData() {
+      if (!Array.isArray(state.parties)) state.parties = [];
+      if (!Array.isArray(state.orders)) state.orders = [];
+
+      state.orders.forEach(o => {
+        if (o.seller && !state.parties.some(p => p.name.trim().toLowerCase() === o.seller.trim().toLowerCase())) {
+          state.parties.push({
+            id: 'p_' + Date.now() + Math.random().toString(36).substr(2, 4),
+            name: o.seller.trim(),
+            type: 'Wholesaler',
+            phone: '',
+            city: ''
+          });
+        }
+        if (o.buyer && !state.parties.some(p => p.name.trim().toLowerCase() === o.buyer.trim().toLowerCase())) {
+          state.parties.push({
+            id: 'p_' + Date.now() + Math.random().toString(36).substr(2, 4),
+            name: o.buyer.trim(),
+            type: 'Retailer',
+            phone: '',
+            city: ''
+          });
+        }
+      });
+    }
+
+    // Safe LocalStorage helpers
+    function loadState() {
+      try {
+        const storedParties = localStorage.getItem('vyapar_parties');
+        const storedOrders = localStorage.getItem('vyapar_orders');
+        const storedPayments = localStorage.getItem('vyapar_payments');
+        const storedQueue = localStorage.getItem('vyapar_sync_queue');
+        const storedUrl = localStorage.getItem('vyapar_sheet_url');
+        if (storedQueue) state.syncQueue = JSON.parse(storedQueue);
+        if (storedUrl) state.sheetWebAppUrl = storedUrl;
+        if (storedParties && storedOrders && storedPayments) {
+          state.parties = JSON.parse(storedParties);
+          state.orders = JSON.parse(storedOrders);
+          state.payments = JSON.parse(storedPayments);
+          syncPartiesFromSavedData();
+          if (!state.selectedBuyerId) {
+            state.selectedBuyerId = state.parties.find(p => p.type === 'Retailer')?.id || null;
+          }
+          return;
+        }
+      } catch (e) {
+        console.warn('LocalStorage error or unavailable:', e);
+      }
+      resetToDefault();
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem('vyapar_parties', JSON.stringify(state.parties));
+        localStorage.setItem('vyapar_orders', JSON.stringify(state.orders));
+        localStorage.setItem('vyapar_payments', JSON.stringify(state.payments));
+        localStorage.setItem('vyapar_sync_queue', JSON.stringify(state.syncQueue));
+        localStorage.setItem('vyapar_sheet_url', state.sheetWebAppUrl || '');
+      } catch (e) {
+        console.warn('LocalStorage save failed:', e);
+      }
+      updateAllUI();
+    }
+
+    // --- GOOGLE SHEET AUTO-SYNC ENGINE ---
+    function updateSyncStatusUI() {
+      const btn = document.getElementById('btn-sheet-sync-modal');
+      const dot = document.getElementById('sync-status-dot');
+      const label = document.getElementById('sync-status-label');
+      const modalText = document.getElementById('sync-modal-status-text');
+      const pendingCountEl = document.getElementById('sync-pending-count');
+      const btnSyncNow = document.getElementById('btn-sync-now');
+      const pending = state.syncQueue.length;
+
+      if (pendingCountEl) pendingCountEl.textContent = pending;
+      if (btnSyncNow) btnSyncNow.disabled = !state.sheetWebAppUrl || pending === 0 || !navigator.onLine || state.isSyncing;
+
+      if (!state.sheetWebAppUrl) {
+        if (btn) btn.className = 'px-3 py-1.5 text-xs font-semibold text-amber-800 bg-amber-50 border border-amber-200 hover:bg-amber-100 rounded-lg transition-colors flex items-center space-x-1.5';
+        if (dot) dot.className = 'w-2 h-2 rounded-full bg-amber-500';
+        if (label) label.textContent = 'Link Sheet';
+        if (modalText) modalText.textContent = 'Not linked yet — paste your Web App URL below';
+        return;
+      }
+
+      if (state.isSyncing) {
+        if (btn) btn.className = 'px-3 py-1.5 text-xs font-semibold text-blue-800 bg-blue-50 border border-blue-200 rounded-lg transition-colors flex items-center space-x-1.5';
+        if (dot) dot.className = 'w-2 h-2 rounded-full bg-blue-500 animate-ping';
+        if (label) label.textContent = 'Syncing...';
+        if (modalText) modalText.textContent = 'Uploading pending entries to Google Sheet...';
+      } else if (!navigator.onLine) {
+        if (btn) btn.className = 'px-3 py-1.5 text-xs font-semibold text-slate-700 bg-slate-100 border border-slate-300 rounded-lg transition-colors flex items-center space-x-1.5';
+        if (dot) dot.className = 'w-2 h-2 rounded-full bg-slate-400';
+        if (label) label.textContent = `Offline (${pending} queued)`;
+        if (modalText) modalText.textContent = `Offline — ${pending} item(s) queued for auto-sync when online`;
+      } else if (pending > 0) {
+        if (btn) btn.className = 'px-3 py-1.5 text-xs font-semibold text-amber-800 bg-amber-50 border border-amber-200 rounded-lg transition-colors flex items-center space-x-1.5';
+        if (dot) dot.className = 'w-2 h-2 rounded-full bg-amber-500';
+        if (label) label.textContent = `${pending} Pending Sync`;
+        if (modalText) modalText.textContent = `Online — ${pending} item(s) waiting to sync`;
+      } else {
+        if (btn) btn.className = 'px-3 py-1.5 text-xs font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 rounded-lg transition-colors flex items-center space-x-1.5';
+        if (dot) dot.className = 'w-2 h-2 rounded-full bg-emerald-500';
+        if (label) label.textContent = 'Sheet Synced';
+        if (modalText) modalText.textContent = 'Connected & Online — All entries synced to Google Sheet';
+      }
+    }
+
+    function queueForSheetSync(type, data) {
+      state.syncQueue.push({ type, data, ts: Date.now() });
+      saveState();
+      if (navigator.onLine && state.sheetWebAppUrl) {
+        syncPendingQueue();
+      }
+    }
+
+    async function syncPendingQueue() {
+      if (!state.sheetWebAppUrl || !navigator.onLine || state.isSyncing || state.syncQueue.length === 0) {
+        updateSyncStatusUI();
+        return;
+      }
+
+      state.isSyncing = true;
+      updateSyncStatusUI();
+
+      while (state.syncQueue.length > 0 && navigator.onLine) {
+        const item = state.syncQueue[0];
+        try {
+          await fetch(state.sheetWebAppUrl, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(item)
+          });
+          state.syncQueue.shift();
+          try {
+            localStorage.setItem('vyapar_sync_queue', JSON.stringify(state.syncQueue));
+          } catch (e) {}
+        } catch (err) {
+          console.warn('Sheet sync paused:', err);
+          break;
+        }
+      }
+
+      state.isSyncing = false;
+      updateSyncStatusUI();
+      if (state.syncQueue.length === 0) {
+        showToast('All new entries synced to Google Sheet!');
+      }
+    }
+
+    function resetToDefault() {
+      state.parties = JSON.parse(JSON.stringify(DEFAULT_PARTIES));
+      state.orders = JSON.parse(JSON.stringify(DEFAULT_ORDERS));
+      state.payments = JSON.parse(JSON.stringify(DEFAULT_PAYMENTS));
+      state.selectedBuyerId = state.parties.find(p => p.type === 'Retailer')?.id || null;
+      saveState();
+    }
+
+    // Currency Formatter
+    function formatINR(num) {
+      const val = Number(num) || 0;
+      return '₹' + Math.round(val).toLocaleString('en-IN');
+    }
+
+    // Toast Notification Builder
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      const bg = type === 'success' ? 'bg-slate-900 text-white border-emerald-500' : 'bg-rose-900 text-white border-rose-500';
+      toast.className = `${bg} pointer-events-auto border-l-4 px-4 py-3 rounded-xl shadow-xl flex items-center space-x-2 text-xs sm:text-sm font-semibold transition-all transform duration-300 opacity-0 translate-y-2`;
+      toast.innerHTML = `
+        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        <span>${message}</span>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.classList.remove('opacity-0', 'translate-y-2');
+      }, 20);
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    // Party financial metrics calculator
+    function getPartyMetrics(partyName, partyType) {
+      if (partyType === 'Retailer') {
+        const partyOrders = state.orders.filter(o => o.buyer === partyName);
+        const totalOrdered = partyOrders.reduce((sum, o) => sum + (Number(o.amount) || 0), 0);
+        const totalPaid = partyOrders.reduce((sum, o) => sum + (Number(o.paid) || 0), 0);
+        const balanceDue = totalOrdered - totalPaid;
+        return { totalOrders: partyOrders.length, totalAmount: totalOrdered, totalPaid, balanceDue };
+      } else {
+        const partySupplies = state.orders.filter(o => o.seller === partyName);
+        const totalSupplied = partySupplies.reduce((sum, o) => sum + (Number(o.amount) || 0), 0);
+        const totalPaidToSeller = partySupplies.reduce((sum, o) => sum + (Number(o.paidToSeller) || 0), 0);
+        const balanceDue = totalSupplied - totalPaidToSeller;
+        return { totalOrders: partySupplies.length, totalAmount: totalSupplied, totalPaid: totalPaidToSeller, balanceDue };
+      }
+    }
+
+    // --- RENDER FUNCTIONS ---
+
+    function updateHeaderStats() {
+      let totalReceivable = 0;
+      let totalPayable = 0;
+
+      state.orders.forEach(o => {
+        const amount = Number(o.amount) || 0;
+        const buyerPaid = Number(o.paid) || 0;
+        const sellerPaid = Number(o.paidToSeller) || 0;
+        totalReceivable += (amount - buyerPaid);
+        totalPayable += (amount - sellerPaid);
+      });
+
+      document.getElementById('header-receivable').textContent = formatINR(totalReceivable);
+      document.getElementById('header-payable').textContent = formatINR(totalPayable);
+      const mobRec = document.getElementById('mobile-receivable');
+      const mobPay = document.getElementById('mobile-payable');
+      if (mobRec) mobRec.textContent = formatINR(totalReceivable);
+      if (mobPay) mobPay.textContent = formatINR(totalPayable);
+
+      // EOD stats
+      const eodRec = document.getElementById('eod-total-receivable');
+      const eodPay = document.getElementById('eod-total-payable');
+      const eodFloat = document.getElementById('eod-broker-float');
+      if (eodRec) eodRec.textContent = formatINR(totalReceivable);
+      if (eodPay) eodPay.textContent = formatINR(totalPayable);
+      if (eodFloat) {
+        // float is money collected from buyer but not yet forwarded to seller
+        let totalBuyerPaid = state.orders.reduce((s, o) => s + (Number(o.paid) || 0), 0);
+        let totalSellerPaid = state.orders.reduce((s, o) => s + (Number(o.paidToSeller) || 0), 0);
+        let float = Math.max(0, totalBuyerPaid - totalSellerPaid);
+        eodFloat.textContent = formatINR(float);
+      }
+      const eodDate = document.getElementById('eod-today-date');
+      if (eodDate) eodDate.textContent = new Date().toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    function populateDatalistsAndDropdowns() {
+      const sellerSelect = document.getElementById('order-seller');
+      const buyerSelect = document.getElementById('order-buyer');
+      const buyerSelectDropdown = document.getElementById('buyer-select-dropdown');
+      const sellerCountBadge = document.getElementById('seller-count-badge');
+      const buyerCountBadge = document.getElementById('buyer-count-badge');
+
+      const sellers = state.parties.filter(p => p.type === 'Wholesaler');
+      const buyers = state.parties.filter(p => p.type === 'Retailer');
+
+      // Populate Order Form Seller Dropdown from saved data
+      if (sellerSelect) {
+        const currentSellerVal = sellerSelect.value;
+        sellerSelect.innerHTML = `<option value="">-- Choose Saved Wholesaler (${sellers.length} saved) --</option>` +
+          sellers.map(s => `<option value="${s.name}">${s.name} ${s.city ? `— ${s.city}` : ''}</option>`).join('') +
+          `<option value="__NEW__">+ Enter New Wholesaler...</option>`;
+        if (currentSellerVal && currentSellerVal !== '__NEW__' && sellers.some(s => s.name === currentSellerVal)) {
+          sellerSelect.value = currentSellerVal;
+        }
+      }
+      if (sellerCountBadge) {
+        sellerCountBadge.textContent = `${sellers.length} saved wholesalers available`;
+      }
+
+      // Populate Order Form Buyer Dropdown from saved data
+      if (buyerSelect) {
+        const currentBuyerVal = buyerSelect.value;
+        buyerSelect.innerHTML = `<option value="">-- Choose Saved Retailer (${buyers.length} saved) --</option>` +
+          buyers.map(b => `<option value="${b.name}">${b.name} ${b.city ? `— ${b.city}` : ''}</option>`).join('') +
+          `<option value="__NEW__">+ Enter New Retailer...</option>`;
+        if (currentBuyerVal && currentBuyerVal !== '__NEW__' && buyers.some(b => b.name === currentBuyerVal)) {
+          buyerSelect.value = currentBuyerVal;
+        }
+      }
+      if (buyerCountBadge) {
+        buyerCountBadge.textContent = `${buyers.length} saved retailers available`;
+      }
+
+      // Dropdown in Buyers Tab
+      if (buyerSelectDropdown) {
+        buyerSelectDropdown.innerHTML = '<option value="">-- Choose Buyer / Retailer --</option>' +
+          buyers.map(b => `<option value="${b.id}" ${b.id === state.selectedBuyerId ? 'selected' : ''}>${b.name}</option>`).join('');
+      }
+
+      // Dropdown in Payment Form based on direction
+      updatePaymentPartyDropdown();
+    }
+
+    function updatePaymentPartyDropdown() {
+      const payPartySelect = document.getElementById('pay-party');
+      const isFromBuyer = document.querySelector('input[name="payment-direction"]:checked')?.value === 'from_buyer';
+      const label = document.getElementById('pay-party-label');
+      
+      if (!payPartySelect) return;
+
+      if (isFromBuyer) {
+        if (label) label.textContent = 'Select Buyer (Retailer) *';
+        const buyers = state.parties.filter(p => p.type === 'Retailer');
+        payPartySelect.innerHTML = '<option value="">-- Choose Retailer --</option>' +
+          buyers.map(b => {
+            const m = getPartyMetrics(b.name, 'Retailer');
+            return `<option value="${b.name}">${b.name} (Due: ${formatINR(m.balanceDue)})</option>`;
+          }).join('');
+      } else {
+        if (label) label.textContent = 'Select Wholesaler (Supplier) *';
+        const sellers = state.parties.filter(p => p.type === 'Wholesaler');
+        payPartySelect.innerHTML = '<option value="">-- Choose Wholesaler --</option>' +
+          sellers.map(s => {
+            const m = getPartyMetrics(s.name, 'Wholesaler');
+            return `<option value="${s.name}">${s.name} (Payable: ${formatINR(m.balanceDue)})</option>`;
+          }).join('');
+      }
+
+      updateLinkedOrdersDropdown();
+    }
+
+    function updateLinkedOrdersDropdown() {
+      const partyName = document.getElementById('pay-party')?.value;
+      const orderSelect = document.getElementById('pay-linked-order');
+      const hint = document.getElementById('pay-party-due-hint');
+      const isFromBuyer = document.querySelector('input[name="payment-direction"]:checked')?.value === 'from_buyer';
+
+      if (!orderSelect) return;
+
+      if (!partyName) {
+        orderSelect.innerHTML = '<option value="">General Balance (Unallocated)</option>';
+        if (hint) hint.textContent = 'Select a party to view current outstanding';
+        return;
+      }
+
+      const partyType = isFromBuyer ? 'Retailer' : 'Wholesaler';
+      const metrics = getPartyMetrics(partyName, partyType);
+      if (hint) {
+        hint.textContent = `Current ${isFromBuyer ? 'Receivable Due' : 'Payable to Supplier'}: ${formatINR(metrics.balanceDue)}`;
+      }
+
+      // Filter pending or partial orders for this party
+      const relevantOrders = state.orders.filter(o => {
+        if (isFromBuyer) {
+          return o.buyer === partyName && (o.amount - (o.paid || 0) > 0);
+        } else {
+          return o.seller === partyName && (o.amount - (o.paidToSeller || 0) > 0);
+        }
+      });
+
+      let options = '<option value="">General Balance (Unallocated)</option>';
+      relevantOrders.forEach(o => {
+        const due = isFromBuyer ? (o.amount - (o.paid || 0)) : (o.amount - (o.paidToSeller || 0));
+        options += `<option value="${o.id}">${o.id} - ${o.item} (Due: ${formatINR(due)})</option>`;
+      });
+      orderSelect.innerHTML = options;
+    }
+
+    // Render Quick Activity Table on Entry Tab
+    function renderQuickActivity() {
+      const tbody = document.getElementById('quick-activity-tbody');
+      if (!tbody) return;
+
+      const recentOrders = [...state.orders].reverse().slice(0, 5);
+      if (recentOrders.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-slate-400">No transactions recorded yet.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = recentOrders.map(o => {
+        const due = o.amount - (o.paid || 0);
+        const statusBadge = due <= 0 
+          ? '<span class="bg-emerald-100 text-emerald-800 font-semibold px-2 py-0.5 rounded-full text-[10px]">Paid</span>'
+          : o.paid > 0
+            ? '<span class="bg-amber-100 text-amber-800 font-semibold px-2 py-0.5 rounded-full text-[10px]">Partial</span>'
+            : '<span class="bg-rose-100 text-rose-800 font-semibold px-2 py-0.5 rounded-full text-[10px]">Pending</span>';
+
+        return `
+          <tr class="hover:bg-slate-50 transition-colors">
+            <td class="py-2.5 font-bold text-blue-700">Order</td>
+            <td class="py-2.5 text-slate-500">${o.date}</td>
+            <td class="py-2.5">
+              <span class="font-bold text-slate-800">${o.buyer}</span>
+              <span class="text-slate-400 block text-[11px]">from ${o.seller} • ${o.item}</span>
+            </td>
+            <td class="py-2.5 text-right font-bold text-slate-900">${formatINR(o.amount)}</td>
+            <td class="py-2.5 text-center">${statusBadge}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Render Buyers All Table & KPI Stats
+    function renderBuyersAll() {
+      const buyers = state.parties.filter(p => p.type === 'Retailer');
+      const tbody = document.getElementById('buyers-table-tbody');
+      const search = (document.getElementById('search-buyers-input')?.value || '').toLowerCase();
+
+      let totalOrdersVal = 0;
+      let totalPaidVal = 0;
+      let totalDueVal = 0;
+
+      const filtered = buyers.filter(b => {
+        const matches = b.name.toLowerCase().includes(search) || (b.city && b.city.toLowerCase().includes(search)) || (b.phone && b.phone.includes(search));
+        return matches;
+      });
+
+      buyers.forEach(b => {
+        const m = getPartyMetrics(b.name, 'Retailer');
+        totalOrdersVal += m.totalAmount;
+        totalPaidVal += m.totalPaid;
+        totalDueVal += m.balanceDue;
+      });
+
+      document.getElementById('stat-total-buyers').textContent = buyers.length;
+      document.getElementById('stat-buyers-total-orders').textContent = formatINR(totalOrdersVal);
+      document.getElementById('stat-buyers-total-paid').textContent = formatINR(totalPaidVal);
+      document.getElementById('stat-buyers-total-due').textContent = formatINR(totalDueVal);
+
+      if (!tbody) return;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="py-6 text-center text-slate-400">No buyers found matching search.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(b => {
+        const m = getPartyMetrics(b.name, 'Retailer');
+        const badge = m.balanceDue <= 0
+          ? '<span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full text-xs">Cleared</span>'
+          : '<span class="bg-rose-100 text-rose-800 font-bold px-2 py-0.5 rounded-full text-xs">Pending Dues</span>';
+
+        return `
+          <tr class="hover:bg-slate-50 transition-colors">
+            <td class="py-3 px-4">
+              <span class="font-bold text-slate-900 block">${b.name}</span>
+              <span class="text-xs text-slate-400">${m.totalOrders} order(s) placed</span>
+            </td>
+            <td class="py-3 px-4 text-slate-600 text-xs">
+              <div>${b.city || 'Indore Market'}</div>
+              <div class="text-slate-400">${b.phone || '--'}</div>
+            </td>
+            <td class="py-3 px-4 text-right font-semibold text-slate-800">${formatINR(m.totalAmount)}</td>
+            <td class="py-3 px-4 text-right font-semibold text-emerald-600">${formatINR(m.totalPaid)}</td>
+            <td class="py-3 px-4 text-right font-bold text-rose-600">${formatINR(m.balanceDue)}</td>
+            <td class="py-3 px-4 text-center">${badge}</td>
+            <td class="py-3 px-4 text-center">
+              <button data-buyer-id="${b.id}" class="btn-inspect-buyer px-3 py-1.5 text-xs font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
+                View Ledger &rarr;
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      // Add event listeners for inspect buttons
+      document.querySelectorAll('.btn-inspect-buyer').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const id = e.currentTarget.getAttribute('data-buyer-id');
+          switchToSpecificBuyer(id);
+        });
+      });
+    }
+
+    // Render Specific Buyer View
+    function renderSpecificBuyer() {
+      const buyerId = state.selectedBuyerId;
+      const buyer = state.parties.find(p => p.id === buyerId && p.type === 'Retailer') || state.parties.find(p => p.type === 'Retailer');
+      
+      if (!buyer) return;
+      state.selectedBuyerId = buyer.id;
+
+      // Update Header info
+      document.getElementById('spec-buyer-avatar').textContent = buyer.name.charAt(0);
+      document.getElementById('spec-buyer-name').textContent = buyer.name;
+      document.getElementById('spec-buyer-meta').textContent = `Phone: ${buyer.phone || 'N/A'}  •  Market: ${buyer.city || 'Indore'}`;
+
+      const metrics = getPartyMetrics(buyer.name, 'Retailer');
+      document.getElementById('spec-buyer-invoiced').textContent = formatINR(metrics.totalAmount);
+      document.getElementById('spec-buyer-paid').textContent = formatINR(metrics.totalPaid);
+      document.getElementById('spec-buyer-due').textContent = formatINR(metrics.balanceDue);
+      document.getElementById('spec-buyer-orders-count').textContent = metrics.totalOrders;
+
+      // Render Orders for this buyer
+      const buyerOrders = state.orders.filter(o => o.buyer === buyer.name);
+      const ordersTbody = document.getElementById('spec-buyer-orders-tbody');
+      if (ordersTbody) {
+        if (buyerOrders.length === 0) {
+          ordersTbody.innerHTML = '<tr><td colspan="8" class="py-6 text-center text-slate-400">No orders recorded for this buyer yet.</td></tr>';
+        } else {
+          ordersTbody.innerHTML = buyerOrders.map(o => {
+            const due = o.amount - (o.paid || 0);
+            const statusBadge = due <= 0 
+              ? '<span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full text-xs">Paid</span>'
+              : o.paid > 0
+                ? '<span class="bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full text-xs">Partial</span>'
+                : '<span class="bg-rose-100 text-rose-800 font-bold px-2 py-0.5 rounded-full text-xs">Pending</span>';
+
+            return `
+              <tr class="hover:bg-slate-50 transition-colors">
+                <td class="py-3 px-4">
+                  <span class="font-bold text-blue-700 block">${o.id}</span>
+                  <span class="text-xs text-slate-400">${o.date}</span>
+                </td>
+                <td class="py-3 px-4 font-semibold text-slate-800">${o.seller}</td>
+                <td class="py-3 px-4">
+                  <span class="font-medium text-slate-900 block">${o.item}</span>
+                  <span class="text-xs text-slate-400">${o.qty} units</span>
+                </td>
+                <td class="py-3 px-4 text-right text-slate-700">${formatINR(o.rate)}</td>
+                <td class="py-3 px-4 text-right font-bold text-slate-900">${formatINR(o.amount)}</td>
+                <td class="py-3 px-4 text-right font-semibold text-emerald-600">${formatINR(o.paid || 0)}</td>
+                <td class="py-3 px-4 text-right font-bold text-rose-600">${formatINR(due)}</td>
+                <td class="py-3 px-4 text-center">${statusBadge}</td>
+              </tr>
+            `;
+          }).join('');
+        }
+      }
+
+      // Render Payments for this buyer
+      const buyerPayments = state.payments.filter(p => p.party === buyer.name && p.direction === 'from_buyer');
+      const paymentsTbody = document.getElementById('spec-buyer-payments-tbody');
+      if (paymentsTbody) {
+        if (buyerPayments.length === 0) {
+          paymentsTbody.innerHTML = '<tr><td colspan="6" class="py-6 text-center text-slate-400">No payment receipts logged for this buyer yet.</td></tr>';
+        } else {
+          paymentsTbody.innerHTML = buyerPayments.map(p => `
+            <tr class="hover:bg-slate-50 transition-colors">
+              <td class="py-3 px-4 font-bold text-emerald-700">${p.id}</td>
+              <td class="py-3 px-4 text-slate-600">${p.date}</td>
+              <td class="py-3 px-4 font-medium text-slate-800">${p.mode}</td>
+              <td class="py-3 px-4 text-slate-600">${p.ref || '--'}</td>
+              <td class="py-3 px-4 text-slate-500">${p.linkedOrder || 'General Balance'}</td>
+              <td class="py-3 px-4 text-right font-bold text-emerald-600">${formatINR(p.amount)}</td>
+            </tr>
+          `).join('');
+        }
+      }
+    }
+
+    // Render Wholesalers Table
+    function renderSellers() {
+      const sellers = state.parties.filter(p => p.type === 'Wholesaler');
+      const tbody = document.getElementById('sellers-table-tbody');
+      if (!tbody) return;
+
+      tbody.innerHTML = sellers.map(s => {
+        const m = getPartyMetrics(s.name, 'Wholesaler');
+        const badge = m.balanceDue <= 0
+          ? '<span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full text-xs">All Paid</span>'
+          : '<span class="bg-rose-100 text-rose-800 font-bold px-2 py-0.5 rounded-full text-xs">Payout Pending</span>';
+
+        return `
+          <tr class="hover:bg-slate-50 transition-colors">
+            <td class="py-3 px-4">
+              <span class="font-bold text-slate-900 block">${s.name}</span>
+              <span class="text-xs text-slate-400">${m.totalOrders} supply shipment(s)</span>
+            </td>
+            <td class="py-3 px-4 text-xs text-slate-600">
+              <div>${s.city || 'Mandi Yard'}</div>
+              <div class="text-slate-400">${s.phone || '--'}</div>
+            </td>
+            <td class="py-3 px-4 text-right font-semibold text-slate-800">${formatINR(m.totalAmount)}</td>
+            <td class="py-3 px-4 text-right font-semibold text-blue-600">${formatINR(m.totalPaid)}</td>
+            <td class="py-3 px-4 text-right font-bold text-rose-600">${formatINR(m.balanceDue)}</td>
+            <td class="py-3 px-4 text-center">${badge}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Render Master Orders Register Table
+    function renderOrdersRegister() {
+      const tbody = document.getElementById('master-orders-tbody');
+      const filterStatus = document.getElementById('filter-order-status')?.value || 'all';
+      const search = (document.getElementById('search-orders-input')?.value || '').toLowerCase();
+
+      if (!tbody) return;
+
+      const filtered = state.orders.filter(o => {
+        const due = o.amount - (o.paid || 0);
+        let status = 'Pending';
+        if (due <= 0) status = 'Paid';
+        else if (o.paid > 0) status = 'Partial';
+
+        if (filterStatus !== 'all' && status !== filterStatus) return false;
+
+        const str = `${o.id} ${o.buyer} ${o.seller} ${o.item} ${o.date}`.toLowerCase();
+        return str.includes(search);
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10" class="py-6 text-center text-slate-400">No orders found matching criteria.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(o => {
+        const due = o.amount - (o.paid || 0);
+        const statusBadge = due <= 0 
+          ? '<span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full text-xs">Paid</span>'
+          : o.paid > 0
+            ? '<span class="bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full text-xs">Partial</span>'
+            : '<span class="bg-rose-100 text-rose-800 font-bold px-2 py-0.5 rounded-full text-xs">Pending</span>';
+
+        return `
+          <tr class="hover:bg-slate-50 transition-colors">
+            <td class="py-3 px-4">
+              <span class="font-bold text-blue-700 block">${o.id}</span>
+              <span class="text-xs text-slate-400">${o.date}</span>
+            </td>
+            <td class="py-3 px-4 font-semibold text-slate-800">${o.seller}</td>
+            <td class="py-3 px-4 font-semibold text-slate-900">${o.buyer}</td>
+            <td class="py-3 px-4 text-slate-700">${o.item}</td>
+            <td class="py-3 px-4 text-right font-medium">${o.qty}</td>
+            <td class="py-3 px-4 text-right text-slate-700">${formatINR(o.rate)}</td>
+            <td class="py-3 px-4 text-right font-bold text-slate-900">${formatINR(o.amount)}</td>
+            <td class="py-3 px-4 text-right font-semibold text-emerald-600">${formatINR(o.paid || 0)}</td>
+            <td class="py-3 px-4 text-right font-bold text-rose-600">${formatINR(due)}</td>
+            <td class="py-3 px-4 text-center">${statusBadge}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Render End of Day Matrix & Lines
+    function renderEodReconciliation() {
+      const buyers = state.parties.filter(p => p.type === 'Retailer');
+      const sellers = state.parties.filter(p => p.type === 'Wholesaler');
+      const matrixTable = document.getElementById('eod-matrix-table');
+      const linesTbody = document.getElementById('eod-lines-tbody');
+
+      if (!matrixTable) return;
+
+      // Build Matrix Table
+      let thead = `<thead class="bg-slate-100 text-slate-700 font-bold text-xs uppercase border-b border-slate-200"><tr><th class="py-3 px-4 bg-slate-200 text-slate-900">Retailer (Buyer) \\ Wholesaler</th>`;
+      sellers.forEach(s => {
+        thead += `<th class="py-3 px-4 text-right">${s.name}</th>`;
+      });
+      thead += `<th class="py-3 px-4 text-right bg-rose-50 text-rose-900">Total Due by Retailer</th></tr></thead>`;
+
+      let tbodyRows = '<tbody class="divide-y divide-slate-100 font-medium">';
+      
+      const colTotals = {};
+      sellers.forEach(s => colTotals[s.name] = 0);
+      let grandTotalDue = 0;
+
+      buyers.forEach(b => {
+        let rowTotal = 0;
+        let rowCells = `<td class="py-3 px-4 font-bold text-slate-900 bg-slate-50/50">${b.name}</td>`;
+
+        sellers.forEach(s => {
+          // Find orders between this buyer and seller where buyer hasn't paid
+          const matchingOrders = state.orders.filter(o => o.buyer === b.name && o.seller === s.name);
+          const cellDue = matchingOrders.reduce((sum, o) => sum + Math.max(0, o.amount - (o.paid || 0)), 0);
+          rowTotal += cellDue;
+          colTotals[s.name] += cellDue;
+
+          const cellClass = cellDue > 0 ? 'text-rose-600 font-bold bg-rose-50/40' : 'text-slate-400';
+          rowCells += `<td class="py-3 px-4 text-right ${cellClass}">${cellDue > 0 ? formatINR(cellDue) : '₹0'}</td>`;
+        });
+
+        grandTotalDue += rowTotal;
+        rowCells += `<td class="py-3 px-4 text-right font-black text-rose-700 bg-rose-50/80">${formatINR(rowTotal)}</td>`;
+        tbodyRows += `<tr>${rowCells}</tr>`;
+      });
+
+      // Footer Row for Sellers Total
+      let tfoot = `<tfoot class="bg-slate-100 font-bold text-slate-900 border-t-2 border-slate-300"><tr><td class="py-3 px-4 text-slate-800">Total Due to Wholesaler:</td>`;
+      sellers.forEach(s => {
+        tfoot += `<td class="py-3 px-4 text-right font-extrabold text-blue-900">${formatINR(colTotals[s.name])}</td>`;
+      });
+      tfoot += `<td class="py-3 px-4 text-right font-black text-rose-700 bg-rose-100">${formatINR(grandTotalDue)}</td></tr></tfoot>`;
+
+      matrixTable.innerHTML = thead + tbodyRows + '</tbody>' + tfoot;
+
+      // Render Bilateral lines
+      if (linesTbody) {
+        // Group by (buyer, seller)
+        const pairMap = {};
+        state.orders.forEach(o => {
+          const key = `${o.buyer}__${o.seller}`;
+          if (!pairMap[key]) {
+            pairMap[key] = { buyer: o.buyer, seller: o.seller, count: 0, totalAmount: 0, buyerPaid: 0, sellerPaid: 0 };
+          }
+          pairMap[key].count += 1;
+          pairMap[key].totalAmount += (Number(o.amount) || 0);
+          pairMap[key].buyerPaid += (Number(o.paid) || 0);
+          pairMap[key].sellerPaid += (Number(o.paidToSeller) || 0);
+        });
+
+        const pairs = Object.values(pairMap);
+        linesTbody.innerHTML = pairs.map(p => {
+          const buyerDue = p.totalAmount - p.buyerPaid;
+          const sellerDue = p.totalAmount - p.sellerPaid;
+          const isSettled = buyerDue <= 0 && sellerDue <= 0;
+          const statusBadge = isSettled
+            ? '<span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full text-xs">Fully Reconciled</span>'
+            : '<span class="bg-rose-100 text-rose-800 font-bold px-2 py-0.5 rounded-full text-xs">Settlement Pending</span>';
+
+          return `
+            <tr class="hover:bg-slate-50 transition-colors">
+              <td class="py-3 px-4 font-bold text-slate-900">${p.buyer}</td>
+              <td class="py-3 px-4 font-semibold text-slate-800">${p.seller}</td>
+              <td class="py-3 px-4 text-slate-600">${p.count} order(s)</td>
+              <td class="py-3 px-4 text-right font-medium text-slate-800">${formatINR(p.totalAmount)}</td>
+              <td class="py-3 px-4 text-right font-bold ${buyerDue > 0 ? 'text-rose-600' : 'text-emerald-600'}">${formatINR(buyerDue)}</td>
+              <td class="py-3 px-4 text-right font-bold ${sellerDue > 0 ? 'text-rose-600' : 'text-emerald-600'}">${formatINR(sellerDue)}</td>
+              <td class="py-3 px-4 text-center">${statusBadge}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+    }
+
+    function updateAllUI() {
+      updateSyncStatusUI();
+      updateHeaderStats();
+      populateDatalistsAndDropdowns();
+      renderQuickActivity();
+      renderBuyersAll();
+      renderSpecificBuyer();
+      renderSellers();
+      renderOrdersRegister();
+      renderEodReconciliation();
+    }
+
+    // --- VIEW SWITCHING LOGIC ---
+    function switchMainView(viewName) {
+      state.activeView = viewName;
+      document.querySelectorAll('.view-panel').forEach(p => p.classList.add('hidden'));
+      document.querySelectorAll('.nav-tab').forEach(t => {
+        t.classList.remove('tab-active');
+        t.classList.add('border-transparent', 'text-slate-600');
+      });
+
+      const activePanel = document.getElementById(`view-${viewName}`);
+      const activeTab = document.querySelector(`.nav-tab[data-view="${viewName}"]`);
+
+      if (activePanel) activePanel.classList.remove('hidden');
+      if (activeTab) {
+        activeTab.classList.add('tab-active');
+        activeTab.classList.remove('border-transparent', 'text-slate-600');
+      }
+
+      document.querySelectorAll('.mobile-nav-tab').forEach(mt => {
+        if (mt.getAttribute('data-view') === viewName) {
+          mt.className = 'mobile-nav-tab flex flex-col items-center justify-center py-1 px-3 rounded-xl text-blue-600 bg-blue-50 font-bold';
+        } else {
+          mt.className = 'mobile-nav-tab flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-500 font-medium';
+        }
+      });
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function switchToSpecificBuyer(buyerId) {
+      state.selectedBuyerId = buyerId;
+      switchMainView('buyers');
+
+      document.getElementById('buyers-all-section').classList.add('hidden');
+      document.getElementById('buyers-specific-section').classList.remove('hidden');
+
+      const btnAll = document.getElementById('btn-buyer-mode-all');
+      const btnSpec = document.getElementById('btn-buyer-mode-specific');
+      btnAll.className = 'px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl text-slate-600 bg-slate-100 hover:bg-slate-200 transition-all';
+      btnSpec.className = 'px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-blue-600 text-white shadow-sm transition-all';
+
+      const select = document.getElementById('buyer-select-dropdown');
+      if (select) select.value = buyerId;
+
+      renderSpecificBuyer();
+    }
+
+    function switchToAllBuyers() {
+      document.getElementById('buyers-all-section').classList.remove('hidden');
+      document.getElementById('buyers-specific-section').classList.add('hidden');
+
+      const btnAll = document.getElementById('btn-buyer-mode-all');
+      const btnSpec = document.getElementById('btn-buyer-mode-specific');
+      btnAll.className = 'px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-blue-600 text-white shadow-sm transition-all';
+      btnSpec.className = 'px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl text-slate-600 bg-slate-100 hover:bg-slate-200 transition-all';
+
+      renderBuyersAll();
+    }
+
+    // --- ATTACH EVENT LISTENERS ---
+    window.addEventListener('DOMContentLoaded', () => {
+      loadState();
+
+      // Set default dates
+      const todayISO = new Date().toISOString().split('T')[0];
+      const orderDateInput = document.getElementById('order-date');
+      const payDateInput = document.getElementById('pay-date');
+      if (orderDateInput) orderDateInput.value = todayISO;
+      if (payDateInput) payDateInput.value = todayISO;
+
+      // Nav Tab Clicks (Desktop & Mobile Bottom Bar)
+      document.querySelectorAll('.nav-tab, .mobile-nav-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          const view = tab.getAttribute('data-view');
+          switchMainView(view);
+        });
+      });
+
+      // Quick-pick Commodity Chips
+      document.querySelectorAll('.btn-quick-item').forEach(chip => {
+        chip.addEventListener('click', (e) => {
+          const itemInput = document.getElementById('order-item');
+          if (itemInput) {
+            itemInput.value = e.currentTarget.getAttribute('data-item');
+            itemInput.focus();
+          }
+        });
+      });
+
+      // Collapsible Optional Order Fields Toggle
+      const btnToggleOptionalOrder = document.getElementById('btn-toggle-optional-order');
+      const optionalOrderFields = document.getElementById('optional-order-fields');
+      const iconOptionalOrder = document.getElementById('icon-optional-order');
+      if (btnToggleOptionalOrder && optionalOrderFields) {
+        btnToggleOptionalOrder.addEventListener('click', () => {
+          const isHidden = optionalOrderFields.classList.contains('hidden');
+          optionalOrderFields.classList.toggle('hidden');
+          if (iconOptionalOrder) {
+            iconOptionalOrder.style.transform = isHidden ? 'rotate(45deg)' : 'rotate(0deg)';
+          }
+        });
+      }
+
+      // Toggle Form Switcher (Order vs Payment)
+      const btnToggleOrder = document.getElementById('toggle-form-order');
+      const btnTogglePayment = document.getElementById('toggle-form-payment');
+      const formOrder = document.getElementById('form-order');
+      const formPayment = document.getElementById('form-payment');
+
+      btnToggleOrder.addEventListener('click', () => {
+        btnToggleOrder.className = 'toggle-active px-5 py-2 rounded-lg font-semibold text-xs sm:text-sm transition-all flex items-center space-x-2';
+        btnTogglePayment.className = 'px-5 py-2 rounded-lg font-semibold text-xs sm:text-sm text-slate-700 hover:text-slate-900 transition-all flex items-center space-x-2';
+        formOrder.classList.remove('hidden');
+        formPayment.classList.add('hidden');
+      });
+
+      btnTogglePayment.addEventListener('click', () => {
+        btnTogglePayment.className = 'toggle-active px-5 py-2 rounded-lg font-semibold text-xs sm:text-sm transition-all flex items-center space-x-2';
+        btnToggleOrder.className = 'px-5 py-2 rounded-lg font-semibold text-xs sm:text-sm text-slate-700 hover:text-slate-900 transition-all flex items-center space-x-2';
+        formPayment.classList.remove('hidden');
+        formOrder.classList.add('hidden');
+      });
+
+      // Live Order Amount calculation
+      const qtyInput = document.getElementById('order-qty');
+      const rateInput = document.getElementById('order-rate');
+      const amountDisplay = document.getElementById('order-amount-display');
+
+      function recalculateOrderTotal() {
+        const q = parseFloat(qtyInput.value) || 0;
+        const r = parseFloat(rateInput.value) || 0;
+        amountDisplay.textContent = formatINR(q * r);
+      }
+      qtyInput.addEventListener('input', recalculateOrderTotal);
+      rateInput.addEventListener('input', recalculateOrderTotal);
+
+      // Toggles for New Seller / Buyer in Order Form
+      const btnToggleNewSeller = document.getElementById('btn-toggle-new-seller');
+      const btnToggleNewBuyer = document.getElementById('btn-toggle-new-buyer');
+      const sellerSelect = document.getElementById('order-seller');
+      const buyerSelect = document.getElementById('order-buyer');
+      const newSellerWrapper = document.getElementById('new-seller-input-wrapper');
+      const newBuyerWrapper = document.getElementById('new-buyer-input-wrapper');
+      const newSellerInput = document.getElementById('order-seller-new');
+      const newBuyerInput = document.getElementById('order-buyer-new');
+
+      if (sellerSelect) {
+        sellerSelect.addEventListener('change', () => {
+          if (sellerSelect.value === '__NEW__') {
+            newSellerWrapper.classList.remove('hidden');
+            newSellerInput.focus();
+            document.getElementById('btn-toggle-new-seller-text').textContent = 'Use Saved List';
+          } else {
+            newSellerWrapper.classList.add('hidden');
+            document.getElementById('btn-toggle-new-seller-text').textContent = '+ New Wholesaler';
+          }
+        });
+      }
+
+      if (btnToggleNewSeller) {
+        btnToggleNewSeller.addEventListener('click', () => {
+          const isHidden = newSellerWrapper.classList.contains('hidden');
+          if (isHidden) {
+            newSellerWrapper.classList.remove('hidden');
+            sellerSelect.value = '__NEW__';
+            newSellerInput.focus();
+            document.getElementById('btn-toggle-new-seller-text').textContent = 'Use Saved List';
+          } else {
+            newSellerWrapper.classList.add('hidden');
+            sellerSelect.value = '';
+            document.getElementById('btn-toggle-new-seller-text').textContent = '+ New Wholesaler';
+          }
+        });
+      }
+
+      if (buyerSelect) {
+        buyerSelect.addEventListener('change', () => {
+          if (buyerSelect.value === '__NEW__') {
+            newBuyerWrapper.classList.remove('hidden');
+            newBuyerInput.focus();
+            document.getElementById('btn-toggle-new-buyer-text').textContent = 'Use Saved List';
+          } else {
+            newBuyerWrapper.classList.add('hidden');
+            document.getElementById('btn-toggle-new-buyer-text').textContent = '+ New Retailer';
+          }
+        });
+      }
+
+      if (btnToggleNewBuyer) {
+        btnToggleNewBuyer.addEventListener('click', () => {
+          const isHidden = newBuyerWrapper.classList.contains('hidden');
+          if (isHidden) {
+            newBuyerWrapper.classList.remove('hidden');
+            buyerSelect.value = '__NEW__';
+            newBuyerInput.focus();
+            document.getElementById('btn-toggle-new-buyer-text').textContent = 'Use Saved List';
+          } else {
+            newBuyerWrapper.classList.add('hidden');
+            buyerSelect.value = '';
+            document.getElementById('btn-toggle-new-buyer-text').textContent = '+ New Retailer';
+          }
+        });
+      }
+
+      // Submit Order Form
+      formOrder.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const date = document.getElementById('order-date').value;
+        
+        // Resolve Seller Name (from saved select or newly typed)
+        let sellerName = sellerSelect.value;
+        if (sellerName === '__NEW__' || !sellerName) {
+          sellerName = newSellerInput.value.trim();
+        }
+
+        // Resolve Buyer Name (from saved select or newly typed)
+        let buyerName = buyerSelect.value;
+        if (buyerName === '__NEW__' || !buyerName) {
+          buyerName = newBuyerInput.value.trim();
+        }
+        const item = document.getElementById('order-item').value.trim();
+        const qty = parseFloat(qtyInput.value);
+        const rate = parseFloat(rateInput.value);
+        const initialPayment = parseFloat(document.getElementById('order-initial-payment').value) || 0;
+        const initialPayout = parseFloat(document.getElementById('order-initial-payout').value) || 0;
+        const remarks = document.getElementById('order-remarks').value.trim();
+        const amount = qty * rate;
+
+        if (!sellerName || !buyerName || !item || isNaN(qty) || isNaN(rate)) {
+          showToast('Please fill all required order fields', 'error');
+          return;
+        }
+
+        // Auto-register party if newly typed
+        if (!state.parties.some(p => p.name.toLowerCase() === sellerName.toLowerCase())) {
+          const newSellerObj = { id: 'p_' + Date.now(), name: sellerName, type: 'Wholesaler', phone: '', city: '' };
+          state.parties.push(newSellerObj);
+          queueForSheetSync('party', newSellerObj);
+        }
+        if (!state.parties.some(p => p.name.toLowerCase() === buyerName.toLowerCase())) {
+          const newBuyerObj = { id: 'p_' + (Date.now() + 1), name: buyerName, type: 'Retailer', phone: '', city: '' };
+          state.parties.push(newBuyerObj);
+          queueForSheetSync('party', newBuyerObj);
+        }
+
+        const newOrderId = 'ORD-' + (1001 + state.orders.length);
+        const newOrder = {
+          id: newOrderId,
+          date,
+          seller: sellerName,
+          buyer: buyerName,
+          item,
+          qty,
+          rate,
+          amount,
+          paid: initialPayment,
+          paidToSeller: initialPayout,
+          remarks
+        };
+
+        state.orders.push(newOrder);
+        queueForSheetSync('order', newOrder);
+
+        // If payment was made on spot, log receipt
+        if (initialPayment > 0) {
+          const spotPay = {
+            id: 'PAY-' + (101 + state.payments.length),
+            date,
+            party: buyerName,
+            direction: 'from_buyer',
+            amount: initialPayment,
+            mode: 'Spot Cash / Advance',
+            linkedOrder: newOrderId,
+            ref: 'Advance on order creation'
+          };
+          state.payments.push(spotPay);
+          queueForSheetSync('payment', spotPay);
+        }
+        if (initialPayout > 0) {
+          const spotPayout = {
+            id: 'PAY-' + (101 + state.payments.length),
+            date,
+            party: sellerName,
+            direction: 'to_seller',
+            amount: initialPayout,
+            mode: 'Immediate Payout',
+            linkedOrder: newOrderId,
+            ref: 'Disbursed against new order'
+          };
+          state.payments.push(spotPayout);
+          queueForSheetSync('payment', spotPayout);
+        }
+
+        saveState();
+        formOrder.reset();
+        document.getElementById('order-date').value = todayISO;
+        amountDisplay.textContent = '₹0';
+        newSellerWrapper.classList.add('hidden');
+        newBuyerWrapper.classList.add('hidden');
+        document.getElementById('btn-toggle-new-seller-text').textContent = '+ New Wholesaler';
+        document.getElementById('btn-toggle-new-buyer-text').textContent = '+ New Retailer';
+        populateDatalistsAndDropdowns();
+        showToast(`Order ${newOrderId} saved successfully! Amount: ${formatINR(amount)}`);
+      });
+
+      // Payment Form Direction Radios change
+      document.querySelectorAll('input[name="payment-direction"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+          document.querySelectorAll('.payment-direction-label').forEach(lbl => {
+            lbl.className = 'payment-direction-label cursor-pointer border-2 border-slate-200 bg-white hover:bg-slate-50 rounded-xl p-3 flex items-center space-x-3 transition-all';
+          });
+          const activeLabel = radio.closest('label');
+          if (radio.value === 'from_buyer') {
+            activeLabel.className = 'payment-direction-label cursor-pointer border-2 border-emerald-500 bg-emerald-50/50 rounded-xl p-3 flex items-center space-x-3 transition-all';
+          } else {
+            activeLabel.className = 'payment-direction-label cursor-pointer border-2 border-rose-500 bg-rose-50/50 rounded-xl p-3 flex items-center space-x-3 transition-all';
+          }
+          updatePaymentPartyDropdown();
+        });
+      });
+
+      // Payment Party selection change -> update due hint & linked orders
+      document.getElementById('pay-party').addEventListener('change', updateLinkedOrdersDropdown);
+
+      // Submit Payment Form
+      formPayment.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const date = document.getElementById('pay-date').value;
+        const direction = document.querySelector('input[name="payment-direction"]:checked')?.value || 'from_buyer';
+        const partyName = document.getElementById('pay-party').value;
+        const amount = parseFloat(document.getElementById('pay-amount').value);
+        const mode = document.getElementById('pay-mode').value;
+        const linkedOrderId = document.getElementById('pay-linked-order').value;
+        const ref = document.getElementById('pay-ref').value.trim();
+
+        if (!partyName || isNaN(amount) || amount <= 0) {
+          showToast('Please select party and enter valid payment amount', 'error');
+          return;
+        }
+
+        const newPayId = 'PAY-' + (101 + state.payments.length);
+        const newPayObj = {
+          id: newPayId,
+          date,
+          party: partyName,
+          direction,
+          amount,
+          mode,
+          linkedOrder: linkedOrderId || 'General Balance',
+          ref
+        };
+        state.payments.push(newPayObj);
+        queueForSheetSync('payment', newPayObj);
+
+        // Apply payment to orders
+        if (direction === 'from_buyer') {
+          if (linkedOrderId) {
+            const ord = state.orders.find(o => o.id === linkedOrderId);
+            if (ord) ord.paid = (ord.paid || 0) + amount;
+          } else {
+            // Apply across unpaid orders of this buyer (FIFO)
+            let remaining = amount;
+            for (let ord of state.orders.filter(o => o.buyer === partyName)) {
+              const due = ord.amount - (ord.paid || 0);
+              if (due > 0 && remaining > 0) {
+                const take = Math.min(due, remaining);
+                ord.paid = (ord.paid || 0) + take;
+                remaining -= take;
+              }
+            }
+          }
+        } else {
+          // Paid to seller
+          if (linkedOrderId) {
+            const ord = state.orders.find(o => o.id === linkedOrderId);
+            if (ord) ord.paidToSeller = (ord.paidToSeller || 0) + amount;
+          } else {
+            // FIFO apply to seller supplies
+            let remaining = amount;
+            for (let ord of state.orders.filter(o => o.seller === partyName)) {
+              const due = ord.amount - (ord.paidToSeller || 0);
+              if (due > 0 && remaining > 0) {
+                const take = Math.min(due, remaining);
+                ord.paidToSeller = (ord.paidToSeller || 0) + take;
+                remaining -= take;
+              }
+            }
+          }
+        }
+
+        saveState();
+        formPayment.reset();
+        document.getElementById('pay-date').value = todayISO;
+        updatePaymentPartyDropdown();
+        showToast(`Payment of ${formatINR(amount)} recorded for ${partyName}`);
+      });
+
+      // Buyers Mode Buttons (All vs Specific)
+      document.getElementById('btn-buyer-mode-all').addEventListener('click', switchToAllBuyers);
+      document.getElementById('btn-buyer-mode-specific').addEventListener('click', () => {
+        const id = state.selectedBuyerId || state.parties.find(p => p.type === 'Retailer')?.id;
+        if (id) switchToSpecificBuyer(id);
+      });
+
+      // Buyer Select Dropdown change
+      document.getElementById('buyer-select-dropdown').addEventListener('change', (e) => {
+        if (e.target.value) {
+          switchToSpecificBuyer(e.target.value);
+        } else {
+          switchToAllBuyers();
+        }
+      });
+
+      // Search Buyers Input
+      document.getElementById('search-buyers-input').addEventListener('input', renderBuyersAll);
+
+      // Specific Buyer Sub-Tabs (Orders vs Payments)
+      const tabOrders = document.getElementById('tab-buyer-orders');
+      const tabPayments = document.getElementById('tab-buyer-payments');
+      const containerOrders = document.getElementById('spec-buyer-orders-container');
+      const containerPayments = document.getElementById('spec-buyer-payments-container');
+      const subtitle = document.getElementById('spec-table-subtitle');
+
+      tabOrders.addEventListener('click', () => {
+        tabOrders.className = 'px-4 py-1.5 rounded-lg text-xs font-bold bg-white text-blue-700 shadow-sm border border-slate-200';
+        tabPayments.className = 'px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-200/70 transition-colors';
+        containerOrders.classList.remove('hidden');
+        containerPayments.classList.add('hidden');
+        subtitle.textContent = 'Showing all orders placed by this retailer';
+      });
+
+      tabPayments.addEventListener('click', () => {
+        tabPayments.className = 'px-4 py-1.5 rounded-lg text-xs font-bold bg-white text-blue-700 shadow-sm border border-slate-200';
+        tabOrders.className = 'px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-200/70 transition-colors';
+        containerPayments.classList.remove('hidden');
+        containerOrders.classList.add('hidden');
+        subtitle.textContent = 'Showing payment collections recorded from this retailer';
+      });
+
+      // Quick Collect Payment for this Buyer
+      document.getElementById('btn-quick-pay-buyer').addEventListener('click', () => {
+        const buyer = state.parties.find(p => p.id === state.selectedBuyerId);
+        if (!buyer) return;
+        switchMainView('entry');
+        btnTogglePayment.click();
+        const radio = document.querySelector('input[name="payment-direction"][value="from_buyer"]');
+        if (radio) {
+          radio.checked = true;
+          radio.dispatchEvent(new Event('change'));
+        }
+        const partySelect = document.getElementById('pay-party');
+        if (partySelect) {
+          partySelect.value = buyer.name;
+          updateLinkedOrdersDropdown();
+        }
+        showToast(`Switched to Payment form for ${buyer.name}`);
+      });
+
+      // Copy Statement to clipboard
+      document.getElementById('btn-copy-buyer-statement').addEventListener('click', () => {
+        const buyer = state.parties.find(p => p.id === state.selectedBuyerId);
+        if (!buyer) return;
+        const metrics = getPartyMetrics(buyer.name, 'Retailer');
+        const text = `*VyaparSetu Account Statement*\n` +
+          `Buyer: ${buyer.name}\n` +
+          `Date: ${new Date().toLocaleDateString('en-IN')}\n` +
+          `------------------------------\n` +
+          `Total Purchases: ${formatINR(metrics.totalAmount)}\n` +
+          `Total Paid: ${formatINR(metrics.totalPaid)}\n` +
+          `Current Balance Due: ${formatINR(metrics.balanceDue)}\n` +
+          `------------------------------\n` +
+          `Please settle pending dues at earliest. Thank you!`;
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(() => {
+            showToast('Account statement copied to clipboard!');
+          }).catch(() => {
+            fallbackCopy(text);
+          });
+        } else {
+          fallbackCopy(text);
+        }
+      });
+
+      function fallbackCopy(text) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          document.execCommand('copy');
+          showToast('Account statement copied to clipboard!');
+        } catch (e) {
+          showToast('Could not copy statement', 'error');
+        }
+        document.body.removeChild(ta);
+      }
+
+      // Orders Register Filters
+      document.getElementById('filter-order-status').addEventListener('change', renderOrdersRegister);
+      document.getElementById('search-orders-input').addEventListener('input', renderOrdersRegister);
+
+      // Add Party Modal Handlers
+      const modalAddParty = document.getElementById('modal-add-party');
+      const btnAddBuyer = document.getElementById('btn-add-new-buyer');
+      const btnAddSeller = document.getElementById('btn-add-new-seller');
+      const modalClose = document.getElementById('modal-party-close');
+      const modalCancel = document.getElementById('modal-party-cancel');
+      const formNewParty = document.getElementById('form-new-party');
+      const partyTypeSelect = document.getElementById('new-party-type');
+
+      function openPartyModal(defaultType) {
+        partyTypeSelect.value = defaultType;
+        document.getElementById('modal-party-title').textContent = `Register New ${defaultType === 'Retailer' ? 'Buyer (Retailer)' : 'Wholesaler (Seller)'}`;
+        modalAddParty.classList.remove('hidden');
+      }
+
+      btnAddBuyer.addEventListener('click', () => openPartyModal('Retailer'));
+      btnAddSeller.addEventListener('click', () => openPartyModal('Wholesaler'));
+      modalClose.addEventListener('click', () => modalAddParty.classList.add('hidden'));
+      modalCancel.addEventListener('click', () => modalAddParty.classList.add('hidden'));
+
+      formNewParty.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('new-party-name').value.trim();
+        const type = partyTypeSelect.value;
+        const phone = document.getElementById('new-party-phone').value.trim();
+        const city = document.getElementById('new-party-city').value.trim();
+
+        if (!name) return;
+
+        const newId = 'p_' + Date.now();
+        const newPartyObj = { id: newId, name, type, phone, city };
+        state.parties.push(newPartyObj);
+        queueForSheetSync('party', newPartyObj);
+        saveState();
+        formNewParty.reset();
+        modalAddParty.classList.add('hidden');
+        showToast(`${type} "${name}" registered successfully!`);
+        if (type === 'Retailer') switchToSpecificBuyer(newId);
+      });
+
+      // Reset Demo Data
+      document.getElementById('btn-reset-demo').addEventListener('click', () => {
+        resetToDefault();
+        showToast('Demo data restored successfully!');
+      });
+
+      // ==========================================
+      // HINDI VOICE ENTRY RECOGNITION & PARSING
+      // ==========================================
+      const btnStartVoice = document.getElementById('btn-start-voice');
+      const modalVoice = document.getElementById('modal-voice-assistant');
+      const btnCloseVoice = document.getElementById('btn-close-voice-modal');
+      const btnRetryVoice = document.getElementById('btn-voice-retry');
+      const btnApplyVoice = document.getElementById('btn-voice-apply');
+      const voiceStatusText = document.getElementById('voice-status-text');
+      const voiceTranscriptText = document.getElementById('voice-transcript-text');
+      const voiceInterimBadge = document.getElementById('voice-interim-badge');
+      const voiceParsedContainer = document.getElementById('voice-parsed-container');
+      const voicePulseRing = document.getElementById('voice-pulse-ring');
+
+      let recognition = null;
+      let lastParsedResult = null;
+
+      function initSpeechRecognition() {
+        const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRec) return null;
+        const rec = new SpeechRec();
+        rec.continuous = false;
+        rec.interimResults = true;
+        rec.lang = 'hi-IN'; // Hindi (India)
+        return rec;
+      }
+
+      function parseHindiSpeech(text) {
+        const clean = text.toLowerCase();
+        const res = {
+          type: 'order',
+          seller: '',
+          buyer: '',
+          item: '',
+          qty: 0,
+          rate: 0,
+          amount: 0,
+          payment: 0,
+          rawText: text
+        };
+
+        // Detect if speech describes a payment receipt
+        if (clean.includes('जमा मिला') || clean.includes('जमा मिले') || clean.includes('पेमेंट मिला') || clean.includes('पेमेंट आया') || clean.includes('नकद जमा') || clean.includes('payment')) {
+          res.type = 'payment';
+        }
+
+        const wholesalers = state.parties.filter(p => p.type === 'Wholesaler');
+        const retailers = state.parties.filter(p => p.type === 'Retailer');
+
+        // 1. Match Seller (Wholesaler)
+        for (let w of wholesalers) {
+          const wName = w.name.toLowerCase();
+          const firstWord = wName.split(' ')[0];
+          if (clean.includes(wName) || (firstWord.length > 2 && clean.includes(firstWord))) {
+            res.seller = w.name;
+            break;
+          }
+          if (clean.includes('महावीर') && wName.includes('mahaveer')) res.seller = w.name;
+          if (clean.includes('गणेश') && wName.includes('ganesh')) res.seller = w.name;
+          if (clean.includes('apex') && wName.includes('apex')) res.seller = w.name;
+        }
+        if (!res.seller) {
+          const mSeller = clean.match(/([^\s,]+(?:\s+[^\s,]+)?)\s+से/);
+          if (mSeller && !mSeller[1].includes('रुपये') && !mSeller[1].includes('भाव')) {
+            const candidate = mSeller[1].trim();
+            const found = wholesalers.find(w => w.name.toLowerCase().includes(candidate.toLowerCase()));
+            res.seller = found ? found.name : candidate;
+          }
+        }
+
+        // 2. Match Buyer (Retailer)
+        for (let b of retailers) {
+          const bName = b.name.toLowerCase();
+          const firstWord = bName.split(' ')[0];
+          if (clean.includes(bName) || (firstWord.length > 2 && clean.includes(firstWord))) {
+            res.buyer = b.name;
+            break;
+          }
+          if (clean.includes('शर्मा') && bName.includes('sharma')) res.buyer = b.name;
+          if (clean.includes('बालाजी') && bName.includes('balaji')) res.buyer = b.name;
+          if (clean.includes('कृष्णा') && bName.includes('krishna')) res.buyer = b.name;
+          if (clean.includes('अग्रवाल') && bName.includes('agarwal')) res.buyer = b.name;
+        }
+        if (!res.buyer) {
+          const mBuyer = clean.match(/([^\s,]+(?:\s+[^\s,]+)?)\s+को/);
+          if (mBuyer) {
+            const candidate = mBuyer[1].trim();
+            const found = retailers.find(r => r.name.toLowerCase().includes(candidate.toLowerCase()));
+            res.buyer = found ? found.name : candidate;
+          }
+        }
+
+        // 3. Match Rate
+        const mRate = clean.match(/(?:भाव|दर|rate|के\s+भाव|की\s+दर)\s*(\d+)/) || clean.match(/(\d+)\s*(?:के\s+भाव|की\s+दर|का\s+भाव|भाव|दर)/);
+        if (mRate) {
+          res.rate = parseFloat(mRate[1]) || 0;
+        }
+
+        // 4. Match Quantity
+        const mQty = clean.match(/(\d+)\s*(?:बोरी|बैग|टिन|पेटी|किलो|क्विंटल|कार्टन|packet|bags|units|boxes|box|kg)/);
+        if (mQty) {
+          res.qty = parseFloat(mQty[1]) || 0;
+        } else {
+          // find any number that is not the rate
+          const allNums = (clean.match(/\d+/g) || []).map(Number);
+          for (let n of allNums) {
+            if (n !== res.rate) {
+              res.qty = n;
+              break;
+            }
+          }
+        }
+
+        // 5. Match Commodity / Item
+        const itemDictionary = [
+          { hi: 'बासमती चावल', en: 'Basmati Rice (50kg Bag)' },
+          { hi: 'चावल', en: 'Rice (50kg Bag)' },
+          { hi: 'गेहूं आटा', en: 'Wheat Flour / Atta (50kg)' },
+          { hi: 'गेहू आटा', en: 'Wheat Flour / Atta (50kg)' },
+          { hi: 'आटा', en: 'Wheat Flour / Atta (50kg)' },
+          { hi: 'रिफाइंड तेल', en: 'Refined Oil (15L Tin)' },
+          { hi: 'तेल', en: 'Refined Oil (15L Tin)' },
+          { hi: 'शक्कर', en: 'Sugar M-30 (50kg Bag)' },
+          { hi: 'चीनी', en: 'Sugar M-30 (50kg Bag)' },
+          { hi: 'तुवर दाल', en: 'Toor Dal Premium (50kg)' },
+          { hi: 'तूर दाल', en: 'Toor Dal Premium (50kg)' },
+          { hi: 'दाल', en: 'Toor Dal Premium (50kg)' },
+          { hi: 'मसाले', en: 'Spices Assorted Box' },
+          { hi: 'चना', en: 'Chana Dal (50kg)' }
+        ];
+
+        for (let item of itemDictionary) {
+          if (clean.includes(item.hi)) {
+            res.item = item.en;
+            break;
+          }
+        }
+        if (!res.item && res.type === 'order') {
+          res.item = 'Wholesale Commodity (Gen)';
+        }
+
+        // 6. Match Payment
+        const mPay = clean.match(/(\d+)\s*(?:रुपये|रु|₹)?\s*(?:जमा|advance|पेमेंट|मिला)/) || clean.match(/(?:जमा|advance|पेमेंट)\s*(\d+)/);
+        if (mPay) {
+          res.payment = parseFloat(mPay[1]) || 0;
+        }
+
+        if (res.qty && res.rate) {
+          res.amount = res.qty * res.rate;
+        }
+
+        return res;
+      }
+
+      function updateVoicePreview(res) {
+        lastParsedResult = res;
+        voiceParsedContainer.classList.remove('hidden');
+        document.getElementById('voice-detected-type').textContent = res.type === 'order' ? '📦 Order Entry' : '💰 Payment Entry';
+        document.getElementById('voice-res-seller').textContent = res.seller || '(पहचाना नहीं गया)';
+        document.getElementById('voice-res-buyer').textContent = res.buyer || '(पहचाना नहीं गया)';
+        document.getElementById('voice-res-item').textContent = res.item || '(पहचाना नहीं गया)';
+        document.getElementById('voice-res-qty').textContent = res.qty ? `${res.qty} Units` : '--';
+        document.getElementById('voice-res-rate').textContent = res.rate ? formatINR(res.rate) : '--';
+        document.getElementById('voice-res-amount').textContent = res.amount ? formatINR(res.amount) : (res.payment ? formatINR(res.payment) : '--');
+
+        btnApplyVoice.disabled = false;
+      }
+
+      function startListening() {
+        modalVoice.classList.remove('hidden');
+        if (voiceManualInput) voiceManualInput.value = '';
+        voiceTranscriptText.textContent = '"बोलना शुरू करें... (Speak now)"';
+        voiceStatusText.textContent = 'सुन रहे हैं... (Listening in Hindi)';
+        voiceParsedContainer.classList.add('hidden');
+        btnApplyVoice.disabled = true;
+        voicePulseRing.className = 'w-20 h-20 rounded-full bg-orange-200 animate-ping flex items-center justify-center relative transition-all duration-300';
+
+        recognition = initSpeechRecognition();
+
+        if (!recognition) {
+          voiceStatusText.textContent = 'Voice API इस ब्राउज़र में उपलब्ध नहीं है। नीचे उदाहरण क्लिक करके टेस्ट करें:';
+          voicePulseRing.className = 'w-20 h-20 rounded-full bg-slate-200 flex items-center justify-center relative';
+          return;
+        }
+
+        recognition.onstart = () => {
+          voiceStatusText.textContent = 'बोलिए... (Listening...)';
+          voiceInterimBadge.classList.remove('hidden');
+        };
+
+        recognition.onresult = (event) => {
+          let interim = '';
+          let finalTranscript = '';
+          for (let i = event.resultIndex; i < event.results.length; ++i) {
+            if (event.results[i].isFinal) {
+              finalTranscript += event.results[i][0].transcript;
+            } else {
+              interim += event.results[i][0].transcript;
+            }
+          }
+          const spoken = finalTranscript || interim;
+          voiceTranscriptText.textContent = `"${spoken}"`;
+
+          if (finalTranscript) {
+            voiceStatusText.textContent = 'पहचान लिया गया! (Recognized)';
+            voiceInterimBadge.classList.add('hidden');
+            voicePulseRing.className = 'w-20 h-20 rounded-full bg-emerald-100 flex items-center justify-center relative';
+            const parsed = parseHindiSpeech(finalTranscript);
+            updateVoicePreview(parsed);
+          }
+        };
+
+        recognition.onerror = (e) => {
+          voiceStatusText.textContent = 'ब्राउज़र माइक उपलब्ध नहीं है — नीचे बॉक्स में कीबोर्ड माइक (Gboard/iPhone) से बोलें।';
+          voiceInterimBadge.classList.add('hidden');
+          voicePulseRing.className = 'w-20 h-20 rounded-full bg-slate-200 flex items-center justify-center relative';
+        };
+
+        recognition.onend = () => {
+          voiceInterimBadge.classList.add('hidden');
+          voicePulseRing.className = 'w-20 h-20 rounded-full bg-orange-100 flex items-center justify-center relative';
+        };
+
+        try {
+          recognition.start();
+        } catch (err) {
+          console.warn('Speech recognition start error:', err);
+        }
+      }
+
+      function stopListening() {
+        if (recognition) {
+          try { recognition.stop(); } catch(e){}
+        }
+        modalVoice.classList.add('hidden');
+      }
+
+      btnStartVoice.addEventListener('click', startListening);
+      btnCloseVoice.addEventListener('click', stopListening);
+      btnRetryVoice.addEventListener('click', () => {
+        if (recognition) {
+          try { recognition.stop(); } catch(e){}
+        }
+        startListening();
+      });
+
+      const voiceManualInput = document.getElementById('voice-manual-input');
+      const btnVoiceParseManual = document.getElementById('btn-voice-parse-manual');
+
+      function handleManualHindiText(rawText) {
+        const phrase = (rawText || '').trim();
+        if (!phrase) return;
+        voiceTranscriptText.textContent = `"${phrase}"`;
+        voiceStatusText.textContent = 'पहचान लिया गया! (Recognized)';
+        voicePulseRing.className = 'w-20 h-20 rounded-full bg-emerald-100 flex items-center justify-center relative';
+        const parsed = parseHindiSpeech(phrase);
+        updateVoicePreview(parsed);
+      }
+
+      if (voiceManualInput) {
+        voiceManualInput.addEventListener('input', () => {
+          const val = voiceManualInput.value.trim();
+          if (val.length >= 4) {
+            handleManualHindiText(val);
+          }
+        });
+      }
+
+      if (btnVoiceParseManual) {
+        btnVoiceParseManual.addEventListener('click', () => {
+          handleManualHindiText(voiceManualInput.value);
+        });
+      }
+
+      // Clickable Hindi speech samples
+      document.querySelectorAll('.btn-voice-sample').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const phrase = e.currentTarget.getAttribute('data-phrase');
+          if (voiceManualInput) voiceManualInput.value = phrase;
+          voiceTranscriptText.textContent = `"${phrase}"`;
+          voiceStatusText.textContent = 'पहचान लिया गया! (Sample Loaded)';
+          const parsed = parseHindiSpeech(phrase);
+          updateVoicePreview(parsed);
+        });
+      });
+
+      // Apply recognized fields to the form
+      btnApplyVoice.addEventListener('click', () => {
+        if (!lastParsedResult) return;
+        const res = lastParsedResult;
+
+        if (res.type === 'order') {
+          // Switch to Order Form toggle
+          btnToggleOrder.click();
+
+          // Apply Seller
+          if (res.seller) {
+            const sellerOpt = Array.from(sellerSelect.options).find(o => o.value.toLowerCase() === res.seller.toLowerCase());
+            if (sellerOpt) {
+              sellerSelect.value = sellerOpt.value;
+              newSellerWrapper.classList.add('hidden');
+            } else {
+              sellerSelect.value = '__NEW__';
+              newSellerWrapper.classList.remove('hidden');
+              newSellerInput.value = res.seller;
+            }
+          }
+
+          // Apply Buyer
+          if (res.buyer) {
+            const buyerOpt = Array.from(buyerSelect.options).find(o => o.value.toLowerCase() === res.buyer.toLowerCase());
+            if (buyerOpt) {
+              buyerSelect.value = buyerOpt.value;
+              newBuyerWrapper.classList.add('hidden');
+            } else {
+              buyerSelect.value = '__NEW__';
+              newBuyerWrapper.classList.remove('hidden');
+              newBuyerInput.value = res.buyer;
+            }
+          }
+
+          // Apply Item, Qty, Rate
+          if (res.item) document.getElementById('order-item').value = res.item;
+          if (res.qty) qtyInput.value = res.qty;
+          if (res.rate) rateInput.value = res.rate;
+          recalculateOrderTotal();
+
+          if (res.payment) {
+            document.getElementById('order-initial-payment').value = res.payment;
+          }
+
+          document.getElementById('order-remarks').value = `Voice Entry (${res.rawText})`;
+
+          stopListening();
+          showToast('आर्डर विवरण फॉर्म में भर दिया गया! (Order fields filled from Hindi voice)');
+        } else {
+          // Switch to Payment Form toggle
+          btnTogglePayment.click();
+          const radioBuyer = document.querySelector('input[name="payment-direction"][value="from_buyer"]');
+          if (radioBuyer) {
+            radioBuyer.checked = true;
+            radioBuyer.dispatchEvent(new Event('change'));
+          }
+
+          if (res.buyer) {
+            const partySelect = document.getElementById('pay-party');
+            partySelect.value = res.buyer;
+            updateLinkedOrdersDropdown();
+          }
+
+          if (res.payment || res.amount) {
+            document.getElementById('pay-amount').value = res.payment || res.amount;
+          }
+
+          document.getElementById('pay-ref').value = `Voice: ${res.rawText}`;
+          stopListening();
+          showToast('पेमेंट विवरण फॉर्म में भर दिया गया! (Payment details filled from Hindi voice)');
+        }
+      });
+
+      // ==========================================
+      // GOOGLE SHEET SYNC MODAL & ONLINE LISTENERS
+      // ==========================================
+      const modalSheetSync = document.getElementById('modal-sheet-sync');
+      const btnSheetSyncModal = document.getElementById('btn-sheet-sync-modal');
+      const btnCloseSyncModal = document.getElementById('btn-close-sync-modal');
+      const btnCancelSyncModal = document.getElementById('btn-cancel-sync-modal');
+      const formSheetSyncUrl = document.getElementById('form-sheet-sync-url');
+      const inputSheetUrl = document.getElementById('input-sheet-webapp-url');
+      const btnUnlinkSheet = document.getElementById('btn-unlink-sheet');
+      const btnSyncNow = document.getElementById('btn-sync-now');
+      const btnCopyAppsScript = document.getElementById('btn-copy-apps-script');
+
+      btnSheetSyncModal.addEventListener('click', () => {
+        inputSheetUrl.value = state.sheetWebAppUrl || '';
+        updateSyncStatusUI();
+        modalSheetSync.classList.remove('hidden');
+      });
+
+      btnCloseSyncModal.addEventListener('click', () => modalSheetSync.classList.add('hidden'));
+      btnCancelSyncModal.addEventListener('click', () => modalSheetSync.classList.add('hidden'));
+
+      formSheetSyncUrl.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const url = inputSheetUrl.value.trim();
+        if (!url) return;
+        state.sheetWebAppUrl = url;
+        saveState();
+        modalSheetSync.classList.add('hidden');
+        showToast('Google Sheet linked! Auto-sync enabled.');
+        syncPendingQueue();
+      });
+
+      btnUnlinkSheet.addEventListener('click', () => {
+        state.sheetWebAppUrl = '';
+        inputSheetUrl.value = '';
+        saveState();
+        showToast('Google Sheet unlinked');
+      });
+
+      btnSyncNow.addEventListener('click', () => {
+        syncPendingQueue();
+      });
+
+      btnCopyAppsScript.addEventListener('click', () => {
+        const code = document.getElementById('apps-script-code').textContent;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(code).then(() => {
+            showToast('Apps Script copied! Paste it in Extensions > Apps Script');
+          }).catch(() => fallbackCopy(code));
+        } else {
+          fallbackCopy(code);
+        }
+      });
+
+      window.addEventListener('online', () => {
+        updateSyncStatusUI();
+        syncPendingQueue();
+      });
+      window.addEventListener('offline', updateSyncStatusUI);
+
+      // Initial sync check on load
+      updateSyncStatusUI();
+      if (navigator.onLine && state.sheetWebAppUrl && state.syncQueue.length > 0) {
+        syncPendingQueue();
+      }
+
+      // Export to CSV
+      document.getElementById('btn-export-csv').addEventListener('click', () => {
+        let csv = 'Order ID,Date,Seller (Wholesaler),Buyer (Retailer),Item,Quantity,Rate,Amount,Payment Received,Retailer Due,Status,Remarks\n';
+        state.orders.forEach(o => {
+          const due = o.amount - (o.paid || 0);
+          const status = due <= 0 ? 'Paid' : (o.paid > 0 ? 'Partial' : 'Pending');
+          csv += `"${o.id}","${o.date}","${o.seller}","${o.buyer}","${o.item}",${o.qty},${o.rate},${o.amount},${o.paid || 0},${due},"${status}","${o.remarks || ''}"\n`;
+        });
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `wholesale_broker_register_${todayISO}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast('Exported CSV file successfully!');
+      });
+
+    });
+  </script>
+</body>
+</html>
