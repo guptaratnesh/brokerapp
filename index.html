@@ -43,14 +43,14 @@
           <div class="bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-1.5 flex items-center space-x-2">
             <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
             <div>
-              <span class="text-[10px] uppercase font-bold text-emerald-700 block tracking-wider">Due from Retailers</span>
+              <span class="text-[10px] uppercase font-bold text-emerald-700 block tracking-wider">खरीदारों से लेना</span>
               <span id="header-receivable" class="text-sm font-bold text-emerald-900">₹0</span>
             </div>
           </div>
           <div class="bg-rose-50 border border-rose-200 rounded-lg px-3 py-1.5 flex items-center space-x-2">
             <div class="w-2.5 h-2.5 rounded-full bg-rose-500"></div>
             <div>
-              <span class="text-[10px] uppercase font-bold text-rose-700 block tracking-wider">Due to Wholesalers</span>
+              <span class="text-[10px] uppercase font-bold text-rose-700 block tracking-wider">विक्रेताओं को देना</span>
               <span id="header-payable" class="text-sm font-bold text-rose-900">₹0</span>
             </div>
           </div>
@@ -67,7 +67,7 @@
             <span class="hidden sm:inline">Export CSV</span>
           </button>
           <button id="btn-reset-demo" class="px-3 py-1.5 text-xs font-semibold text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors">
-            Reset Demo
+            Clear Data
           </button>
         </div>
 
@@ -77,23 +77,23 @@
       <nav class="flex space-x-1 sm:space-x-4 border-t border-slate-100 pt-1 -mb-px overflow-x-auto" id="main-nav-tabs">
         <button data-view="entry" class="nav-tab tab-active flex items-center space-x-2 px-3 sm:px-4 py-2.5 border-b-2 font-medium text-sm whitespace-nowrap transition-all">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-          <span>Data Entry (Order / Payment)</span>
+          <span>एंट्री (ऑर्डर / भुगतान)</span>
         </button>
         <button data-view="buyers" class="nav-tab text-slate-600 hover:text-blue-600 px-3 sm:px-4 py-2.5 border-b-2 border-transparent font-medium text-sm whitespace-nowrap transition-all flex items-center space-x-2">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-          <span>Buyers (Retailers)</span>
+          <span>खरीदार (फुटकर)</span>
         </button>
         <button data-view="sellers" class="nav-tab text-slate-600 hover:text-blue-600 px-3 sm:px-4 py-2.5 border-b-2 border-transparent font-medium text-sm whitespace-nowrap transition-all flex items-center space-x-2">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-          <span>Wholesalers (Sellers)</span>
+          <span>विक्रेता (थोक)</span>
         </button>
         <button data-view="orders" class="nav-tab text-slate-600 hover:text-blue-600 px-3 sm:px-4 py-2.5 border-b-2 border-transparent font-medium text-sm whitespace-nowrap transition-all flex items-center space-x-2">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
-          <span>Orders Register</span>
+          <span>ऑर्डर रजिस्टर</span>
         </button>
         <button data-view="eod" class="nav-tab text-slate-600 hover:text-blue-600 px-3 sm:px-4 py-2.5 border-b-2 border-transparent font-medium text-sm whitespace-nowrap transition-all flex items-center space-x-2">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-          <span>End-of-Day Dues</span>
+          <span>दैनिक बकाया (EOD)</span>
         </button>
       </nav>
 
@@ -107,14 +107,14 @@
     <div class="grid grid-cols-2 gap-3 mb-5 md:hidden">
       <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-3 flex items-center justify-between shadow-sm">
         <div>
-          <span class="text-[10px] uppercase font-bold text-emerald-700 block tracking-wider">Due from Buyers</span>
+          <span class="text-[10px] uppercase font-bold text-emerald-700 block tracking-wider">खरीदारों से लेना</span>
           <span id="mobile-receivable" class="text-base font-extrabold text-emerald-900">₹0</span>
         </div>
         <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
       </div>
       <div class="bg-rose-50 border border-rose-200 rounded-2xl p-3 flex items-center justify-between shadow-sm">
         <div>
-          <span class="text-[10px] uppercase font-bold text-rose-700 block tracking-wider">Due to Sellers</span>
+          <span class="text-[10px] uppercase font-bold text-rose-700 block tracking-wider">विक्रेताओं को देना</span>
           <span id="mobile-payable" class="text-base font-extrabold text-rose-900">₹0</span>
         </div>
         <div class="w-2.5 h-2.5 rounded-full bg-rose-500"></div>
@@ -179,13 +179,13 @@
               
               <!-- Date -->
               <div>
-                <label for="order-date" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Order Date *</label>
+                <label for="order-date" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">तारीख *</label>
                 <input type="date" id="order-date" required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
               </div>
 
               <!-- Wholesaler (Seller) - Google-style Editable Autocomplete -->
               <div class="relative">
-                <label for="order-seller" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Seller (Wholesaler) *</label>
+                <label for="order-seller" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">विक्रेता (थोक व्यापारी) *</label>
                 <div class="relative">
                   <input type="text" id="order-seller" autocomplete="off" placeholder="Type or search wholesaler..." required class="w-full rounded-xl border border-slate-300 pl-3.5 pr-8 py-2.5 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm bg-white">
                   <svg class="w-4 h-4 text-slate-400 absolute right-3 top-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -199,7 +199,7 @@
 
               <!-- Retailer (Buyer) - Google-style Editable Autocomplete -->
               <div class="relative">
-                <label for="order-buyer" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Buyer (Retailer) *</label>
+                <label for="order-buyer" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">खरीदार (फुटकर व्यापारी) *</label>
                 <div class="relative">
                   <input type="text" id="order-buyer" autocomplete="off" placeholder="Type or search retailer..." required class="w-full rounded-xl border border-slate-300 pl-3.5 pr-8 py-2.5 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm bg-white">
                   <svg class="w-4 h-4 text-slate-400 absolute right-3 top-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -211,11 +211,19 @@
                 </div>
               </div>
 
-              <!-- Item -->
-              <div>
-                <label for="order-item" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Commodity / Item *</label>
-                <input type="text" id="order-item" placeholder="e.g. Basmati Rice (50kg Bags)" required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
-                <div class="flex flex-wrap gap-1.5 mt-2">
+              <!-- Item - Google-style Editable Autocomplete -->
+              <div class="relative">
+                <label for="order-item" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">माल / वस्तु *</label>
+                <div class="relative">
+                  <input type="text" id="order-item" autocomplete="off" placeholder="Type or search item..." required class="w-full rounded-xl border border-slate-300 pl-3.5 pr-8 py-2.5 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm bg-white">
+                  <svg class="w-4 h-4 text-slate-400 absolute right-3 top-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </div>
+                <div id="item-suggestions" class="absolute z-30 left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl max-h-52 overflow-y-auto hidden"></div>
+                <div class="flex items-center space-x-1.5 mt-1 text-[11px] text-emerald-600 font-medium">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                  <span id="item-count-badge">Type new or pick from saved list</span>
+                </div>
+                <div class="flex flex-wrap gap-1.5 mt-1.5">
                   <button type="button" class="btn-quick-item px-2 py-0.5 text-[11px] font-semibold bg-slate-100 hover:bg-blue-100 hover:text-blue-800 text-slate-600 rounded-md transition-colors" data-item="Basmati Rice" data-unit="Bag">Rice</button>
                   <button type="button" class="btn-quick-item px-2 py-0.5 text-[11px] font-semibold bg-slate-100 hover:bg-blue-100 hover:text-blue-800 text-slate-600 rounded-md transition-colors" data-item="Wheat Flour / Atta" data-unit="Bag">Atta</button>
                   <button type="button" class="btn-quick-item px-2 py-0.5 text-[11px] font-semibold bg-slate-100 hover:bg-blue-100 hover:text-blue-800 text-slate-600 rounded-md transition-colors" data-item="Refined Oil (15L)" data-unit="Tin">Oil Tin</button>
@@ -226,7 +234,7 @@
 
               <!-- Quantity & Unit -->
               <div>
-                <label for="order-qty" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Quantity &amp; Unit *</label>
+                <label for="order-qty" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">मात्रा और इकाई *</label>
                 <div class="flex space-x-2">
                   <input type="number" id="order-qty" min="0.01" step="any" placeholder="e.g. 50" required class="w-3/5 rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
                   <select id="order-unit" class="w-2/5 rounded-xl border border-slate-300 px-2.5 py-2.5 text-sm font-semibold bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
@@ -243,7 +251,7 @@
 
               <!-- Rate -->
               <div>
-                <label id="order-rate-label" for="order-rate" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Rate per Kg (₹) *</label>
+                <label id="order-rate-label" for="order-rate" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">भाव प्रति Kg (₹) *</label>
                 <input type="number" id="order-rate" min="0.01" step="any" placeholder="e.g. 1800" required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
               </div>
 
@@ -254,8 +262,8 @@
               <div class="flex items-center space-x-3">
                 <div class="w-9 h-9 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-base">₹</div>
                 <div>
-                  <span class="text-xs font-semibold text-blue-900 block">Calculated Total Order Amount</span>
-                  <span class="text-xs text-blue-700">Formula: Quantity × Rate</span>
+                  <span class="text-xs font-semibold text-blue-900 block">कुल रकम</span>
+                  <span class="text-xs text-blue-700">मात्रा × भाव</span>
                 </div>
               </div>
               <div class="text-right">
@@ -267,23 +275,23 @@
             <div class="pt-1">
               <button type="button" id="btn-toggle-optional-order" class="text-xs font-bold text-slate-600 hover:text-blue-700 flex items-center space-x-1.5 py-1 transition-colors">
                 <svg id="icon-optional-order" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                <span>Add Spot Payment or Delivery Remarks (Optional)</span>
+                <span>तुरंत भुगतान या टिप्पणी जोड़ें (वैकल्पिक)</span>
               </button>
               <div id="optional-order-fields" class="grid grid-cols-1 md:grid-cols-3 gap-5 pt-3 mt-2 border-t border-slate-100 hidden">
                 <div>
-                  <label for="order-initial-payment" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Payment Received on Spot (₹)</label>
+                  <label for="order-initial-payment" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">तुरंत प्राप्त भुगतान (₹)</label>
                   <input type="number" id="order-initial-payment" min="0" step="any" value="0" placeholder="0" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
                   <p class="text-[11px] text-slate-400 mt-1">Leave 0 if full amount is due</p>
                 </div>
 
                 <div>
-                  <label for="order-initial-payout" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Amount Forwarded to Seller (₹)</label>
+                  <label for="order-initial-payout" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">विक्रेता को दिया गया भुगतान (₹)</label>
                   <input type="number" id="order-initial-payout" min="0" step="any" value="0" placeholder="0" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
                   <p class="text-[11px] text-slate-400 mt-1">Disbursed to wholesaler right away</p>
                 </div>
 
                 <div>
-                  <label for="order-remarks" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Remarks / Delivery Note</label>
+                  <label for="order-remarks" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">टिप्पणी / डिलीवरी नोट</label>
                   <input type="text" id="order-remarks" placeholder="e.g. Direct dispatch via truck #4402" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
                 </div>
               </div>
@@ -329,19 +337,19 @@
             
             <!-- Type Selector: From Buyer vs To Seller -->
             <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl">
-              <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Payment Direction *</label>
+              <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">भुगतान का प्रकार *</label>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <label class="payment-direction-label cursor-pointer border-2 border-emerald-500 bg-emerald-50/50 rounded-xl p-3 flex items-center space-x-3 transition-all">
                   <input type="radio" name="payment-direction" value="from_buyer" checked class="text-emerald-600 focus:ring-emerald-500 h-4 w-4">
                   <div>
-                    <span class="block text-sm font-bold text-emerald-900">Payment Received from Buyer (Retailer)</span>
+                    <span class="block text-sm font-bold text-emerald-900">खरीदार से प्राप्त भुगतान</span>
                     <span class="block text-xs text-emerald-700">Clears retail customer dues</span>
                   </div>
                 </label>
                 <label class="payment-direction-label cursor-pointer border-2 border-slate-200 bg-white hover:bg-slate-50 rounded-xl p-3 flex items-center space-x-3 transition-all">
                   <input type="radio" name="payment-direction" value="to_seller" class="text-rose-600 focus:ring-rose-500 h-4 w-4">
                   <div>
-                    <span class="block text-sm font-bold text-rose-900">Payment Paid to Seller (Wholesaler)</span>
+                    <span class="block text-sm font-bold text-rose-900">विक्रेता को किया गया भुगतान</span>
                     <span class="block text-xs text-rose-700">Settles supplier outstanding amount</span>
                   </div>
                 </label>
@@ -352,13 +360,13 @@
               
               <!-- Date -->
               <div>
-                <label for="pay-date" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Payment Date *</label>
+                <label for="pay-date" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">भुगतान की तारीख *</label>
                 <input type="date" id="pay-date" required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
               </div>
 
               <!-- Party Selection (Dynamic based on direction) -->
               <div>
-                <label id="pay-party-label" for="pay-party" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Select Buyer (Retailer) *</label>
+                <label id="pay-party-label" for="pay-party" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">खरीदार चुनें *</label>
                 <select id="pay-party" required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm bg-white">
                   <option value="">-- Choose Party --</option>
                 </select>
@@ -367,13 +375,13 @@
 
               <!-- Payment Amount -->
               <div>
-                <label for="pay-amount" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Payment Amount (₹) *</label>
+                <label for="pay-amount" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">भुगतान राशि (₹) *</label>
                 <input type="number" id="pay-amount" min="1" step="any" placeholder="e.g. 25000" required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
               </div>
 
               <!-- Payment Mode -->
               <div>
-                <label for="pay-mode" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Payment Mode *</label>
+                <label for="pay-mode" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">भुगतान का माध्यम *</label>
                 <select id="pay-mode" required class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm bg-white">
                   <option value="UPI / PhonePe / GPay">UPI / GPay / PhonePe</option>
                   <option value="Cash">Cash in Hand</option>
@@ -384,7 +392,7 @@
 
               <!-- Linked Order (Optional) -->
               <div>
-                <label for="pay-linked-order" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Allocate Against Order (Optional)</label>
+                <label for="pay-linked-order" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">ऑर्डर से जोड़ें (वैकल्पिक)</label>
                 <select id="pay-linked-order" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm bg-white">
                   <option value="">General Balance (Unallocated)</option>
                 </select>
@@ -393,7 +401,7 @@
 
               <!-- Reference / Note -->
               <div>
-                <label for="pay-ref" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Transaction ID / Reference Note</label>
+                <label for="pay-ref" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">ट्रांज़ैक्शन आईडी / संदर्भ नोट</label>
                 <input type="text" id="pay-ref" placeholder="e.g. UPI Ref #40921098, or Cash slip #12" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
               </div>
 
@@ -449,10 +457,10 @@
         <!-- View Mode Switcher -->
         <div class="flex items-center space-x-2">
           <button id="btn-buyer-mode-all" class="px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-blue-600 text-white shadow-sm transition-all">
-            All Buyers List
+            सभी खरीदार सूची
           </button>
           <button id="btn-buyer-mode-specific" class="px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl text-slate-600 bg-slate-100 hover:bg-slate-200 transition-all">
-            Specific Buyer Details & Ledger
+            किसी एक खरीदार का खाता
           </button>
         </div>
 
@@ -460,12 +468,12 @@
         <div class="flex items-center space-x-3 w-full md:w-auto">
           <div class="relative flex-1 md:w-64">
             <select id="buyer-select-dropdown" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs sm:text-sm font-semibold focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white">
-              <option value="">-- Choose Buyer / Retailer --</option>
+              <option value="">-- खरीदार चुनें --</option>
             </select>
           </div>
           <button id="btn-add-new-buyer" class="px-3 py-2 text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-xl transition-colors whitespace-nowrap flex items-center space-x-1">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-            <span>Add Buyer</span>
+            <span>+ नया खरीदार</span>
           </button>
         </div>
 
@@ -477,19 +485,19 @@
         <!-- Summary KPI Stats -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider block">Total Buyers</span>
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider block">कुल खरीदार</span>
             <span id="stat-total-buyers" class="text-2xl font-bold text-slate-900 mt-1 block">0</span>
           </div>
           <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider block">Total Order Book</span>
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider block">कुल ऑर्डर राशि</span>
             <span id="stat-buyers-total-orders" class="text-2xl font-bold text-slate-900 mt-1 block">₹0</span>
           </div>
           <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-            <span class="text-xs font-semibold text-emerald-600 uppercase tracking-wider block">Total Collected</span>
+            <span class="text-xs font-semibold text-emerald-600 uppercase tracking-wider block">कुल प्राप्त भुगतान</span>
             <span id="stat-buyers-total-paid" class="text-2xl font-bold text-emerald-600 mt-1 block">₹0</span>
           </div>
           <div class="bg-white p-4 rounded-xl border border-rose-200 shadow-sm bg-rose-50/30">
-            <span class="text-xs font-semibold text-rose-600 uppercase tracking-wider block">Total Pending Dues</span>
+            <span class="text-xs font-semibold text-rose-600 uppercase tracking-wider block">कुल बकाया राशि</span>
             <span id="stat-buyers-total-due" class="text-2xl font-bold text-rose-600 mt-1 block">₹0</span>
           </div>
         </div>
@@ -497,22 +505,22 @@
         <!-- Search Table Card -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
           <div class="p-4 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-3">
-            <h3 class="font-bold text-slate-900 text-sm">Retailer Directory & Master Ledger Balances</h3>
+            <h3 class="font-bold text-slate-900 text-sm">खरीदार सूची और बकाया खाता</h3>
             <div class="w-full sm:w-64">
-              <input type="text" id="search-buyers-input" placeholder="Search buyer, phone, city..." class="w-full text-xs rounded-xl border border-slate-300 px-3 py-1.5 focus:ring-2 focus:ring-blue-500">
+              <input type="text" id="search-buyers-input" placeholder="खरीदार, फोन या शहर खोजें..." class="w-full text-xs rounded-xl border border-slate-300 px-3 py-1.5 focus:ring-2 focus:ring-blue-500">
             </div>
           </div>
           <div class="overflow-x-auto">
             <table class="w-full text-left text-xs sm:text-sm">
               <thead class="bg-slate-50/75 border-b border-slate-200 text-slate-500 font-semibold uppercase text-[11px] tracking-wider">
                 <tr>
-                  <th class="py-3 px-4">Buyer (Retailer)</th>
-                  <th class="py-3 px-4">Location / Phone</th>
-                  <th class="py-3 px-4 text-right">Total Orders</th>
-                  <th class="py-3 px-4 text-right">Total Payments</th>
-                  <th class="py-3 px-4 text-right">Balance Due</th>
-                  <th class="py-3 px-4 text-center">Status</th>
-                  <th class="py-3 px-4 text-center">Action</th>
+                  <th class="py-3 px-4">खरीदार (फुटकर)</th>
+                  <th class="py-3 px-4">शहर / मोबाइल</th>
+                  <th class="py-3 px-4 text-right">कुल ऑर्डर</th>
+                  <th class="py-3 px-4 text-right">कुल भुगतान</th>
+                  <th class="py-3 px-4 text-right">बकाया राशि</th>
+                  <th class="py-3 px-4 text-center">स्थिति</th>
+                  <th class="py-3 px-4 text-center">खाता देखें</th>
                 </tr>
               </thead>
               <tbody id="buyers-table-tbody" class="divide-y divide-slate-100 font-medium">
@@ -561,19 +569,19 @@
           <!-- Specific Buyer 4-card metric row -->
           <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6 pt-6 border-t border-white/10">
             <div class="bg-white/5 rounded-xl p-3 border border-white/10">
-              <span class="text-[11px] uppercase font-bold tracking-wider text-blue-200/70 block">Total Invoiced</span>
+              <span class="text-[11px] uppercase font-bold tracking-wider text-blue-200/70 block">कुल बिल राशि</span>
               <span id="spec-buyer-invoiced" class="text-lg sm:text-xl font-bold mt-0.5 block">₹0</span>
             </div>
             <div class="bg-white/5 rounded-xl p-3 border border-white/10">
-              <span class="text-[11px] uppercase font-bold tracking-wider text-emerald-300 block">Total Paid</span>
+              <span class="text-[11px] uppercase font-bold tracking-wider text-emerald-300 block">कुल भुगतान</span>
               <span id="spec-buyer-paid" class="text-lg sm:text-xl font-bold text-emerald-300 mt-0.5 block">₹0</span>
             </div>
             <div class="bg-white/5 rounded-xl p-3 border border-white/10">
-              <span class="text-[11px] uppercase font-bold tracking-wider text-rose-300 block">Balance Pending</span>
+              <span class="text-[11px] uppercase font-bold tracking-wider text-rose-300 block">बकाया शेष</span>
               <span id="spec-buyer-due" class="text-lg sm:text-xl font-bold text-rose-300 mt-0.5 block">₹0</span>
             </div>
             <div class="bg-white/5 rounded-xl p-3 border border-white/10">
-              <span class="text-[11px] uppercase font-bold tracking-wider text-blue-200/70 block">Orders Count</span>
+              <span class="text-[11px] uppercase font-bold tracking-wider text-blue-200/70 block">कुल ऑर्डर</span>
               <span id="spec-buyer-orders-count" class="text-lg sm:text-xl font-bold mt-0.5 block">0</span>
             </div>
           </div>
@@ -586,10 +594,10 @@
           <div class="border-b border-slate-200 bg-slate-50 p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
             <div class="flex space-x-2">
               <button id="tab-buyer-orders" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-white text-blue-700 shadow-sm border border-slate-200">
-                All Orders Placed
+                सभी ऑर्डर
               </button>
               <button id="tab-buyer-payments" class="px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-200/70 transition-colors">
-                Payment History
+                भुगतान इतिहास
               </button>
             </div>
             <span class="text-xs text-slate-500" id="spec-table-subtitle">Showing all orders placed by this retailer</span>
@@ -600,14 +608,14 @@
             <table class="w-full text-left text-xs sm:text-sm">
               <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase text-[11px] tracking-wider">
                 <tr>
-                  <th class="py-3 px-4">Order ID & Date</th>
-                  <th class="py-3 px-4">Wholesaler (Seller)</th>
-                  <th class="py-3 px-4">Item & Qty</th>
-                  <th class="py-3 px-4 text-right">Rate</th>
-                  <th class="py-3 px-4 text-right">Total Amount</th>
-                  <th class="py-3 px-4 text-right">Paid</th>
-                  <th class="py-3 px-4 text-right">Due</th>
-                  <th class="py-3 px-4 text-center">Status</th>
+                  <th class="py-3 px-4">ऑर्डर आईडी व तारीख</th>
+                  <th class="py-3 px-4">विक्रेता (थोक)</th>
+                  <th class="py-3 px-4">माल व मात्रा</th>
+                  <th class="py-3 px-4 text-right">भाव</th>
+                  <th class="py-3 px-4 text-right">कुल रकम</th>
+                  <th class="py-3 px-4 text-right">भुगतान</th>
+                  <th class="py-3 px-4 text-right">बकाया</th>
+                  <th class="py-3 px-4 text-center">स्थिति</th>
                 </tr>
               </thead>
               <tbody id="spec-buyer-orders-tbody" class="divide-y divide-slate-100 font-medium">
@@ -621,12 +629,12 @@
             <table class="w-full text-left text-xs sm:text-sm">
               <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase text-[11px] tracking-wider">
                 <tr>
-                  <th class="py-3 px-4">Receipt #</th>
-                  <th class="py-3 px-4">Date</th>
-                  <th class="py-3 px-4">Payment Mode</th>
-                  <th class="py-3 px-4">Reference / Details</th>
-                  <th class="py-3 px-4">Allocated Order</th>
-                  <th class="py-3 px-4 text-right">Amount Received</th>
+                  <th class="py-3 px-4">रसीद #</th>
+                  <th class="py-3 px-4">तारीख</th>
+                  <th class="py-3 px-4">माध्यम</th>
+                  <th class="py-3 px-4">संदर्भ / नोट</th>
+                  <th class="py-3 px-4">जुड़ा ऑर्डर</th>
+                  <th class="py-3 px-4 text-right">प्राप्त राशि</th>
                 </tr>
               </thead>
               <tbody id="spec-buyer-payments-tbody" class="divide-y divide-slate-100 font-medium">
@@ -648,12 +656,12 @@
       <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
           <div>
-            <h2 class="text-lg font-bold text-slate-900">Wholesale Suppliers Directory</h2>
+            <h2 class="text-lg font-bold text-slate-900">विक्रेता (थोक व्यापारी) सूची</h2>
             <p class="text-xs text-slate-500">Track supplies fulfilled, payouts forwarded, and outstanding dues owed to wholesalers</p>
           </div>
           <button id="btn-add-new-seller" class="px-3.5 py-2 text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-xl transition-colors flex items-center space-x-1">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-            <span>Add Wholesaler</span>
+            <span>+ नया विक्रेता</span>
           </button>
         </div>
 
@@ -661,12 +669,12 @@
           <table class="w-full text-left text-xs sm:text-sm">
             <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase text-[11px] tracking-wider">
               <tr>
-                <th class="py-3 px-4">Wholesaler Name</th>
-                <th class="py-3 px-4">Market / Phone</th>
-                <th class="py-3 px-4 text-right">Total Supplied Value</th>
-                <th class="py-3 px-4 text-right">Payments Sent</th>
-                <th class="py-3 px-4 text-right">Payable Due</th>
-                <th class="py-3 px-4 text-center">Settlement Status</th>
+                <th class="py-3 px-4">विक्रेता का नाम</th>
+                <th class="py-3 px-4">मंडी / मोबाइल</th>
+                <th class="py-3 px-4 text-right">कुल माल आपूर्ति</th>
+                <th class="py-3 px-4 text-right">भेजा गया भुगतान</th>
+                <th class="py-3 px-4 text-right">देय बकाया</th>
+                <th class="py-3 px-4 text-center">स्थिति</th>
               </tr>
             </thead>
             <tbody id="sellers-table-tbody" class="divide-y divide-slate-100 font-medium">
@@ -685,15 +693,15 @@
         
         <div class="p-4 sm:p-5 bg-slate-50 border-b border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h2 class="text-lg font-bold text-slate-900">Master Orders Register</h2>
+            <h2 class="text-lg font-bold text-slate-900">मास्टर ऑर्डर रजिस्टर</h2>
             <p class="text-xs text-slate-500">Full history of orders matching the manual register headers</p>
           </div>
           <div class="flex flex-wrap items-center gap-2">
             <select id="filter-order-status" class="text-xs rounded-xl border border-slate-300 px-3 py-1.5 bg-white font-medium">
-              <option value="all">All Statuses</option>
-              <option value="Pending">Pending Only</option>
-              <option value="Partial">Partial Only</option>
-              <option value="Paid">Fully Paid</option>
+              <option value="all">सभी स्थिति</option>
+              <option value="Pending">बकाया (Pending)</option>
+              <option value="Partial">आंशिक (Partial)</option>
+              <option value="Paid">पूर्ण भुगतान (Paid)</option>
             </select>
             <input type="text" id="search-orders-input" placeholder="Search item, buyer, seller..." class="text-xs rounded-xl border border-slate-300 px-3 py-1.5 w-48">
           </div>
@@ -703,16 +711,16 @@
           <table class="w-full text-left text-xs sm:text-sm">
             <thead class="bg-slate-50 text-slate-500 font-semibold uppercase text-[11px] tracking-wider border-b border-slate-200">
               <tr>
-                <th class="py-3 px-4">Order ID & Date</th>
-                <th class="py-3 px-4">Seller (Wholesaler)</th>
-                <th class="py-3 px-4">Buyer (Retailer)</th>
-                <th class="py-3 px-4">Item</th>
-                <th class="py-3 px-4 text-right">Qty</th>
-                <th class="py-3 px-4 text-right">Rate (₹)</th>
-                <th class="py-3 px-4 text-right">Amount (₹)</th>
-                <th class="py-3 px-4 text-right">Paid (₹)</th>
-                <th class="py-3 px-4 text-right">Retailer Due (₹)</th>
-                <th class="py-3 px-4 text-center">Status</th>
+                <th class="py-3 px-4">ऑर्डर आईडी व तारीख</th>
+                <th class="py-3 px-4">विक्रेता (थोक)</th>
+                <th class="py-3 px-4">खरीदार (फुटकर)</th>
+                <th class="py-3 px-4">माल / वस्तु</th>
+                <th class="py-3 px-4 text-right">मात्रा</th>
+                <th class="py-3 px-4 text-right">भाव (₹)</th>
+                <th class="py-3 px-4 text-right">रकम (₹)</th>
+                <th class="py-3 px-4 text-right">भुगतान (₹)</th>
+                <th class="py-3 px-4 text-right">बकाया (₹)</th>
+                <th class="py-3 px-4 text-center">स्थिति</th>
               </tr>
             </thead>
             <tbody id="master-orders-tbody" class="divide-y divide-slate-100 font-medium">
@@ -734,7 +742,7 @@
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <div>
             <span class="text-xs font-bold text-blue-600 uppercase tracking-widest block">Daily Settlement Cockpit</span>
-            <h2 class="text-xl font-bold text-slate-900 mt-0.5">End-of-Day Dues Reconciliation</h2>
+            <h2 class="text-xl font-bold text-slate-900 mt-0.5">दैनिक बकाया मिलान (End-of-Day Dues)</h2>
             <p class="text-xs text-slate-500 mt-1">Cross-reconcile which retailer owes which wholesaler for fulfilled stock</p>
           </div>
           <div class="text-right">
@@ -746,24 +754,24 @@
         <!-- 3 KPI Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
           <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
-            <span class="text-xs font-bold text-emerald-800 uppercase tracking-wider block">Total To Collect From Buyers</span>
+            <span class="text-xs font-bold text-emerald-800 uppercase tracking-wider block">खरीदारों से कुल लेना है</span>
             <span id="eod-total-receivable" class="text-2xl font-extrabold text-emerald-700 mt-1 block">₹0</span>
             <span class="text-[11px] text-emerald-600 mt-0.5 block">Outstanding retail receivables</span>
           </div>
           <div class="bg-rose-50 border border-rose-200 rounded-xl p-4">
-            <span class="text-xs font-bold text-rose-800 uppercase tracking-wider block">Total To Disburse To Sellers</span>
+            <span class="text-xs font-bold text-rose-800 uppercase tracking-wider block">विक्रेताओं को कुल देना है</span>
             <span id="eod-total-payable" class="text-2xl font-extrabold text-rose-700 mt-1 block">₹0</span>
             <span class="text-[11px] text-rose-600 mt-0.5 block">Pending wholesale liabilities</span>
           </div>
           <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
-            <span class="text-xs font-bold text-blue-800 uppercase tracking-wider block">Broker Margin / In-Transit Float</span>
+            <span class="text-xs font-bold text-blue-800 uppercase tracking-wider block">ब्रोकर के पास शेष (Float)</span>
             <span id="eod-broker-float" class="text-2xl font-extrabold text-blue-700 mt-1 block">₹0</span>
             <span class="text-[11px] text-blue-600 mt-0.5 block">Collected but not yet forwarded</span>
           </div>
         </div>
 
         <!-- Bilateral Settlement Matrix -->
-        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-3">Retailer-to-Wholesaler Due Matrix</h3>
+        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-3">खरीदार-से-विक्रेता बकाया तालिका</h3>
         <p class="text-xs text-slate-500 mb-4">Shows exact amount due from each Retailer (Row) to each Wholesaler (Column):</p>
         
         <div class="overflow-x-auto border border-slate-200 rounded-xl">
@@ -776,18 +784,18 @@
 
       <!-- Bilateral Itemized Breakdown Table -->
       <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Unsettled Supply Lines (Pending Fulfillment Debt)</h3>
+        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">पार्टी-वार लेन-देन सारांश</h3>
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs sm:text-sm">
             <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase text-[11px] tracking-wider">
               <tr>
-                <th class="py-3 px-4">Retailer (Buyer)</th>
-                <th class="py-3 px-4">Wholesaler (Seller)</th>
+                <th class="py-3 px-4">खरीदार (फुटकर)</th>
+                <th class="py-3 px-4">विक्रेता (थोक)</th>
                 <th class="py-3 px-4">Orders Count</th>
-                <th class="py-3 px-4 text-right">Total Trade</th>
-                <th class="py-3 px-4 text-right">Buyer Unpaid</th>
-                <th class="py-3 px-4 text-right">Seller Pending</th>
-                <th class="py-3 px-4 text-center">Settlement Status</th>
+                <th class="py-3 px-4 text-right">कुल व्यापार</th>
+                <th class="py-3 px-4 text-right">खरीदार बकाया</th>
+                <th class="py-3 px-4 text-right">विक्रेता देय</th>
+                <th class="py-3 px-4 text-center">स्थिति</th>
               </tr>
             </thead>
             <tbody id="eod-lines-tbody" class="divide-y divide-slate-100 font-medium">
@@ -805,23 +813,23 @@
   <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 z-40 px-2 py-1.5 flex justify-around items-center shadow-[0_-4px_12px_rgba(0,0,0,0.05)]">
     <button data-view="entry" class="mobile-nav-tab flex flex-col items-center justify-center py-1 px-3 rounded-xl text-blue-600 font-bold">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-      <span class="text-[10px] mt-0.5">Entry</span>
+      <span class="text-[10px] mt-0.5">एंट्री</span>
     </button>
     <button data-view="buyers" class="mobile-nav-tab flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-500 font-medium">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-      <span class="text-[10px] mt-0.5">Buyers</span>
+      <span class="text-[10px] mt-0.5">खरीदार</span>
     </button>
     <button data-view="sellers" class="mobile-nav-tab flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-500 font-medium">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-      <span class="text-[10px] mt-0.5">Sellers</span>
+      <span class="text-[10px] mt-0.5">विक्रेता</span>
     </button>
     <button data-view="orders" class="mobile-nav-tab flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-500 font-medium">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
-      <span class="text-[10px] mt-0.5">Orders</span>
+      <span class="text-[10px] mt-0.5">रजिस्टर</span>
     </button>
     <button data-view="eod" class="mobile-nav-tab flex flex-col items-center justify-center py-1 px-3 rounded-xl text-slate-500 font-medium">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-      <span class="text-[10px] mt-0.5">EOD Dues</span>
+      <span class="text-[10px] mt-0.5">बकाया</span>
     </button>
   </nav>
 
@@ -1042,42 +1050,18 @@
   <!-- APPLICATION JAVASCRIPT LOGIC -->
   <script>
     // --- INITIAL DEMO DATA ---
-    const DEFAULT_PARTIES = [
-      { id: 'p1', name: 'Sharma Kirana Store', type: 'Retailer', phone: '+91 98260 11223', city: 'Vijay Nagar, Indore' },
-      { id: 'p2', name: 'Balaji Provision', type: 'Retailer', phone: '+91 94250 44556', city: 'Sarrafa, Ujjain' },
-      { id: 'p3', name: 'Krishna Retail', type: 'Retailer', phone: '+91 97130 77889', city: 'Mandleshwar' },
-      { id: 'p4', name: 'Agarwal Daily Needs', type: 'Retailer', phone: '+91 98930 22334', city: 'Rau, Indore' },
-      { id: 'p5', name: 'Mahaveer Wholesale Mart', type: 'Wholesaler', phone: '+91 98270 99887', city: 'Grain Mandi, Indore' },
-      { id: 'p6', name: 'Sri Ganesh Trading Co.', type: 'Wholesaler', phone: '+91 94251 66778', city: 'Malwa Mills, Indore' },
-      { id: 'p7', name: 'Apex Grain Distributors', type: 'Wholesaler', phone: '+91 91110 33445', city: 'Dewas Naka' }
-    ];
+    const DEFAULT_ITEMS = [];
 
-    const DEFAULT_ORDERS = [
-      { id: 'ORD-1001', date: '2026-11-08', seller: 'Mahaveer Wholesale Mart', buyer: 'Sharma Kirana Store', item: 'Basmati Rice (50kg Bag)', qty: 40, unit: 'Bag', rate: 1950, amount: 78000, paid: 78000, paidToSeller: 78000, remarks: 'Delivered in full' },
-      { id: 'ORD-1002', date: '2026-11-08', seller: 'Sri Ganesh Trading Co.', buyer: 'Balaji Provision', item: 'Refined Oil (15L Tin)', qty: 30, unit: 'Tin', rate: 1620, amount: 48600, paid: 25000, paidToSeller: 25000, remarks: 'Partial payment received' },
-      { id: 'ORD-1003', date: '2026-11-09', seller: 'Apex Grain Distributors', buyer: 'Krishna Retail', item: 'Wheat Flour / Atta (50kg)', qty: 60, unit: 'Bag', rate: 1450, amount: 87000, paid: 0, paidToSeller: 0, remarks: '7 days credit term' },
-      { id: 'ORD-1004', date: '2026-11-09', seller: 'Mahaveer Wholesale Mart', buyer: 'Agarwal Daily Needs', item: 'Sugar M-30 (50kg Bag)', qty: 25, unit: 'Bag', rate: 2100, amount: 52500, paid: 52500, paidToSeller: 50000, remarks: 'Broker float ₹2,500' },
-      { id: 'ORD-1005', date: '2026-11-10', seller: 'Sri Ganesh Trading Co.', buyer: 'Sharma Kirana Store', item: 'Spices Assorted Box', qty: 15, unit: 'Box', rate: 3200, amount: 48000, paid: 20000, paidToSeller: 20000, remarks: 'Balance promised Friday' },
-      { id: 'ORD-1006', date: '2026-11-10', seller: 'Apex Grain Distributors', buyer: 'Balaji Provision', item: 'Toor Dal Premium (50kg)', qty: 20, unit: 'Bag', rate: 4600, amount: 92000, paid: 40000, paidToSeller: 40000, remarks: 'Half paid' },
-      { id: 'ORD-1007', date: '2026-11-11', seller: 'Mahaveer Wholesale Mart', buyer: 'Krishna Retail', item: 'Basmati Rice (50kg Bag)', qty: 30, unit: 'Bag', rate: 1950, amount: 58500, paid: 0, paidToSeller: 0, remarks: 'Today morning dispatch' }
-    ];
+    const DEFAULT_PARTIES = [];
 
-    const DEFAULT_PAYMENTS = [
-      { id: 'PAY-101', date: '2026-11-08', party: 'Sharma Kirana Store', direction: 'from_buyer', amount: 78000, mode: 'Bank Transfer (NEFT/RTGS)', linkedOrder: 'ORD-1001', ref: 'NEFT#IND882101' },
-      { id: 'PAY-102', date: '2026-11-08', party: 'Mahaveer Wholesale Mart', direction: 'to_seller', amount: 78000, mode: 'Bank Transfer (NEFT/RTGS)', linkedOrder: 'ORD-1001', ref: 'Forwarded to Wholesaler' },
-      { id: 'PAY-103', date: '2026-11-09', party: 'Balaji Provision', direction: 'from_buyer', amount: 25000, mode: 'UPI / PhonePe / GPay', linkedOrder: 'ORD-1002', ref: 'UPI/99281921' },
-      { id: 'PAY-104', date: '2026-11-09', party: 'Sri Ganesh Trading Co.', direction: 'to_seller', amount: 25000, mode: 'UPI / PhonePe / GPay', linkedOrder: 'ORD-1002', ref: 'Forwarded UPI' },
-      { id: 'PAY-105', date: '2026-11-10', party: 'Agarwal Daily Needs', direction: 'from_buyer', amount: 52500, mode: 'Cheque', linkedOrder: 'ORD-1004', ref: 'HDFC Chq #110928' },
-      { id: 'PAY-106', date: '2026-11-10', party: 'Mahaveer Wholesale Mart', direction: 'to_seller', amount: 50000, mode: 'Bank Transfer (NEFT/RTGS)', linkedOrder: 'ORD-1004', ref: 'Disbursed ₹50k' },
-      { id: 'PAY-107', date: '2026-11-10', party: 'Sharma Kirana Store', direction: 'from_buyer', amount: 20000, mode: 'Cash', linkedOrder: 'ORD-1005', ref: 'Cash slip #41' },
-      { id: 'PAY-108', date: '2026-11-10', party: 'Sri Ganesh Trading Co.', direction: 'to_seller', amount: 20000, mode: 'Cash', linkedOrder: 'ORD-1005', ref: 'Cash handed to Munimji' },
-      { id: 'PAY-109', date: '2026-11-10', party: 'Balaji Provision', direction: 'from_buyer', amount: 40000, mode: 'UPI / PhonePe / GPay', linkedOrder: 'ORD-1006', ref: 'UPI Ref 4099281' },
-      { id: 'PAY-110', date: '2026-11-10', party: 'Apex Grain Distributors', direction: 'to_seller', amount: 40000, mode: 'Bank Transfer (NEFT/RTGS)', linkedOrder: 'ORD-1006', ref: 'Bank RTGS' }
-    ];
+    const DEFAULT_ORDERS = [];
+
+    const DEFAULT_PAYMENTS = [];
 
     // --- APPLICATION STATE ---
     let state = {
       parties: [],
+      items: [],
       orders: [],
       payments: [],
       syncQueue: [],
@@ -1089,6 +1073,18 @@
       selectedBuyerId: null,
       buyerSubTab: 'orders'
     };
+
+    function syncItemsFromSavedData() {
+      if (!Array.isArray(state.items) || state.items.length === 0) {
+        state.items = JSON.parse(JSON.stringify(DEFAULT_ITEMS));
+      }
+      if (!Array.isArray(state.orders)) return;
+      state.orders.forEach(o => {
+        if (o.item && !state.items.some(it => it.name.trim().toLowerCase() === o.item.trim().toLowerCase())) {
+          state.items.push({ name: o.item.trim(), defaultUnit: o.unit || 'Kg' });
+        }
+      });
+    }
 
     // Sync any parties from orders in saved data into master parties list
     function syncPartiesFromSavedData() {
@@ -1120,10 +1116,19 @@
     // Safe LocalStorage helpers
     function loadState() {
       try {
+        if (!localStorage.getItem('vyapar_clean_v1')) {
+          localStorage.removeItem('vyapar_parties');
+          localStorage.removeItem('vyapar_orders');
+          localStorage.removeItem('vyapar_payments');
+          localStorage.removeItem('vyapar_items');
+          localStorage.setItem('vyapar_clean_v1', '1');
+        }
         const storedParties = localStorage.getItem('vyapar_parties');
         const storedOrders = localStorage.getItem('vyapar_orders');
         const storedPayments = localStorage.getItem('vyapar_payments');
         const storedQueue = localStorage.getItem('vyapar_sync_queue');
+        const storedItems = localStorage.getItem('vyapar_items');
+        if (storedItems) state.items = JSON.parse(storedItems);
         const storedUrl = localStorage.getItem('vyapar_sheet_url');
         if (storedQueue) state.syncQueue = JSON.parse(storedQueue);
         if (storedUrl) state.sheetWebAppUrl = storedUrl;
@@ -1132,6 +1137,7 @@
           state.orders = JSON.parse(storedOrders);
           state.payments = JSON.parse(storedPayments);
           syncPartiesFromSavedData();
+          syncItemsFromSavedData();
           if (!state.selectedBuyerId) {
             state.selectedBuyerId = state.parties.find(p => p.type === 'Retailer')?.id || null;
           }
@@ -1146,6 +1152,7 @@
     function saveState() {
       try {
         localStorage.setItem('vyapar_parties', JSON.stringify(state.parties));
+        localStorage.setItem('vyapar_items', JSON.stringify(state.items));
         localStorage.setItem('vyapar_orders', JSON.stringify(state.orders));
         localStorage.setItem('vyapar_payments', JSON.stringify(state.payments));
         localStorage.setItem('vyapar_sync_queue', JSON.stringify(state.syncQueue));
@@ -1245,6 +1252,7 @@
 
     function resetToDefault() {
       state.parties = JSON.parse(JSON.stringify(DEFAULT_PARTIES));
+      state.items = JSON.parse(JSON.stringify(DEFAULT_ITEMS));
       state.orders = JSON.parse(JSON.stringify(DEFAULT_ORDERS));
       state.payments = JSON.parse(JSON.stringify(DEFAULT_PAYMENTS));
       state.selectedBuyerId = state.parties.find(p => p.type === 'Retailer')?.id || null;
@@ -1279,14 +1287,15 @@
 
     // Party financial metrics calculator
     function getPartyMetrics(partyName, partyType) {
+      const target = (partyName || '').trim().toLowerCase();
       if (partyType === 'Retailer') {
-        const partyOrders = state.orders.filter(o => o.buyer === partyName);
+        const partyOrders = state.orders.filter(o => (o.buyer || '').trim().toLowerCase() === target);
         const totalOrdered = partyOrders.reduce((sum, o) => sum + (Number(o.amount) || 0), 0);
         const totalPaid = partyOrders.reduce((sum, o) => sum + (Number(o.paid) || 0), 0);
         const balanceDue = totalOrdered - totalPaid;
         return { totalOrders: partyOrders.length, totalAmount: totalOrdered, totalPaid, balanceDue };
       } else {
-        const partySupplies = state.orders.filter(o => o.seller === partyName);
+        const partySupplies = state.orders.filter(o => (o.seller || '').trim().toLowerCase() === target);
         const totalSupplied = partySupplies.reduce((sum, o) => sum + (Number(o.amount) || 0), 0);
         const totalPaidToSeller = partySupplies.reduce((sum, o) => sum + (Number(o.paidToSeller) || 0), 0);
         const balanceDue = totalSupplied - totalPaidToSeller;
@@ -1346,10 +1355,14 @@
       if (buyerCountBadge) {
         buyerCountBadge.textContent = `${buyers.length} saved • Type to search or add new`;
       }
+      const itemCountBadge = document.getElementById('item-count-badge');
+      if (itemCountBadge) {
+        itemCountBadge.textContent = `${state.items.length} saved • Type to search or add new`;
+      }
 
       // Dropdown in Buyers Tab
       if (buyerSelectDropdown) {
-        buyerSelectDropdown.innerHTML = '<option value="">-- Choose Buyer / Retailer --</option>' +
+        buyerSelectDropdown.innerHTML = '<option value="">-- खरीदार चुनें --</option>' +
           buyers.map(b => `<option value="${b.id}" ${b.id === state.selectedBuyerId ? 'selected' : ''}>${b.name}</option>`).join('');
       }
 
@@ -1365,7 +1378,7 @@
       if (!payPartySelect) return;
 
       if (isFromBuyer) {
-        if (label) label.textContent = 'Select Buyer (Retailer) *';
+        if (label) label.textContent = 'खरीदार चुनें *';
         const buyers = state.parties.filter(p => p.type === 'Retailer');
         payPartySelect.innerHTML = '<option value="">-- Choose Retailer --</option>' +
           buyers.map(b => {
@@ -1373,7 +1386,7 @@
             return `<option value="${b.name}">${b.name} (Due: ${formatINR(m.balanceDue)})</option>`;
           }).join('');
       } else {
-        if (label) label.textContent = 'Select Wholesaler (Supplier) *';
+        if (label) label.textContent = 'विक्रेता चुनें *';
         const sellers = state.parties.filter(p => p.type === 'Wholesaler');
         payPartySelect.innerHTML = '<option value="">-- Choose Wholesaler --</option>' +
           sellers.map(s => {
@@ -1499,7 +1512,20 @@
       const buyerId = state.selectedBuyerId;
       const buyer = state.parties.find(p => p.id === buyerId && p.type === 'Retailer') || state.parties.find(p => p.type === 'Retailer');
       
-      if (!buyer) return;
+      if (!buyer) {
+        document.getElementById('spec-buyer-avatar').textContent = '-';
+        document.getElementById('spec-buyer-name').textContent = 'कोई खरीदार नहीं';
+        document.getElementById('spec-buyer-meta').textContent = 'नया ऑर्डर दर्ज करने पर खरीदार यहाँ दिखेगा';
+        document.getElementById('spec-buyer-invoiced').textContent = '₹0';
+        document.getElementById('spec-buyer-paid').textContent = '₹0';
+        document.getElementById('spec-buyer-due').textContent = '₹0';
+        document.getElementById('spec-buyer-orders-count').textContent = '0';
+        const ot = document.getElementById('spec-buyer-orders-tbody');
+        if (ot) ot.innerHTML = '<tr><td colspan="8" class="py-6 text-center text-slate-400">अभी कोई ऑर्डर नहीं है।</td></tr>';
+        const pt = document.getElementById('spec-buyer-payments-tbody');
+        if (pt) pt.innerHTML = '<tr><td colspan="6" class="py-6 text-center text-slate-400">अभी कोई भुगतान नहीं है।</td></tr>';
+        return;
+      }
       state.selectedBuyerId = buyer.id;
 
       // Update Header info
@@ -1514,7 +1540,7 @@
       document.getElementById('spec-buyer-orders-count').textContent = metrics.totalOrders;
 
       // Render Orders for this buyer
-      const buyerOrders = state.orders.filter(o => o.buyer === buyer.name);
+      const buyerOrders = state.orders.filter(o => (o.buyer || "").trim().toLowerCase() === buyer.name.trim().toLowerCase());
       const ordersTbody = document.getElementById('spec-buyer-orders-tbody');
       if (ordersTbody) {
         if (buyerOrders.length === 0) {
@@ -1551,7 +1577,7 @@
       }
 
       // Render Payments for this buyer
-      const buyerPayments = state.payments.filter(p => p.party === buyer.name && p.direction === 'from_buyer');
+      const buyerPayments = state.payments.filter(p => (p.party || '').trim().toLowerCase() === buyer.name.trim().toLowerCase() && p.direction === 'from_buyer');
       const paymentsTbody = document.getElementById('spec-buyer-payments-tbody');
       if (paymentsTbody) {
         if (buyerPayments.length === 0) {
@@ -1576,6 +1602,11 @@
       const sellers = state.parties.filter(p => p.type === 'Wholesaler');
       const tbody = document.getElementById('sellers-table-tbody');
       if (!tbody) return;
+
+      if (sellers.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="py-6 text-center text-slate-400">अभी कोई विक्रेता दर्ज नहीं है। नया ऑर्डर जोड़ें।</td></tr>';
+        return;
+      }
 
       tbody.innerHTML = sellers.map(s => {
         const m = getPartyMetrics(s.name, 'Wholesaler');
@@ -1602,7 +1633,7 @@
       }).join('');
     }
 
-    // Render Master Orders Register Table
+    // Render मास्टर ऑर्डर रजिस्टर Table
     function renderOrdersRegister() {
       const tbody = document.getElementById('master-orders-tbody');
       const filterStatus = document.getElementById('filter-order-status')?.value || 'all';
@@ -1669,7 +1700,7 @@
       sellers.forEach(s => {
         thead += `<th class="py-3 px-4 text-right">${s.name}</th>`;
       });
-      thead += `<th class="py-3 px-4 text-right bg-rose-50 text-rose-900">Total Due by Retailer</th></tr></thead>`;
+      thead += `<th class="py-3 px-4 text-right bg-rose-50 text-rose-900">खरीदार का कुल बकाया</th></tr></thead>`;
 
       let tbodyRows = '<tbody class="divide-y divide-slate-100 font-medium">';
       
@@ -1683,7 +1714,7 @@
 
         sellers.forEach(s => {
           // Find orders between this buyer and seller where buyer hasn't paid
-          const matchingOrders = state.orders.filter(o => o.buyer === b.name && o.seller === s.name);
+          const matchingOrders = state.orders.filter(o => (o.buyer || "").trim().toLowerCase() === b.name.trim().toLowerCase() && (o.seller || "").trim().toLowerCase() === s.name.trim().toLowerCase());
           const cellDue = matchingOrders.reduce((sum, o) => sum + Math.max(0, o.amount - (o.paid || 0)), 0);
           rowTotal += cellDue;
           colTotals[s.name] += cellDue;
@@ -1698,7 +1729,7 @@
       });
 
       // Footer Row for Sellers Total
-      let tfoot = `<tfoot class="bg-slate-100 font-bold text-slate-900 border-t-2 border-slate-300"><tr><td class="py-3 px-4 text-slate-800">Total Due to Wholesaler:</td>`;
+      let tfoot = `<tfoot class="bg-slate-100 font-bold text-slate-900 border-t-2 border-slate-300"><tr><td class="py-3 px-4 text-slate-800">विक्रेता को कुल देय:</td>`;
       sellers.forEach(s => {
         tfoot += `<td class="py-3 px-4 text-right font-extrabold text-blue-900">${formatINR(colTotals[s.name])}</td>`;
       });
@@ -1839,7 +1870,7 @@
       const orderRateLabel = document.getElementById('order-rate-label');
       function updateRateLabel() {
         if (orderUnitSelect && orderRateLabel) {
-          orderRateLabel.textContent = `Rate per ${orderUnitSelect.value} (₹) *`;
+          orderRateLabel.textContent = `भाव प्रति ${orderUnitSelect.value} (₹) *`;
         }
       }
       if (orderUnitSelect) {
@@ -1975,12 +2006,75 @@
       setupAutocomplete(sellerInput, sellerSuggestions, 'Wholesaler');
       setupAutocomplete(buyerInput, buyerSuggestions, 'Retailer');
 
+      const itemInputEl = document.getElementById('order-item');
+      const itemSuggestions = document.getElementById('item-suggestions');
+
+      function setupItemAutocomplete() {
+        if (!itemInputEl || !itemSuggestions) return;
+
+        function renderItemSuggestions(query) {
+          const q = (query || '').trim().toLowerCase();
+          const matches = q
+            ? state.items.filter(it => it.name.toLowerCase().includes(q))
+            : state.items;
+
+          let htmlOut = '';
+          matches.forEach(it => {
+            htmlOut += `
+              <button type="button" class="autocomplete-item-opt w-full text-left px-3.5 py-2.5 hover:bg-blue-50 border-b border-slate-100 last:border-b-0 flex items-center justify-between transition-colors" data-value="${it.name}" data-unit="${it.defaultUnit || 'Kg'}">
+                <span class="text-sm font-semibold text-slate-900">${it.name}</span>
+                <span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">${it.defaultUnit || 'Kg'}</span>
+              </button>
+            `;
+          });
+
+          const exactExists = state.items.some(it => it.name.toLowerCase() === q);
+          if (q && !exactExists) {
+            htmlOut += `
+              <div class="px-3.5 py-2 bg-emerald-50/70 text-[11px] font-semibold text-emerald-800 flex items-center space-x-1.5">
+                <span>+ Will save "<strong>${query.trim()}</strong>" as new Item</span>
+              </div>
+            `;
+          }
+
+          if (!htmlOut) {
+            itemSuggestions.classList.add('hidden');
+            return;
+          }
+
+          itemSuggestions.innerHTML = htmlOut;
+          itemSuggestions.classList.remove('hidden');
+
+          itemSuggestions.querySelectorAll('.autocomplete-item-opt').forEach(btn => {
+            btn.addEventListener('mousedown', (e) => {
+              e.preventDefault();
+              itemInputEl.value = btn.getAttribute('data-value');
+              const u = btn.getAttribute('data-unit');
+              if (u && orderUnitSelect) {
+                orderUnitSelect.value = u;
+                updateRateLabel();
+              }
+              itemInputEl.classList.remove('border-rose-500', 'ring-2', 'ring-rose-300');
+              itemSuggestions.classList.add('hidden');
+            });
+          });
+        }
+
+        itemInputEl.addEventListener('focus', () => renderItemSuggestions(itemInputEl.value));
+        itemInputEl.addEventListener('input', () => renderItemSuggestions(itemInputEl.value));
+        itemInputEl.addEventListener('blur', () => {
+          setTimeout(() => itemSuggestions.classList.add('hidden'), 150);
+        });
+      }
+
+      setupItemAutocomplete();
+
       // Submit Order Form
       formOrder.addEventListener('submit', (e) => {
         e.preventDefault();
         const date = document.getElementById('order-date').value;
-        const sellerName = sellerInput.value.trim();
-        const buyerName = buyerInput.value.trim();
+        let sellerName = sellerInput.value.trim();
+        let buyerName = buyerInput.value.trim();
         const item = document.getElementById('order-item').value.trim();
         const qty = parseFloat(qtyInput.value);
         const unit = document.getElementById('order-unit')?.value || 'Kg';
@@ -2031,16 +2125,25 @@
           return;
         }
 
-        // Auto-register party if newly typed
-        if (!state.parties.some(p => p.name.toLowerCase() === sellerName.toLowerCase())) {
+        // Resolve canonical party name or auto-register if newly typed
+        const existingSeller = state.parties.find(p => p.name.trim().toLowerCase() === sellerName.toLowerCase());
+        if (existingSeller) {
+          sellerName = existingSeller.name;
+        } else {
           const newSellerObj = { id: 'p_' + Date.now(), name: sellerName, type: 'Wholesaler', phone: '', city: '' };
           state.parties.push(newSellerObj);
           queueForSheetSync('party', newSellerObj);
         }
-        if (!state.parties.some(p => p.name.toLowerCase() === buyerName.toLowerCase())) {
+        const existingBuyer = state.parties.find(p => p.name.trim().toLowerCase() === buyerName.toLowerCase());
+        if (existingBuyer) {
+          buyerName = existingBuyer.name;
+        } else {
           const newBuyerObj = { id: 'p_' + (Date.now() + 1), name: buyerName, type: 'Retailer', phone: '', city: '' };
           state.parties.push(newBuyerObj);
           queueForSheetSync('party', newBuyerObj);
+        }
+        if (!state.items.some(it => it.name.toLowerCase() === item.toLowerCase())) {
+          state.items.push({ name: item, defaultUnit: unit || 'Kg' });
         }
 
         if (state.editingOrderIndex >= 0 && state.orders[state.editingOrderIndex]) {
@@ -2298,7 +2401,20 @@
       // Quick Collect Payment for this Buyer
       document.getElementById('btn-quick-pay-buyer').addEventListener('click', () => {
         const buyer = state.parties.find(p => p.id === state.selectedBuyerId);
-        if (!buyer) return;
+        if (!buyer) {
+        document.getElementById('spec-buyer-avatar').textContent = '-';
+        document.getElementById('spec-buyer-name').textContent = 'कोई खरीदार नहीं';
+        document.getElementById('spec-buyer-meta').textContent = 'नया ऑर्डर दर्ज करने पर खरीदार यहाँ दिखेगा';
+        document.getElementById('spec-buyer-invoiced').textContent = '₹0';
+        document.getElementById('spec-buyer-paid').textContent = '₹0';
+        document.getElementById('spec-buyer-due').textContent = '₹0';
+        document.getElementById('spec-buyer-orders-count').textContent = '0';
+        const ot = document.getElementById('spec-buyer-orders-tbody');
+        if (ot) ot.innerHTML = '<tr><td colspan="8" class="py-6 text-center text-slate-400">अभी कोई ऑर्डर नहीं है।</td></tr>';
+        const pt = document.getElementById('spec-buyer-payments-tbody');
+        if (pt) pt.innerHTML = '<tr><td colspan="6" class="py-6 text-center text-slate-400">अभी कोई भुगतान नहीं है।</td></tr>';
+        return;
+      }
         switchMainView('entry');
         btnTogglePayment.click();
         const radio = document.querySelector('input[name="payment-direction"][value="from_buyer"]');
@@ -2317,7 +2433,20 @@
       // Copy Statement to clipboard
       document.getElementById('btn-copy-buyer-statement').addEventListener('click', () => {
         const buyer = state.parties.find(p => p.id === state.selectedBuyerId);
-        if (!buyer) return;
+        if (!buyer) {
+        document.getElementById('spec-buyer-avatar').textContent = '-';
+        document.getElementById('spec-buyer-name').textContent = 'कोई खरीदार नहीं';
+        document.getElementById('spec-buyer-meta').textContent = 'नया ऑर्डर दर्ज करने पर खरीदार यहाँ दिखेगा';
+        document.getElementById('spec-buyer-invoiced').textContent = '₹0';
+        document.getElementById('spec-buyer-paid').textContent = '₹0';
+        document.getElementById('spec-buyer-due').textContent = '₹0';
+        document.getElementById('spec-buyer-orders-count').textContent = '0';
+        const ot = document.getElementById('spec-buyer-orders-tbody');
+        if (ot) ot.innerHTML = '<tr><td colspan="8" class="py-6 text-center text-slate-400">अभी कोई ऑर्डर नहीं है।</td></tr>';
+        const pt = document.getElementById('spec-buyer-payments-tbody');
+        if (pt) pt.innerHTML = '<tr><td colspan="6" class="py-6 text-center text-slate-400">अभी कोई भुगतान नहीं है।</td></tr>';
+        return;
+      }
         const metrics = getPartyMetrics(buyer.name, 'Retailer');
         const text = `*VyaparSetu Account Statement*\n` +
           `Buyer: ${buyer.name}\n` +
@@ -2399,10 +2528,10 @@
         if (type === 'Retailer') switchToSpecificBuyer(newId);
       });
 
-      // Reset Demo Data
+      // Clear Data Data
       document.getElementById('btn-reset-demo').addEventListener('click', () => {
         resetToDefault();
-        showToast('Demo data restored successfully!');
+        showToast('All data cleared!');
       });
 
       // ==========================================
@@ -2892,6 +3021,7 @@
         amountDisplay.textContent = '₹0';
         if (sellerSuggestions) sellerSuggestions.classList.add('hidden');
         if (buyerSuggestions) buyerSuggestions.classList.add('hidden');
+        if (itemSuggestions) itemSuggestions.classList.add('hidden');
         if (optionalOrderFields) optionalOrderFields.classList.add('hidden');
         populateDatalistsAndDropdowns();
         updateOrderNavControls();
